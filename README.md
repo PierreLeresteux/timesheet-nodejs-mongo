@@ -15,3 +15,5 @@ post('/ts', CREATE NEW timesheet);<br/>
 put('/ts/:id', UPDATE timesheet);<br/>
 delete('/ts/:id', DELETE timesheet);
 
+
+Pour info : http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/
