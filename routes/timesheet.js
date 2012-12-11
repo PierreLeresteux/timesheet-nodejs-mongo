@@ -201,8 +201,7 @@ var populateDB = function() {
 		}]
 	}];
 
-	db.collection('timesheet', function(err, collection) {
-		collection.insert(timesheet, {safe:true}, function(err, result) {});
-	});
+    collection.drop();
+    collection.insert(timesheet, {safe:true}, function(err, result) {});
 
 };
