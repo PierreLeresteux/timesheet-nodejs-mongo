@@ -11,23 +11,7 @@ var mongoUri = process.env.MONGOLAB_URI ||  'mongodb://localhost:27017/timesheet
 mongo.Db.connect(mongoUri, function (err, database) {
 	db = database;
 });
-/*
-db = new Db('timesheetdb', new Server('localhost', 27017), {safe:false});
 
-
-db.open(function(err, db) {
-	if(!err) {
-		//populateDB();
-		console.log("Connected to 'timesheetdb' database");
-		db.collection('timesheet', {safe:true}, function(err, collection) {
-			if (err) {
-				console.log("The 'timesheet' collection doesn't exist. Creating it with sample data...");
-				populateDB();
-			}
-		});
-	}
-});
-*/
 exports.findById = function(req, res) {
 	var id = req.params.id;
 	console.log('Retrieving timesheet: ' + id);
