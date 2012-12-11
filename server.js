@@ -12,6 +12,7 @@ app.get('/init', ts.init);
 app.get('/ts', ts.findAll);
 app.get('/ts/:id', ts.findById);
 app.get('/ts/:user/:day', ts.findByDayAndUser);
+app.get('/ts/:user/:datestart/:datestop', ts.findByDaysAndUser);
 app.post('/ts', ts.addts);
 app.put('/ts/:id', ts.updatets);
 app.delete('/ts/:id', ts.deletets);

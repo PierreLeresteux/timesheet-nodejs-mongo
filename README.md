@@ -11,6 +11,7 @@ URL :
 get('/ts', GET ALL);<br/>
 get('/ts/:id', GET BY OBJECTID);<br/>
 get('/ts/:user/:day', GET BY USER AND DAY);<br/>
+get('/ts/:user/:datestart/:datestop', GET BY USER AND DAYS);<br/>
 post('/ts', CREATE NEW timesheet);<br/>
 put('/ts/:id', UPDATE timesheet);<br/>
 delete('/ts/:id', DELETE timesheet);

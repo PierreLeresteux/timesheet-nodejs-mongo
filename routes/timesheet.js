@@ -23,12 +23,20 @@ exports.findById = function(req, res) {
 };
 
 exports.findByDayAndUser = function(req,res) {
-	var day = req.params.day;
+	var day = ~~req.params.day;
 	var user = req.params.user;
-	console.log(day);
-	console.log(user);
 	var collection = db.collection('timesheet');
-	collection.find({'day':day}, {limit:100}).toArray(function(err, docs) {
+	collection.find({'user.login':user, 'day': day}, {limit:100}).toArray(function(err, docs) {
+		res.send(docs);
+	});
+};
+
+exports.findByDaysAndUser = function(req,res) {
+	var start = ~~req.params.datestart;
+	var end = ~~req.params.datestop;
+	var user = req.params.user;
+	var collection = db.collection('timesheet');
+	collection.find({'user.login':user, 'day': {$gte: start, $lte: end}}, {limit:100}).toArray(function(err, docs) {
 		res.send(docs);
 	});
 };
