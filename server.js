@@ -8,6 +8,7 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
+app.get('/init', ts.init);
 app.get('/ts', ts.findAll);
 app.get('/ts/:id', ts.findById);
 app.get('/ts/:user/:day', ts.findByDayAndUser);

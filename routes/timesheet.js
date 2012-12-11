@@ -96,6 +96,11 @@ exports.deleteTimesheet = function(req, res) {
 	});
 }
 
+exports.init = function(req, res){
+	populateDB();
+	res.send();
+}
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 // Populate database with sample data -- Only used once: the first time the application is started.
 // You'd typically not find this code in a real-life app, since the database would already exist.
