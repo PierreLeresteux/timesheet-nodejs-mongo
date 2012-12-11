@@ -4,7 +4,16 @@ var Server = mongo.Server,
 	Db = mongo.Db,
 	BSON = mongo.BSONPure;
 
+var db;
+
+var mongoUri = process.env.MONGOLAB_URI ||  'mongodb://localhost:27017/timesheetdb';
+
+mongo.Db.connect(mongoUri, function (err, database) {
+	db = database;
+});
+/*
 db = new Db('timesheetdb', new Server('localhost', 27017), {safe:false});
+
 
 db.open(function(err, db) {
 	if(!err) {
@@ -18,7 +27,7 @@ db.open(function(err, db) {
 		});
 	}
 });
-
+*/
 exports.findById = function(req, res) {
 	var id = req.params.id;
 	console.log('Retrieving timesheet: ' + id);
