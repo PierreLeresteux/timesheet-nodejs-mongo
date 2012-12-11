@@ -3,22 +3,27 @@ timesheet-nodejs-mongo
 
 INIT (populateDB)
 
-http://localhost:[PORT]/init
-
+http://localhost:[PORT]/init <br/>
+-> create collections:<br/>
+    - timesheet<br/>
+    - project <br/>
+    -user<br />
 URLs :
 
 * ts => timesheet (document) [CRUD]<br/>
-	get('/ts') => GET ALL)<br/>
-	get('/ts/:id') => GET BY OBJECTID)<br/>
-	post('/ts') => CREATE NEW timesheet <br/>
-	put('/ts/:id') => UPDATE timesheet <br/>
-	delete('/ts/:id') => DELETE timesheet<br/>
+	- get('/ts') => GET ALL)<br/>
+	- get('/ts/:id') => GET BY OBJECTID)<br/>
+	- post('/ts') => CREATE NEW timesheet <br/>
+	- put('/ts/:id') => UPDATE timesheet <br/>
+	- delete('/ts/:id') => DELETE timesheet<br/>
 
-* ts/user => utilisateur<br/>
-	get('/ts/user/:user?year=[&month=]') > GET BY USER (login)  <br/>
+* user => utilisateur.login<br/>
+    - get('/user') => GET ALL USERS<br/>
+	- get('/ts/user/:user?year=[&month=]') > GET timesheet BY USER (login)  <br/>
 
-* ts/project => project<br/>
-	get('/ts/project/:project?year=[&month=]') => GET BY TASKS (project) <br/>
+* project => tasks.project<br/>
+    - get('/project') => GET ALL PROJECTS<br/>
+	- get('/ts/project/:project?year=[&month=]') => GET timesheet BY TASKS (project) <br/>
 
 
 Pour info : http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/

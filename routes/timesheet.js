@@ -4,40 +4,33 @@ var Server = mongo.Server,
 	Db = mongo.Db,
 	BSON = mongo.BSONPure;
 
-var collection;
-
 var mongoUri = process.env.MONGOLAB_URI ||  'mongodb://localhost:27017/timesheetdb';
+var db;
 
-mongo.Db.connect(mongoUri, function (err, db) {
-    collection = db.collection('timesheet');
+Db.connect(mongoUri, function (err, database) {
+    db = database;
 });
 
-exports.find = function(req, res) {
-	var key = req.params.key;
-	if (key.length==24){
-        findById(req,res);
-    }else{
-        findByUser(req,res);
-    }
-
-};
+/*------------- TIMESHEET ------------------*/
 
 exports.findAll = function(req, res) {
-	collection.find().toArray(function(err, items) {
-		res.send(items);
-	});
+    db.collection('timesheet', function(err, collection) {
+        findAllByCollection(collection, res);
+    });
 };
 
 exports.addTimesheet = function(req, res) {
 	var timesheet = req.body;
 	console.log('Adding timesheet: ' + JSON.stringify(timesheet));
-    collection.insert(timesheet, {safe:true}, function(err, result) {
-        if (err) {
-            res.send({'error':'An error has occurred'});
-        } else {
-            console.log('Success: ' + JSON.stringify(result[0]));
-            res.send(result[0]);
-        }
+    db.collection('timesheet', function(err, collection) {
+        collection.insert(timesheet, {safe:true}, function(err, result) {
+            if (err) {
+                res.send({'error':'An error has occurred'});
+            } else {
+                console.log('Success: ' + JSON.stringify(result[0]));
+                res.send(result[0]);
+            }
+        });
     });
 }
 
@@ -46,40 +39,57 @@ exports.updateTimesheet = function(req, res) {
 	var timesheet = req.body;
     console.log('Updating timesheet: ' + id);
 	console.log(JSON.stringify(timesheet));
-    collection.update({'_id':new BSON.ObjectID(id)}, timesheet, {safe:true}, function(err, result) {
-        if (err) {
-            console.log('Error updating timesheet: ' + err);
-            res.send({'error':'An error has occurred'});
-        } else {
-            console.log('' + result + ' document(s) updated');
-            res.send(timesheet);
+    db.collection('timesheet', function(err, collection) {
+        collection.update({'_id':new BSON.ObjectID(id)}, timesheet, {safe:true}, function(err, result) {
+            if (err) {
+                console.log('Error updating timesheet: ' + err);
+                res.send({'error':'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                res.send(timesheet);
         }
+        });
     });
 }
 
 exports.deleteTimesheet = function(req, res) {
 	var id = req.params.id;
 	console.log('Deleting timesheet: ' + id);
-    collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
-        if (err) {
-            res.send({'error':'An error has occurred - ' + err});
-        } else {
-            console.log('' + result + ' document(s) deleted');
-            res.send(req.body);
-        }
+    db.collection('timesheet', function(err, collection) {
+        collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
+            if (err) {
+                res.send({'error':'An error has occurred - ' + err});
+            } else {
+                console.log('' + result + ' document(s) deleted');
+                res.send(req.body);
+            }
+        });
     });
-}
-
-exports.init = function(req, res){
-	populateDB();
-	res.send();
 }
 
 exports.findById = function(req, res) {
     var id = req.params.id;
     console.log('Retrieving timesheet: ' + id);
-    collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-        res.send(item);
+    db.collection('timesheet', function(err, collection) {
+        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+            res.send(item);
+        });
+    });
+};
+
+function findByQuery(query,res){
+    console.log("Query : "+JSON.stringify(query));
+    db.collection('timesheet', function(err, collection) {
+        collection.find(query, {limit:100}).toArray(function(err, docs) {
+            res.send(docs);
+        });
+    });
+}
+/*------------- PROJECT ------------------*/
+
+exports.allProjects = function(req, res){
+    db.collection('project', function(err, collection) {
+        findAllByCollection(collection, res);
     });
 };
 
@@ -94,6 +104,14 @@ exports.findByProject = function(req, res){
     }
     findByQuery(query,res);
 };
+/*------------- USER ------------------*/
+
+exports.allUsers = function(req, res){
+    db.collection('user', function(err, collection) {
+        findAllByCollection(collection, res);
+    });
+};
+
 exports.findByUser = function(req, res) {
     var user = req.params.user;
     var year = ~~req.query.year;
@@ -105,16 +123,21 @@ exports.findByUser = function(req, res) {
     }
     findByQuery(query,res);
 
-}
+};
+/*------------- UTIL ------------------*/
 
-function findByQuery(query,res){
-    console.log("Query : "+JSON.stringify(query));
-    collection.find(query, {limit:100}).toArray(function(err, docs) {
-        res.send(docs);
+function findAllByCollection(collection, res){
+    collection.find().toArray(function(err, items) {
+        res.send(items);
     });
 }
-// Populate database with sample data -- Only used once: the first time the application is started.
-// You'd typically not find this code in a real-life app, since the database would already exist.
+
+/*------------- INIT ------------------*/
+
+exports.init = function(req, res){
+    populateDB();
+    res.send();
+}
 var populateDB = function() {
 	console.log('populateDB');
 	var timesheet = [
@@ -188,10 +211,10 @@ var populateDB = function() {
 		year: 2012,
 		month: 12,
 		user: {
-			lastname: "David",
-			firstname: "Sebastien",
-			login: "SDA"
-		},
+            lastname: "Leresteux",
+            firstname: "Pierre",
+            login: "PLE"
+        },
 		tasks: [{
 			project: "BUG_PROD",
 			hours: "5"
@@ -200,8 +223,37 @@ var populateDB = function() {
 			hours: "1"
 		}]
 	}];
+    var user = [{
+        lastname: "Leresteux",
+        firstname: "Pierre",
+        login: "PLE"
+    },{
+        lastname: "David",
+        firstname: "Sebastien",
+        login: "SDA"
+    }];
+    var project = [{
+        project: "BUG_PROD"
+    },{
+        project: "POC_EMV_PAPERBOY"
+    },{
+        project: "LANPA"
+    },{
+        project: "IMG_LIB"
+    },{
+        project: "POC_JS"
+    }];
 
-    collection.drop();
-    collection.insert(timesheet, {safe:true}, function(err, result) {});
-
+    db.collection('timesheet', function(err, collection) {
+        collection.drop();
+        collection.insert(timesheet, {safe:true}, function(err, result) {});
+    });
+    db.collection('user', function(err, collection) {
+        collection.drop();
+        collection.insert(user,  {safe:true}, function(err, result) {});
+    });
+    db.collection('project', function(err, collection) {
+        collection.drop();
+        collection.insert(project,  {safe:true}, function(err, result) {});
+    });
 };
