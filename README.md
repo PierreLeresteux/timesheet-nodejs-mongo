@@ -1,14 +1,15 @@
 timesheet-nodejs-mongo
 ======================
 
-INIT (populateDB)
+__INIT (populateDB)__
 
 http://localhost:[PORT]/init <br/>
--> create collections:<br/>
+* create collections:<br/>
     - timesheet<br/>
     - project <br/>
-    -user<br />
-URLs :
+    - user<br />
+
+__URLs__
 
 * ts => timesheet (document) [CRUD]<br/>
 	- get('/ts') => GET ALL)<br/>
