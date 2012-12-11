@@ -3,7 +3,7 @@ timesheet-nodejs-mongo
 
 INIT (populateDB)
 
-http://localhost:16001/init
+http://localhost:3000/init
 
 URL : 
 

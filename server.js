@@ -16,5 +16,6 @@ app.post('/ts', ts.addts);
 app.put('/ts/:id', ts.updatets);
 app.delete('/ts/:id', ts.deletets);
 
-app.listen(16001);
-console.log('Listening on port 16001...');
+var port = process.env.PORT || 3000
+app.listen(port);
+console.log('Listening on port '+port);
