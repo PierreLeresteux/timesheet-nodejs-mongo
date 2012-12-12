@@ -1,17 +1,18 @@
 var http = require('http');
+var https = require('https');
 
 exports.init = function(app) {
 
-	var sendLib = function(response, host, path){
+	var sendLib = function(response, host, path, opt){
 		var options = {
 			host: host,
-			port: 80,
+			port: opt.https ? 443 : 80,
 			path: path,
 			method: 'GET'
 		};
 
-		var fileData = '';
-		var request = http.request(options, function(res) {
+		var fileData = '', web = opt.https ? https : http;
+		var request = web.request(options, function(res) {
 			console.log('GET '+res.statusCode+' '+options.host+options.path);
 			res.setEncoding('utf8');
 			res.on('data', function(chunk){
@@ -19,6 +20,7 @@ exports.init = function(app) {
 			});
 
 			res.on('end', function() {
+				response.type(res.headers['content-type'] || 'application/javascript');
 				response.send(fileData);
 			});
 
@@ -36,7 +38,7 @@ exports.init = function(app) {
 	}
 
 	app.get('/libs/:cdn/:lib/:version/:file', function(req, resp){
-		var host, path;
+		var host, path, opt = {};
 		switch(req.params.cdn) {
 			case 'google':
 				host =  'ajax.googleapis.com';
@@ -51,7 +53,12 @@ exports.init = function(app) {
 				host = 'cdnjs.cloudflare.com';
 				path = '/ajax/libs/'+req.params.lib+'/'+req.params.version+'/'+req.params.file;
 				break;
+			case 'github':
+				host = 'raw.github.com';
+				path = '/'+req.params.lib+'/'+req.query.plugin+'/'+req.params.version+'/'+req.params.file;
+				opt.https = true;
+				break;
 		}
-		sendLib(resp, host, path);
+		sendLib(resp, host, path, opt);
 	});
 }
