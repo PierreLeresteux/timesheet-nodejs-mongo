@@ -18,11 +18,15 @@ URLs :
 	- delete('/ts/:id') => DELETE timesheet<br/>
 
 * user => utilisateur.login<br/>
-    - get('/user') => GET ALL USERS<br/>
+    - get('/user') => GET ALL<br/>
+    - get('/user/:id') => GET A user<br/>
+    - delete('/user/:id') => DELETE user<br/>
 	- get('/ts/user/:user?year=[&month=]') > GET timesheet BY USER (login)  <br/>
 
 * project => tasks.project<br/>
-    - get('/project') => GET ALL PROJECTS<br/>
+    - get('/project') => GET ALL<br/>
+    - get('/project/:id') => GET A project<br/>
+    - delete('/project/:id') => DELETE project<br/>
 	- get('/ts/project/:project?year=[&month=]') => GET timesheet BY TASKS (project) <br/>
 
 

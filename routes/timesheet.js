@@ -15,7 +15,7 @@ Db.connect(mongoUri, function (err, database) {
 
 exports.findAll = function(req, res) {
     db.collection('timesheet', function(err, collection) {
-        findAllByCollection(collection, res);
+        getAll(collection, res);
     });
 };
 
@@ -32,7 +32,7 @@ exports.addTimesheet = function(req, res) {
             }
         });
     });
-}
+};
 
 exports.updateTimesheet = function(req, res) {
 	var id = req.params.id;
@@ -50,30 +50,21 @@ exports.updateTimesheet = function(req, res) {
         }
         });
     });
-}
+};
 
 exports.deleteTimesheet = function(req, res) {
 	var id = req.params.id;
 	console.log('Deleting timesheet: ' + id);
     db.collection('timesheet', function(err, collection) {
-        collection.remove({'_id':new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
-            if (err) {
-                res.send({'error':'An error has occurred - ' + err});
-            } else {
-                console.log('' + result + ' document(s) deleted');
-                res.send(req.body);
-            }
-        });
+        deleteById(collection, id, res, req);
     });
-}
+};
 
 exports.findById = function(req, res) {
     var id = req.params.id;
     console.log('Retrieving timesheet: ' + id);
     db.collection('timesheet', function(err, collection) {
-        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-            res.send(item);
-        });
+        getById(collection,id, res);
     });
 };
 
@@ -89,10 +80,25 @@ function findByQuery(query,res){
 
 exports.allProjects = function(req, res){
     db.collection('project', function(err, collection) {
-        findAllByCollection(collection, res);
+        getAll(collection, res);
     });
 };
 
+exports.findProjectById = function(req, res){
+    var id = req.params.id;
+    console.log('Retrieving project: ' + id);
+    db.collection('project', function(err, collection) {
+        getById(collection,id, res);
+    });
+};
+
+exports.deleteProject = function(req, res) {
+    var id = req.params.id;
+    console.log('Deleting project: ' + id);
+    db.collection('project', function(err, collection) {
+        deleteById(collection, id, res, req);
+    });
+};
 exports.findByProject = function(req, res){
     var project = req.params.project;
     var year = ~~req.query.year;
@@ -104,14 +110,29 @@ exports.findByProject = function(req, res){
     }
     findByQuery(query,res);
 };
-/*------------- USER ------------------*/
 
+/*------------- USER ------------------*/
 exports.allUsers = function(req, res){
     db.collection('user', function(err, collection) {
-        findAllByCollection(collection, res);
+        getAll(collection, res);
     });
 };
 
+exports.findUserById = function(req, res){
+    var id = req.params.id;
+    console.log('Retrieving user: ' + id);
+    db.collection('user', function(err, collection) {
+        getById(collection,id, res);
+    });
+};
+
+exports.deleteUser = function(req, res) {
+    var id = req.params.id;
+    console.log('Deleting user: ' + id);
+    db.collection('user', function(err, collection) {
+        deleteById(collection, id, res, req);
+    });
+};
 exports.findByUser = function(req, res) {
     var user = req.params.user;
     var year = ~~req.query.year;
@@ -126,9 +147,25 @@ exports.findByUser = function(req, res) {
 };
 /*------------- UTIL ------------------*/
 
-function findAllByCollection(collection, res){
+function getAll(collection, res){
     collection.find().toArray(function(err, items) {
         res.send(items);
+    });
+}
+function getById(collection, id,res) {
+    collection.findOne({'_id': new BSON.ObjectID(id)}, function (err, item) {
+        res.send(item);
+    });
+}
+
+function deleteById(collection, id, res, req) {
+    collection.remove({'_id': new BSON.ObjectID(id)}, {safe: true}, function (err, result) {
+        if (err) {
+            res.send({'error': 'An error has occurred - ' + err});
+        } else {
+            console.log('' + result + ' document(s) deleted');
+            res.send(req.body);
+        }
     });
 }
 

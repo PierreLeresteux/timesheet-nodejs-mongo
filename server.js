@@ -13,15 +13,19 @@ app.get('/init', ts.init);
 // timesheet CRUD
 app.get('/ts', ts.findAll);
 app.get('/ts/:id', ts.findById);
-app.post('/ts', ts.addts);
-app.put('/ts/:id', ts.updatets);
-app.delete('/ts/:id', ts.deletets);
+app.post('/ts', ts.addTimesheet);
+app.put('/ts/:id', ts.updateTimesheet);
+app.delete('/ts/:id', ts.deleteTimesheet);
 // user
 app.get('/user', ts.allUsers);
+app.get('/user/:id', ts.findUserById);
+app.delete('/user/:id', ts.deleteUser);
 app.get('/ts/user/:user', ts.findByUser);
 
 // project
 app.get('/project', ts.allProjects);
+app.get('/project/:id', ts.findProjectById);
+app.delete('/project/:id', ts.deleteProject);
 app.get('/ts/project/:project', ts.findByProject);
 
 var port = process.env.PORT || 3000
