@@ -19,6 +19,7 @@ exports.init = function(app) {
 			});
 
 			res.on('end', function() {
+				response.type(res.headers['content-type'] || 'application/javascript');
 				response.send(fileData);
 			});
 
