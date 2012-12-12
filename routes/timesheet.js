@@ -1,4 +1,5 @@
 var mongo = require('mongodb');
+var mongUtil = require('./utilMongo');
 
 var Server = mongo.Server,
 	Db = mongo.Db,
@@ -15,7 +16,7 @@ Db.connect(mongoUri, function (err, database) {
 
 exports.findAll = function(req, res) {
     db.collection('timesheet', function(err, collection) {
-        getAll(collection, res);
+	    mongUtil.getAll(collection, res);
     });
 };
 
@@ -23,14 +24,7 @@ exports.addTimesheet = function(req, res) {
 	var timesheet = req.body;
 	console.log('Adding timesheet: ' + JSON.stringify(timesheet));
     db.collection('timesheet', function(err, collection) {
-        collection.insert(timesheet, {safe:true}, function(err, result) {
-            if (err) {
-                res.send({'error':'An error has occurred'});
-            } else {
-                console.log('Success: ' + JSON.stringify(result[0]));
-                res.send(result[0]);
-            }
-        });
+	    mongUtil.insertEntity(collection, timesheet, res);
     });
 };
 
@@ -40,15 +34,7 @@ exports.updateTimesheet = function(req, res) {
     console.log('Updating timesheet: ' + id);
 	console.log(JSON.stringify(timesheet));
     db.collection('timesheet', function(err, collection) {
-        collection.update({'_id':new BSON.ObjectID(id)}, timesheet, {safe:true}, function(err, result) {
-            if (err) {
-                console.log('Error updating timesheet: ' + err);
-                res.send({'error':'An error has occurred'});
-            } else {
-                console.log('' + result + ' document(s) updated');
-                res.send(timesheet);
-        }
-        });
+	    mongUtil.updateEntity(collection, id, timesheet, res);
     });
 };
 
@@ -56,7 +42,7 @@ exports.deleteTimesheet = function(req, res) {
 	var id = req.params.id;
 	console.log('Deleting timesheet: ' + id);
     db.collection('timesheet', function(err, collection) {
-        deleteById(collection, id, res, req);
+	    mongUtil.deleteById(collection, id, res, req);
     });
 };
 
@@ -64,23 +50,45 @@ exports.findById = function(req, res) {
     var id = req.params.id;
     console.log('Retrieving timesheet: ' + id);
     db.collection('timesheet', function(err, collection) {
-        getById(collection,id, res);
+	    mongUtil.getById(collection,id, res);
     });
 };
+/*------------- TIMESHEET EXTENDED ------------------*/
 
-function findByQuery(query,res){
-    console.log("Query : "+JSON.stringify(query));
-    db.collection('timesheet', function(err, collection) {
-        collection.find(query, {limit:100}).toArray(function(err, docs) {
-            res.send(docs);
-        });
-    });
-}
+exports.findByUser = function(req, res) {
+	var user = req.params.user;
+	var year = ~~req.query.year;
+	var month = ~~req.query.month;
+
+	var query = {'user.login':user, 'year': year};
+	if (month){
+		query.month = month;
+	}
+	db.collection('timesheet', function(err, collection) {
+		mongUtil.findByQuery(collection,query,res);
+	});
+};
+
+exports.findByProject = function(req, res){
+	var project = req.params.project;
+	var year = ~~req.query.year;
+	var month = ~~req.query.month;
+
+	var query = {'tasks.project':project, 'year': year};
+	if (month){
+		query.month = month;
+	}
+
+	db.collection('timesheet', function(err, collection) {
+		mongUtil.findByQuery(collection,query,res);
+	});
+};
+
 /*------------- PROJECT ------------------*/
 
 exports.allProjects = function(req, res){
     db.collection('project', function(err, collection) {
-        getAll(collection, res);
+	    mongUtil.getAll(collection, res);
     });
 };
 
@@ -88,33 +96,39 @@ exports.findProjectById = function(req, res){
     var id = req.params.id;
     console.log('Retrieving project: ' + id);
     db.collection('project', function(err, collection) {
-        getById(collection,id, res);
+	    mongUtil.getById(collection,id, res);
     });
+};
+
+exports.addProject = function(req, res) {
+	var project = req.body;
+	console.log('Adding timesheet: ' + JSON.stringify(project));
+	db.collection('project', function(err, collection) {
+		mongUtil.insertEntity(collection, project, res);
+	});
+};
+exports.updateProject = function(req, res) {
+	var id = req.params.id;
+	var project = req.body;
+	console.log('Updating project: ' + id);
+	console.log(JSON.stringify(project));
+	db.collection('project', function(err, collection) {
+		mongUtil.updateEntity(collection, id, project, res);
+	});
 };
 
 exports.deleteProject = function(req, res) {
     var id = req.params.id;
     console.log('Deleting project: ' + id);
     db.collection('project', function(err, collection) {
-        deleteById(collection, id, res, req);
+	    mongUtil.deleteById(collection, id, res, req);
     });
 };
-exports.findByProject = function(req, res){
-    var project = req.params.project;
-    var year = ~~req.query.year;
-    var month = ~~req.query.month;
-
-    var query = {'tasks.project':project, 'year': year};
-    if (month){
-        query.month = month;
-    }
-    findByQuery(query,res);
-};
-
 /*------------- USER ------------------*/
+
 exports.allUsers = function(req, res){
     db.collection('user', function(err, collection) {
-        getAll(collection, res);
+	    mongUtil.getAll(collection, res);
     });
 };
 
@@ -122,7 +136,7 @@ exports.findUserById = function(req, res){
     var id = req.params.id;
     console.log('Retrieving user: ' + id);
     db.collection('user', function(err, collection) {
-        getById(collection,id, res);
+	    mongUtil.getById(collection,id, res);
     });
 };
 
@@ -130,51 +144,34 @@ exports.deleteUser = function(req, res) {
     var id = req.params.id;
     console.log('Deleting user: ' + id);
     db.collection('user', function(err, collection) {
-        deleteById(collection, id, res, req);
+	    mongUtil.deleteById(collection, id, res, req);
     });
 };
-exports.findByUser = function(req, res) {
-    var user = req.params.user;
-    var year = ~~req.query.year;
-    var month = ~~req.query.month;
-
-    var query = {'user.login':user, 'year': year};
-    if (month){
-        query.month = month;
-    }
-    findByQuery(query,res);
-
+exports.updateUser = function(req, res) {
+	var id = req.params.id;
+	var user = req.body;
+	console.log('Updating user: ' + id);
+	console.log(JSON.stringify(user));
+	db.collection('user', function(err, collection) {
+		mongUtil.updateEntity(collection, id, user, res);
+	});
 };
-/*------------- UTIL ------------------*/
 
-function getAll(collection, res){
-    collection.find().toArray(function(err, items) {
-        res.send(items);
-    });
-}
-function getById(collection, id,res) {
-    collection.findOne({'_id': new BSON.ObjectID(id)}, function (err, item) {
-        res.send(item);
-    });
-}
+exports.addUser = function(req, res) {
+	var user = req.body;
+	console.log('Adding User: ' + JSON.stringify(user));
+	db.collection('user', function(err, collection) {
+		mongUtil.insertEntity(collection, user, res);
+	});
+};
 
-function deleteById(collection, id, res, req) {
-    collection.remove({'_id': new BSON.ObjectID(id)}, {safe: true}, function (err, result) {
-        if (err) {
-            res.send({'error': 'An error has occurred - ' + err});
-        } else {
-            console.log('' + result + ' document(s) deleted');
-            res.send(req.body);
-        }
-    });
-}
 
 /*------------- INIT ------------------*/
 
 exports.init = function(req, res){
     populateDB();
     res.send();
-}
+};
 var populateDB = function() {
 	console.log('populateDB');
 	var timesheet = [
