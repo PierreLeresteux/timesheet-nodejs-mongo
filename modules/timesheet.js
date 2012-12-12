@@ -201,7 +201,7 @@ exports.deleteProject = function(req, res) {
 /*------------- USER ------------------*/
 
 exports.allUsers = function(req, res){
-    db.collection('user', function(err, collection) {
+    db.collection('account', function(err, collection) {
 	    mongUtil.getAll(collection, res);
     });
 };
@@ -209,7 +209,7 @@ exports.allUsers = function(req, res){
 exports.findUserById = function(req, res){
     var id = req.params.id;
     console.log('Retrieving user: ' + id);
-    db.collection('user', function(err, collection) {
+    db.collection('account', function(err, collection) {
 	    mongUtil.getById(collection,id, res);
     });
 };
@@ -217,7 +217,7 @@ exports.findUserById = function(req, res){
 exports.deleteUser = function(req, res) {
     var id = req.params.id;
     console.log('Deleting user: ' + id);
-    db.collection('user', function(err, collection) {
+    db.collection('account', function(err, collection) {
 	    mongUtil.deleteById(collection, id, res, req);
     });
 };
@@ -226,7 +226,7 @@ exports.updateUser = function(req, res) {
 	var user = req.body;
 	console.log('Updating user: ' + id);
 	console.log(JSON.stringify(user));
-	db.collection('user', function(err, collection) {
+	db.collection('account', function(err, collection) {
 		mongUtil.updateEntity(collection, id, user, res);
 	});
 };
@@ -234,7 +234,7 @@ exports.updateUser = function(req, res) {
 exports.addUser = function(req, res) {
 	var user = req.body;
 	console.log('Adding User: ' + JSON.stringify(user));
-	db.collection('user', function(err, collection) {
+	db.collection('account', function(err, collection) {
 		mongUtil.insertEntity(collection, user, res);
 	});
 };
@@ -256,7 +256,7 @@ var populateDB = function() {
 		user: {
 			lastname: "Leresteux",
 			firstname: "Pierre",
-			login: "PLE"
+			login: "pleresteux"
 		},
 		tasks: [{
 			project:"LANPA",
@@ -273,7 +273,7 @@ var populateDB = function() {
 		user: {
 			lastname: "Leresteux",
 			firstname: "Pierre",
-			login: "PLE"
+			login: "pleresteux"
 		},
 		tasks: [{
 			project: "LANPA",
@@ -287,7 +287,7 @@ var populateDB = function() {
         user: {
             lastname: "Leresteux",
             firstname: "Pierre",
-            login: "PLE"
+            login: "pleresteux"
         },
         tasks: [{
             project: "IMG_LIB",
@@ -301,7 +301,7 @@ var populateDB = function() {
 		user: {
 			lastname: "David",
 			firstname: "Sebastien",
-			login: "SDA"
+			login: "sdavid"
 		},
 		tasks: [{
 			project: "LANPA",
@@ -321,7 +321,7 @@ var populateDB = function() {
 		user: {
             lastname: "Leresteux",
             firstname: "Pierre",
-            login: "PLE"
+            login: "pleresteux"
         },
 		tasks: [{
 			project: "BUG_PROD",
@@ -331,14 +331,20 @@ var populateDB = function() {
 			hours: 1
 		}]
 	}];
-    var user = [{
+    var account = [{
         lastname: "Leresteux",
         firstname: "Pierre",
-        login: "PLE"
+        login: "pleresteux",
+        email: "pleresteux@emailvision.com",
+        pass : "$2a$10$mR8PzOjlCoKiEcfzM4ITvOx7vu1UeUj5rTcwbY4jFBBPpyBtT0P6S",
+        date : "December 12th 2012, 8:59:17 pm"
     },{
         lastname: "David",
         firstname: "Sebastien",
-        login: "SDA"
+        login: "sdavid",
+        email: "sdavid@emailvision.com",
+        pass : "$2a$10$mR8PzOjlCoKiEcfzM4ITvOx7vu1UeUj5rTcwbY4jFBBPpyBtT0P6S",
+        date : "December 12th 2012, 9:02:53 pm"
     }];
     var project = [{
         project: "BUG_PROD"
@@ -356,9 +362,9 @@ var populateDB = function() {
         collection.drop();
         collection.insert(timesheet, {safe:true}, function(err, result) {});
     });
-    db.collection('user', function(err, collection) {
+    db.collection('account', function(err, collection) {
         collection.drop();
-        collection.insert(user,  {safe:true}, function(err, result) {});
+        collection.insert(account,  {safe:true}, function(err, result) {});
     });
     db.collection('project', function(err, collection) {
         collection.drop();

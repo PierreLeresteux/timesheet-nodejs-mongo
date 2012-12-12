@@ -31,4 +31,10 @@ __URLs__
 	- get('/ts/project/:project?year=[&month=]') => GET timesheet BY TASKS (project) <br/>
 
 
-Pour info : http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/
+
+___Pour info :___
+
+http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/
+
+Fundation 3 : http://foundation.zurb.com/
+Login system : https://github.com/braitsch/node-login
