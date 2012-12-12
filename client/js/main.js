@@ -57,6 +57,7 @@ require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordi
 		window.log = function(log) {
 			console.log(log);
 		}
+		
 		if(window.debugMode) {
 			require(['less']);
 		}
