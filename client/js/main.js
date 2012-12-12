@@ -21,7 +21,8 @@ requirejs.config({
 		'foundation-topbar': 'js/foundation/jquery.foundation.topbar',
 		'foundation-placeholder': 'js/foundation/jquery.placeholder',
 		'modernizr-foundation': 'js/foundation/modernizr.foundation',
-		'less': '/libs/cdnjs/less.js/1.3.1/less.min'
+		'less': '/libs/cdnjs/less.js/1.3.1/less.min',
+		'require-text': '/libs/github/requirejs/2.0.3/text.js?plugin=text'
 	},
 	shim: {
 		'angular': {deps: ['zepto']},
@@ -52,12 +53,12 @@ requirejs.config({
 require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
 		'foundation-clearing', 'foundation-forms', 'foundation-joyride', 'foundation-magellan', 'foundation-mediaQueryToggle',
 		'foundation-navigation', 'foundation-orbit', 'foundation-reveal', 'foundation-tabs', 'foundation-topbar', 'foundation-placeholder',
-		'modernizr-foundation'],
+		'modernizr-foundation', 'require-text'],
 	function() {
 		window.log = function(log) {
 			console.log(log);
 		}
-		
+
 		if(window.debugMode) {
 			require(['less']);
 		}
@@ -70,4 +71,7 @@ require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordi
 
 var init = function() {
 	log('init');
+	require(['js/app/ControllerTest'], function(ControllerTest){
+		ControllerTest.init();
+	});
 }
