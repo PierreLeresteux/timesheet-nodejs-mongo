@@ -45,10 +45,10 @@ exports.insertEntity = function(collection, entity, res) {
 		}
 	});
 };
-
 exports.findByQuery = function(collection,query,res){
 	console.log("Query : "+JSON.stringify(query));
 	collection.find(query, {limit:100}).toArray(function(err, docs) {
 		res.send(docs);
 	});
 };
+

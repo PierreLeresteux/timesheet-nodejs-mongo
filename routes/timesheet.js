@@ -55,20 +55,6 @@ exports.findById = function(req, res) {
 };
 /*------------- TIMESHEET EXTENDED ------------------*/
 
-exports.findByUser = function(req, res) {
-	var user = req.params.user;
-	var year = ~~req.query.year;
-	var month = ~~req.query.month;
-
-	var query = {'user.login':user, 'year': year};
-	if (month){
-		query.month = month;
-	}
-	db.collection('timesheet', function(err, collection) {
-		mongUtil.findByQuery(collection,query,res);
-	});
-};
-
 exports.findByProject = function(req, res){
 	var project = req.params.project;
 	var year = ~~req.query.year;
@@ -79,6 +65,20 @@ exports.findByProject = function(req, res){
 		query.month = month;
 	}
 
+	db.collection('timesheet', function(err, collection) {
+		mongUtil.findByQuery(collection,query,res);
+	});
+};
+
+exports.findByUser = function(req, res) {
+	var user = req.params.user;
+	var year = ~~req.query.year;
+	var month = ~~req.query.month;
+
+	var query = {'user.login':user, 'year': year};
+	if (month){
+		query.month = month;
+	}
 	db.collection('timesheet', function(err, collection) {
 		mongUtil.findByQuery(collection,query,res);
 	});
