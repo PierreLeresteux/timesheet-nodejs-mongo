@@ -60,7 +60,10 @@ require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordi
 		if(window.debugMode) {
 			require(['less']);
 		}
-		init();
+
+		$(document).ready(function(){
+			init();
+		});
 	}
 );
 
