@@ -6,6 +6,8 @@ var libs = require('./routes/libs');
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
     app.use(express.bodyParser());
+    app.use(express.static(__dirname+'/client'));
+    app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
 });
 
 //INIT (must be remove later)
