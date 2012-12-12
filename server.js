@@ -1,7 +1,7 @@
-var express = require('express'),
-    ts = require('./routes/timesheet');
-
+var express = require('express');
+var ts = require('./routes/timesheet');
 var app = express();
+var libs = require('./routes/libs');
 
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
@@ -31,6 +31,9 @@ app.get('/project/:id', ts.findProjectById);
 app.post('/project', ts.addProject);
 app.put('/ts/:id', ts.updateProject);
 app.delete('/project/:id', ts.deleteProject);
+
+// 3rd party libs
+libs.init(app);
 
 var port = process.env.PORT || 3000;
 app.listen(port);
