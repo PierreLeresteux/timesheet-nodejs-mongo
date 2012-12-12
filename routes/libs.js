@@ -46,6 +46,11 @@ exports.init = function(app) {
 				host = 'requirejs.org';
 				var min = (req.query.min && req.query.min == 'false') ? false : true;
 				path = '/docs/release/'+req.params.version+'/'+(min ? 'minified' : 'comments')+'/'+req.params.file;
+				break;
+			case 'cdnjs':
+				host = 'cdnjs.cloudflare.com';
+				path = '/ajax/libs/'+req.params.lib+'/'+req.params.version+'/'+req.params.file;
+				break;
 		}
 		sendLib(resp, host, path);
 	});
