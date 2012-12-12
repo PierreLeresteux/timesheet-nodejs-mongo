@@ -52,3 +52,10 @@ exports.findByQuery = function(collection,query,res){
 	});
 };
 
+exports.aggregate = function(collection, pipeline, res){
+	console.log("Pipeline : "+JSON.stringify(pipeline));
+	collection.aggregate(pipeline, function(err, docs){
+		res.send(docs);
+	});
+}
+

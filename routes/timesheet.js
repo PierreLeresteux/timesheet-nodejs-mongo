@@ -84,6 +84,80 @@ exports.findByUser = function(req, res) {
 	});
 };
 
+exports.aggregByProject = function(req, res) {
+	var project = req.params.project;
+	var year = ~~req.query.year;
+	var month = ~~req.query.month;
+
+	 var pipelineYM = [
+		 {
+			 $project :
+			 {
+				'tasks': "$tasks",
+			    'year' :1,
+			    'month':1
+			 }
+		 },
+		 {
+			 $unwind: "$tasks"
+		 },
+		 {
+			 $match:
+			 {
+			    year:year,
+			    month: month,
+				"tasks.project": project
+			 }
+		 },
+		 {
+			 $group:
+			 {
+				 _id: "$tasks.project",
+				 hours:
+				 {
+					 $sum : "$tasks.hours"
+				 }
+			 }
+		 }
+	 ];
+	var pipelineY = [
+		{
+			$project :
+			{
+				'tasks': "$tasks",
+				'year' :1
+			}
+		},
+		{
+			$unwind: "$tasks"
+		},
+		{
+			$match:
+			{
+				year:year,
+				"tasks.project": project
+			}
+		},
+		{
+			$group:
+			{
+				_id: "$tasks.project",
+				hours:
+				{
+					$sum : "$tasks.hours"
+				}
+			}
+		}
+	];
+	db.collection('timesheet', function(err, collection) {
+		if (month){
+			mongUtil.aggregate(collection,pipelineYM,res);
+		}else{
+			mongUtil.aggregate(collection,pipelineY,res);
+		}
+	});
+
+};
 /*------------- PROJECT ------------------*/
 
 exports.allProjects = function(req, res){
@@ -185,11 +259,11 @@ var populateDB = function() {
 			login: "PLE"
 		},
 		tasks: [{
-			project: "LANPA",
-			hours: "6"
+			project:"LANPA",
+			hours: 6
 		},{
 			project: "BUG_PROD",
-			hours: "2"
+			hours: 2
 		}]
 	},
 	{
@@ -203,7 +277,7 @@ var populateDB = function() {
 		},
 		tasks: [{
 			project: "LANPA",
-			hours: "8"
+			hours: 8
 		}]
 	},
     {
@@ -217,7 +291,7 @@ var populateDB = function() {
         },
         tasks: [{
             project: "IMG_LIB",
-            hours: "8"
+            hours: 8
         }]
     },
 	{
@@ -231,13 +305,13 @@ var populateDB = function() {
 		},
 		tasks: [{
 			project: "LANPA",
-			hours: "4"
+			hours: 4
 		},{
 			project: "BUG_PROD",
-			hours: "3"
+			hours: 3
 		},{
 			project: "POC_JS",
-			hours: "1"
+			hours: 1
 		}]
 	},
 	{
@@ -251,10 +325,10 @@ var populateDB = function() {
         },
 		tasks: [{
 			project: "BUG_PROD",
-			hours: "5"
+			hours: 5
 		},{
 			project: "POC_EMV_PAPERBOY",
-			hours: "1"
+			hours: 1
 		}]
 	}];
     var user = [{

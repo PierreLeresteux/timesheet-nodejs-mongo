@@ -1,7 +1,8 @@
 var express = require('express');
 var ts = require('./routes/timesheet');
-var app = express();
 var libs = require('./routes/libs');
+
+var app = express();
 
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
@@ -20,6 +21,7 @@ app.put('/ts/:id', ts.updateTimesheet);
 app.delete('/ts/:id', ts.deleteTimesheet);
 // timesheet EXTENDED
 app.get('/ts/project/:project', ts.findByProject);
+app.get('/ts/project/:project/stat', ts.aggregByProject);
 app.get('/ts/user/:user', ts.findByUser);
 // user CRUD
 app.get('/user', ts.allUsers);
