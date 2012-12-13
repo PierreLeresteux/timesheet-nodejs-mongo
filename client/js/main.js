@@ -26,7 +26,9 @@ requirejs.config({
 		'text': 'js/require/text-2.0.3',
 
 		// local app
-		'controller-test': 'js/app/ControllerTest'
+		'main-controller': 'js/app/MainController',
+		'calendar-controller': 'js/app/CalendarController',
+		'stats-controller': 'js/app/StatsController'
 	},
 	shim: {
 		'angular': {deps: ['zepto']},
@@ -67,18 +69,15 @@ require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordi
 			require(['less']);
 		}
 
+		var init = function() {
+			log('init');
+			require(['main-controller'], function(MainController){
+				MainController.init();
+			});
+		}
+
 		$(document).ready(function(){
 			init();
 		});
 	}
 );
-
-var init = function() {
-	log('init');
-	require(['controller-test'], function(ControllerTest){
-		ControllerTest.init();
-		setTimeout(function() {
-			ControllerTest.addTemplate2();
-		}, 1000);
-	});
-}
