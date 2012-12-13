@@ -12,7 +12,8 @@
         "mongodb": ">= 1.1.x",
         "moment" : ">=1.7.x",
         "uglify-js": ">=2.2.x",
-        "less": ">=1.3.x"
+        "less": ">=1.3.x",
+        "hbs": ">=2.0.x"
     },
     "engines": {
 	    "node": "0.8.x",

@@ -4,13 +4,17 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>EMV Timesheet</title>
 	<link rel="stylesheet" type="text/css" href="css/libs.css"/>
+	{{#if dev}}
 	<link rel="stylesheet/less" type="text/css" href="less/main.less"/>
-	<script data-main="js/main" src="/libs/requirejs/require/2.1.2/require.js"></script>
 	<script>
 		less = { env: 'development' };
 		localStorage.clear();
 		window.debugMode = true;
 	</script>
+	{{else}}
+	<link rel="stylesheet" type="text/css" href="css/main.css"/>
+	{{/if}}
+	<script data-main="js/main" src="/libs/requirejs/require/2.1.2/require.js"></script>
 </head>
 
 <body>

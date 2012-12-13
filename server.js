@@ -4,6 +4,14 @@ var libs = require('./modules/libs');
 //var AM = require('./modules/account-manager');
 
 var app = express();
+var dev = false;
+
+process.argv.forEach(function (val, index, array) {
+    if(val == 'dev') {
+        dev = true;
+        return;
+    }
+});
 
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
@@ -11,7 +19,7 @@ app.configure(function () {
     app.use(express.cookieParser());
     app.use(express.session({ secret: 'allez-la-le-secret' }));
     app.use(express.methodOverride());
-    app.use(express.static(__dirname+'/client'));
+    app.use(express.static(dev ? __dirname+'/client' : __dirname+'/build/output'));
     app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
 });
 
@@ -57,6 +65,14 @@ app.post('/connect', function(req, res){
         }
     });
     */
+});
+
+// index.html
+app.set('view engine', 'html');
+app.engine('html', require('hbs').__express);
+app.set('views', __dirname + '/client/html');
+app.get('/index', function(req, res){
+    res.render('index', {'dev': dev});
 });
 
 // timesheet CRUD

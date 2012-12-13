@@ -5,9 +5,9 @@ define(['text!html/angular-test.html'], function(Template){
 			window.ControllerTest1 = this.controller1;
 			window.ControllerTest2 = this.controller2;
 			this.$body = $(document.getElementsByTagName('body')[0]);
-			log($(Template).find('#angular-test-template1').html());
 			var $view1 = $($(Template).find('#angular-test-template1').html());
 			this.$body.append($view1);
+			log($view1.length);
 			angular.bootstrap($view1.get(0));
 		},
 		controller1: function($scope) {
