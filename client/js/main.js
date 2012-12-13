@@ -73,5 +73,8 @@ var init = function() {
 	log('init');
 	require(['js/app/ControllerTest'], function(ControllerTest){
 		ControllerTest.init();
+		setTimeout(function() {
+			ControllerTest.addTemplate2();
+		}, 1000);
 	});
 }
