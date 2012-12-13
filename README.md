@@ -13,12 +13,11 @@ __LAUNCH LOCALLY__
 
 * dev:
 
-node server.js dev
+    node server.js dev
 
 * minified js & compiled less
 
-./build.sh<br/>
-node server.js
+    node server.js
 
 
 __URLs__

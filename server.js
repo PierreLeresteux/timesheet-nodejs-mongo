@@ -1,7 +1,7 @@
 var express = require('express');
 var ts = require('./modules/timesheet');
 var libs = require('./modules/libs');
-
+var exec = require('child_process').exec;
 var app = express();
 var dev = false;
 
@@ -11,6 +11,18 @@ process.argv.forEach(function (val, index, array) {
         return;
     }
 });
+
+if(!dev) {
+    var callback = function(error, stdout, stderr){
+        console.log(stdout);
+        console.log(stderr);
+        if(error !== null){
+            console.log('Error: ' + error);
+        }
+    };
+    exec('chmod ug+x build.sh', callback);
+    exec('./build.sh', callback);
+}
 
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
