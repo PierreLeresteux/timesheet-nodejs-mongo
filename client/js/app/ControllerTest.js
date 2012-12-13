@@ -3,11 +3,12 @@ define(['text!html/angular-test.html'], function(Template){
 		init: function() {
 			log('ControllerTest > init');
 			window.ControllerTest1 = this.controller1;
+			window.ControllerTest1.$inject = ['$scope'];
 			window.ControllerTest2 = this.controller2;
+			window.ControllerTest2.$inject = ['$scope'];
 			this.$body = $(document.getElementsByTagName('body')[0]);
 			var $view1 = $($(Template).find('#angular-test-template1').html());
 			this.$body.append($view1);
-			log($view1.length);
 			angular.bootstrap($view1.get(0));
 		},
 		controller1: function($scope) {
