@@ -1,0 +1,71 @@
+{
+    "users" : [
+        {
+            "login" : "sjob",
+            "firstname" : "Sébastien",
+            "lastname" : "Job"
+        }
+    ],
+
+    "categories" : [
+        {
+            "name" : "Holiday", 
+            "projects" : [
+                {
+                    "name" : "RTT",
+                    "accounting" : "abs",
+                    "tasks" : [
+                        {"task" : "RTT"},
+                    ]
+                },
+                {
+                    "name" : "Vacation",
+                    "accounting" : "abs",
+                    "tasks" : [
+                        {"task" : "Vacation"},
+                    ]
+                }
+            ]
+        },
+        {
+            "name" : "Future Architecture", 
+            "projects" : [
+                {
+                    "name" : "DataStore",
+                    "accounting" : "prd",
+                    "tasks" : [
+                        {"task" : "PoC"},
+                    ]
+                }
+            ]
+        }
+    ],
+
+    "activities" : [
+        {
+            "year" : 2012,
+            "month" : 12,
+            "day" : 13,
+            "user" : {
+                "login" : "sjob",
+                "name" : "Sébastien Job"
+            },
+            "items" : [
+                {
+                    "hours" : 4,
+                    "category" : "Holiday",
+                    "project" : "Vacation",
+                    "task" : "RTT",
+                    "accounting" : "abs"
+                },
+                {
+                    "hours" : 4,
+                    "category" : "Future Architecture",
+                    "project" : "DataStore",
+                    "task" : "PoC",
+                    "accounting" : "prd"
+                }
+            ]
+        }
+    ]
+}
