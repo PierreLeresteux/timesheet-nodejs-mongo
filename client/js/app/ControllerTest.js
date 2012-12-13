@@ -1,4 +1,4 @@
-define(['require-text!html/angular-test.html'], function(Template){
+define(['text!html/angular-test.html'], function(Template){
 	return {
 		init: function() {
 			log('ControllerTest > init');

@@ -1,6 +1,7 @@
 requirejs.config({
 	baseUrl: './',
 	paths: {
+		// 3rd party
 		'angular': '/libs/google/angularjs/1.0.3/angular.min',
 		'zepto': '/libs/cdnjs/zepto/1.0rc1/zepto.min',
 		'foundation': 'js/foundation/foundation.min',
@@ -22,7 +23,10 @@ requirejs.config({
 		'foundation-placeholder': 'js/foundation/jquery.placeholder',
 		'modernizr-foundation': 'js/foundation/modernizr.foundation',
 		'less': '/libs/cdnjs/less.js/1.3.1/less.min',
-		'require-text': '/libs/github/requirejs/2.0.3/text.js?plugin=text'
+		'text': 'js/require/text-2.0.3',
+
+		// local app
+		'controller-test': 'js/app/ControllerTest'
 	},
 	shim: {
 		'angular': {deps: ['zepto']},
@@ -53,7 +57,7 @@ requirejs.config({
 require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
 		'foundation-clearing', 'foundation-forms', 'foundation-joyride', 'foundation-magellan', 'foundation-mediaQueryToggle',
 		'foundation-navigation', 'foundation-orbit', 'foundation-reveal', 'foundation-tabs', 'foundation-topbar', 'foundation-placeholder',
-		'modernizr-foundation', 'require-text'],
+		'modernizr-foundation', 'text'],
 	function() {
 		window.log = function(log) {
 			console.log(log);
@@ -71,7 +75,7 @@ require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordi
 
 var init = function() {
 	log('init');
-	require(['js/app/ControllerTest'], function(ControllerTest){
+	require(['controller-test'], function(ControllerTest){
 		ControllerTest.init();
 		setTimeout(function() {
 			ControllerTest.addTemplate2();
