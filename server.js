@@ -1,7 +1,7 @@
 var express = require('express');
 var ts = require('./modules/timesheet');
 var libs = require('./modules/libs');
-var AM = require('./modules/account-manager');
+//var AM = require('./modules/account-manager');
 
 var app = express();
 
@@ -27,6 +27,7 @@ app.get('/connect', function(req, res){
         console.log('autologin failed');
         res.send('Hello - Please Login To Your Account');
     }	else{
+        /*
         AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
             if (o != null){
                 console.log('autologin ok '+req.cookies.user);
@@ -37,10 +38,12 @@ app.get('/connect', function(req, res){
                 res.send('Hello - Please Login To Your Account');
             }
         });
+        */
     }
 });
 app.post('/connect', function(req, res){
     console.log("Manual login : "+req.param('user'));
+    /*
     AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
         if (!o){
             res.send(e, 400);
@@ -53,6 +56,7 @@ app.post('/connect', function(req, res){
             res.send(o, 200);
         }
     });
+    */
 });
 
 // timesheet CRUD
