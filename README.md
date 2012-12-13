@@ -45,7 +45,7 @@ __URLs__
 
 ___Pour info :___
 
-http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/
-
-Fundation 3 : http://foundation.zurb.com/
-Login system : https://github.com/braitsch/node-login
+http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/<br />
+Fundation 3 : http://foundation.zurb.com/<br />
+Batch (icon) : http://adamwhitcroft.com/batch/<br />
+Login system : https://github.com/braitsch/node-login<br />
