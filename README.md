@@ -9,6 +9,18 @@ http://localhost:[PORT]/init <br/>
     - project <br/>
     - user<br />
 
+__LAUNCH LOCALLY
+
+* dev:
+
+node server.js dev
+
+* minified js & compiled less
+
+./build.sh<br/>
+node server.js
+
+
 __URLs__
 
 * ts => timesheet (document) [CRUD]<br/>
