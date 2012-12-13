@@ -1,7 +1,6 @@
 var express = require('express');
 var ts = require('./modules/timesheet');
 var libs = require('./modules/libs');
-//var AM = require('./modules/account-manager');
 
 var app = express();
 var dev = false;
@@ -26,46 +25,6 @@ app.configure(function () {
 //INIT (must be remove later)
 app.get('/init', ts.init);
 
-
-// AUTHENTICATION
-app.get('/connect', function(req, res){
-    console.log("Hello there "+req.cookies);
-    // check if the user's credentials are saved in a cookie //
-    if (!req.cookies || req.cookies.user == undefined || req.cookies.pass == undefined){
-        console.log('autologin failed');
-        res.send('Hello - Please Login To Your Account');
-    }	else{
-        /*
-        AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
-            if (o != null){
-                console.log('autologin ok '+req.cookies.user);
-                req.session.user = o;
-                res.redirect('/home');
-            }	else{
-                console.log('autologin failed -> wrong cookie');
-                res.send('Hello - Please Login To Your Account');
-            }
-        });
-        */
-    }
-});
-app.post('/connect', function(req, res){
-    console.log("Manual login : "+req.param('user'));
-    /*
-    AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
-        if (!o){
-            res.send(e, 400);
-        }	else{
-            req.session.user = o;
-            if (req.param('remember-me') == 'true'){
-                res.cookie('user', o.user, { maxAge: 900000 });
-                res.cookie('pass', o.pass, { maxAge: 900000 });
-            }
-            res.send(o, 200);
-        }
-    });
-    */
-});
 
 // index.html
 app.set('view engine', 'html');
