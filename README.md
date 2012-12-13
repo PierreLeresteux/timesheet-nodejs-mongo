@@ -9,7 +9,7 @@ http://localhost:[PORT]/init <br/>
     - project <br/>
     - user<br />
 
-__LAUNCH LOCALLY
+__LAUNCH LOCALLY__
 
 * dev:
 
