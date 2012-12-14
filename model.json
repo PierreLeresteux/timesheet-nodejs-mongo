@@ -1,71 +1,83 @@
 {
-    "users" : [
-        {
-            "login" : "sjob",
-            "firstname" : "Sébastien",
-            "lastname" : "Job"
-        }
-    ],
+    "accountings" : [{
+        "_id" : "AccountingId",
+        "name" : "Accounting Name"
+    }],
 
-    "categories" : [
-        {
-            "name" : "Holiday", 
-            "projects" : [
-                {
-                    "name" : "RTT",
-                    "accounting" : "abs",
-                    "tasks" : [
-                        {"task" : "RTT"},
-                    ]
-                },
-                {
-                    "name" : "Vacation",
-                    "accounting" : "abs",
-                    "tasks" : [
-                        {"task" : "Vacation"},
-                    ]
-                }
-            ]
-        },
-        {
-            "name" : "Future Architecture", 
-            "projects" : [
-                {
-                    "name" : "DataStore",
-                    "accounting" : "prd",
-                    "tasks" : [
-                        {"task" : "PoC"},
-                    ]
-                }
-            ]
-        }
-    ],
+    "categories" : [{
+        "_id" : "CategoryId",
+        "name" : "Category Name",
+        "authorized_users" : [
+            { "login" : "user_login" },
+            { "login" : "user_login" }
+        ],
+        "projects" : [{
+            "id" : "ProjectId",
+            "name" : "Project Name",
+            "accounting" : {
+                "id" : "AccountingId"
+            },
+            "tasks" : [{
+                "id" : "TaskId",
+                "name" : "Task Name"
+            }]
+        }]
+    }],
 
-    "activities" : [
-        {
+    "activities" : [{
+        "_id" : "ActivityId",
+        "date" : {
             "year" : 2012,
             "month" : 12,
-            "day" : 13,
-            "user" : {
-                "login" : "sjob",
-                "name" : "Sébastien Job"
-            },
-            "items" : [
-                {
-                    "hours" : 4,
-                    "category" : "Holiday",
-                    "project" : "Vacation",
-                    "task" : "RTT",
-                    "accounting" : "abs"
-                },
-                {
-                    "hours" : 4,
-                    "category" : "Future Architecture",
-                    "project" : "DataStore",
-                    "task" : "PoC",
-                    "accounting" : "prd"
-                }
-            ]
-        }
-    ]
+            "day" : 14
+        },
+        "hours" : 8,
+        "task" : { "id" : "TaskId" }
+    }]
 }
+/*
+GET /activities/?year=2012&month=12&day=14
+=>
+[{
+    "id" : "3d396cd4",
+    "date" : {
+        "year" : 2012,
+        "month" : 12,
+        "day" : 14
+    },
+    "hours" : 4,
+    "task" : {
+        "id" : "94d6114e",
+        "name" : "RTT"
+    },
+    "project" : {
+        "id" : "1006a33c",
+        "name" : "RTT"
+    },
+    "category" : {
+        "id" : "05b6b92c",
+        "name" : "Vacation/Off"
+    }
+},{
+    "id" : "375ae043",
+    "date" : {
+        "year" : 2012,
+        "month" : 12,
+        "day" : 14
+    },
+    "hours" : 4,
+    "task" : {
+        "id" : "94d6114e",
+        "name" : "PoC"
+    },
+    "project" : {
+        "id" : "1006a33c",
+        "name" : "DataStore"
+    },
+    "category" : {
+        "id" : "707abfa3",
+        "name" : "Future Architecture"
+    }
+}]
+
+*/
