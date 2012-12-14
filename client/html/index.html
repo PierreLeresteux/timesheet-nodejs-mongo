@@ -9,15 +9,17 @@
 	<script>
 		less = { env: 'development' };
 		localStorage.clear();
-		window.debugMode = true;
+		window.debug = true;
 	</script>
 	{{else}}
 	<link rel="stylesheet" type="text/css" href="css/main.css"/>
 	{{/if}}
+	<!--[if !IE]>-->
 	<script data-main="js/main" src="/libs/requirejs/require/2.1.2/require.js"></script>
+	<!--<![endif]-->
 </head>
 
-<body>
+<body ng-view>
 <!--[if IE]>
 	<div class="ie">
 		<div>Internet Explorer is not supported, please download a real browser:</div>
@@ -28,7 +30,7 @@
 	</div>
 <![endif]-->
 <!--[if !IE]>-->
-	<div id="main-div" ng-view></div>
+
 <!--<![endif]-->
 </body>
 </html>

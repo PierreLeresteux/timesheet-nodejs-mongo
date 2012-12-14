@@ -24,9 +24,11 @@ requirejs.config({
 		'modernizr-foundation': 'js/foundation/modernizr.foundation',
 		'less': '/libs/cdnjs/less.js/1.3.1/less.min',
 		'text': 'js/require/text-2.0.3',
+		'underscore': '/libs/cdnjs/underscore.js/1.4.2/underscore-min',
 
 		// local app
-		'main-controller': 'js/app/MainController',
+		'controller': 'js/app/Controller',
+		'router': 'js/app/Router',
 		'calendar-controller': 'js/app/CalendarController',
 		'stats-controller': 'js/app/StatsController'
 	},
@@ -56,23 +58,25 @@ requirejs.config({
 	}
 });
 
-require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
+require(['controller', 'angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
 		'foundation-clearing', 'foundation-forms', 'foundation-joyride', 'foundation-magellan', 'foundation-mediaQueryToggle',
 		'foundation-navigation', 'foundation-orbit', 'foundation-reveal', 'foundation-tabs', 'foundation-topbar', 'foundation-placeholder',
-		'modernizr-foundation', 'text'],
-	function() {
+		'modernizr-foundation', 'text', 'underscore'],
+	function(Controller) {
 		window.log = function(log) {
 			console.log(log);
 		}
 
-		if(window.debugMode) {
+		if(window.debug) {
 			require(['less']);
 		}
 
 		var init = function() {
 			log('init');
-			require(['main-controller'], function(MainController){
-				MainController.init();
+			window.$body = $(document.getElementsByTagName('body')[0]);
+			window.Controller = Controller;
+			require(['router'], function(Router){
+				new Router();
 			});
 		}
 
