@@ -41,7 +41,7 @@
     "rest_examples" : [{
         "request" : {
             "method" : "GET",
-            "url" : "/activities/?year=2012&month=12&day=14"
+            "url" : "/activities?year=2012&month=12&day=14"
         },
         "response" : {
             "data" : [{
