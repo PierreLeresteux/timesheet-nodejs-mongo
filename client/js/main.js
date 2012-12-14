@@ -58,11 +58,11 @@ requirejs.config({
 	}
 });
 
-require(['controller', 'angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
+require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
 		'foundation-clearing', 'foundation-forms', 'foundation-joyride', 'foundation-magellan', 'foundation-mediaQueryToggle',
 		'foundation-navigation', 'foundation-orbit', 'foundation-reveal', 'foundation-tabs', 'foundation-topbar', 'foundation-placeholder',
 		'modernizr-foundation', 'text', 'underscore'],
-	function(Controller) {
+	function() {
 		window.log = function(log) {
 			console.log(log);
 		}
@@ -74,7 +74,6 @@ require(['controller', 'angular', 'zepto', 'foundation', 'foundation-app', 'foun
 		var init = function() {
 			log('init');
 			window.$body = $(document.getElementsByTagName('body')[0]);
-			window.Controller = Controller;
 			require(['router'], function(Router){
 				new Router();
 			});

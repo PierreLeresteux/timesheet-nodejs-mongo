@@ -35,14 +35,16 @@ define([], function(){
 			window[name] = this.controller;
 			window[name].$inject = ['$scope'];
 			this.name = name;
-			this.template = template;
+			if(template) {
+				this.template = template;
+			}
 		},
 		render: function() {
 			log(this.name + ' > render');
 			var $template = $(this.template);
 			var $body = window.$body || $(document.getElementsByTagName('body')[0]);
 			$body.empty().append($template);
-			//angular.bootstrap($template.get(0));
+			angular.bootstrap($template.get(0));
 		},
 		controller: function($scope) {
 		}

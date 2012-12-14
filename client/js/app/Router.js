@@ -18,8 +18,8 @@ define([], function(){
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
 						log('Router > load CalendarController');
-						require(['calendar-controller','text!html/calendar.html'], function(CalendarController,Template) {
-							 new CalendarController('CalendarController', Template).render();
+						require(['calendar-controller'], function(CalendarController) {
+							 new CalendarController('CalendarController').render();
 						});
 					}
 				});
@@ -27,8 +27,8 @@ define([], function(){
 					'redirectTo': function() {
 						require(['stats-controller'], function(StatsController) {
 							log('Router > load StatsController');
-							require(['stats-controller','text!html/stats.html'], function(StatsController,Template) {
-								new StatsController('StatsController', Template).render();
+							require(['stats-controller'], function(StatsController) {
+								new StatsController('StatsController').render();
 							});
 						});
 					}
