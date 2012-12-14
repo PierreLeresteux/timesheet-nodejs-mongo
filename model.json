@@ -38,7 +38,7 @@
         }]
     },
 
-    "rest_examples" : {
+    "rest_examples" : [{
         "request" : {
             "method" : "GET",
             "url" : "/activities/?year=2012&month=12&day=14"
@@ -94,5 +94,48 @@
                 }
             }]
         }
-    }
+    },{
+        "request" : {
+            "method" : "GET",
+            "url" : "/categories/707abfa3"
+        },
+        "response" : {
+            "data" : {
+                "id" : "707abfa3",
+                "name" : "Future Architecture",
+                "authorized_users" : [
+                    { "login" : "sjob" }
+                ],
+                "projects" : [{
+                    "id" : "1006a33c",
+                    "name" : "DataStore",
+                    "accounting" : {
+                        "id" : "293ce3dc",
+                        "name" : "prd"
+                    },
+                    "tasks" : [{
+                        "id" : "94d6114e",
+                        "name" : "PoC"
+                    },{
+                        "id" : "32f69a6a",
+                        "name" : "Implementation"
+                    }]
+                }]
+            }
+        }
+    },{
+        "request" : {
+            "method" : "GET",
+            "url" : "/categories/707abfa3/projects/1006a33c/tasks"
+        },
+        "response" : {
+            "data" : [{
+                "id" : "94d6114e",
+                "name" : "PoC"
+            },{
+                "id" : "32f69a6a",
+                "name" : "Implementation"
+            }]
+        }
+    }]
 }
