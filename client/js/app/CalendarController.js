@@ -4,6 +4,7 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 		render: function() {
 			log(this.name + ' > render');
 			$body.empty().append(this.template);
+			$(document.getElementById('menu')).foundationAccordion();
 			angular.bootstrap(document.getElementById('calendar'));
 		},
 		controller: function($scope){
