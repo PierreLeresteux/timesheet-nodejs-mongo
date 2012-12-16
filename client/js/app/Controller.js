@@ -42,7 +42,10 @@ define([], function(){
 		render: function() {
 			log(this.name + ' > render');
 			var $template = $(this.template);
-			var $body = window.$body || $(document.getElementsByTagName('body')[0]);
+			var $body = window.$body;
+			if(!$body) {
+				$body = $(document.getElementsByTagName('body')[0]);
+			}
 			$body.empty().append($template);
 			angular.bootstrap($template.get(0));
 		},

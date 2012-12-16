@@ -1,1 +1,15 @@
-<div ng-controller="CalendarController">Calendar</div>
+<div id="menu"></div>
+<div id="calendar" ng-controller="CalendarController">
+	<div class="weekdays">
+		<div class="weekday"><span>monday</span></div>
+		<div class="weekday"><span>tuesday</span></div>
+		<div class="weekday"><span>wednesday</span></div>
+		<div class="weekday"><span>thursday</span></div>
+		<div class="weekday"><span>friday</span></div>
+	</div>
+	<div class="month">
+		<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">
+			<div ng-repeat="day in week.days" class="day {{day.class}}"><span>{{day.text}}</span></div>
+		</div>
+	</div>
+</div>

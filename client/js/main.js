@@ -25,6 +25,7 @@ requirejs.config({
 		'less': '/libs/cdnjs/less.js/1.3.1/less.min',
 		'text': 'js/require/text-2.0.3',
 		'underscore': '/libs/cdnjs/underscore.js/1.4.2/underscore-min',
+		'moment': '/libs/cdnjs/moment.js/1.7.2/moment.min',
 
 		// local app
 		'controller': 'js/app/Controller',
@@ -58,10 +59,7 @@ requirejs.config({
 	}
 });
 
-require(['angular', 'zepto', 'foundation', 'foundation-app', 'foundation-accordion', 'foundation-alerts', 'foundation-buttons',
-		'foundation-clearing', 'foundation-forms', 'foundation-joyride', 'foundation-magellan', 'foundation-mediaQueryToggle',
-		'foundation-navigation', 'foundation-orbit', 'foundation-reveal', 'foundation-tabs', 'foundation-topbar', 'foundation-placeholder',
-		'modernizr-foundation', 'text', 'underscore'],
+require(['angular', 'zepto', 'text', 'underscore', 'foundation-app'],
 	function() {
 		window.log = function(log) {
 			console.log(log);

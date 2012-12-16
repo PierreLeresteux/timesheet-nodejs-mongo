@@ -1,0 +1,163 @@
+body {
+	position: static !important;
+	.user-select(none);
+	font-size: 0;
+
+	#calendar {
+
+		.month {
+
+			.week {
+
+				.day {
+					font-size: 13px;
+					border-color: black;
+					border-style: solid;
+					.transition(background-color 0.2s ease);
+
+					&:hover {
+						background-color: #cce6ff;
+						.transition(background-color 0.3s ease);
+					}
+
+					span {
+						display: inline-block;
+						padding: 5px;
+					}
+				}
+
+				.today {
+					background-color: #ccff99;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 640px) {
+
+	#menu {
+		min-height: 80px;
+	}
+
+	#calendar {
+
+		.weekdays {
+			display: none;
+		}
+		
+		.month {
+
+			.week {
+
+				.day {
+					border-width: 1px 1px 0 1px;
+					min-height: 80px;
+				}
+
+				.empty {
+					display: none;
+				}
+
+				&:last-child {
+					border-bottom: 1px solid black;
+				}
+			}
+		}
+	}
+}
+
+@media (min-width: 641px) {
+
+	body {
+		overflow: hidden;
+	}
+
+	#menu {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 80%;
+	}
+
+	#calendar {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 20%;
+		right: 0;
+
+		.weekdays {
+			white-space: nowrap;
+
+			.weekday {
+				display: inline-block;
+				width: 20%;
+				line-height: 20px;
+				font-size: 13px;
+				color: black;
+
+				span {
+					padding-left: 5px;
+				}
+			}
+		}
+		
+		.month {
+			position: inherit;
+			top: 20px;
+			bottom: 0;
+			left: 0;
+			right: 0;
+
+			.week {
+				position: inherit;
+				left: 0;
+				right: 0;
+
+				.day {
+					position: inherit;
+					top: 0;
+					bottom: 0;
+					border-color: black;
+					border-style: solid;
+					border-width: 1px 0 0 1px;
+				}
+
+				.empty {
+					background-color: #f0f0f0;
+
+					&:hover {
+						background-color: #f0f0f0 !important;
+					}
+				}
+
+				.monday {
+					left: 0;
+					right: 80%;
+				}
+
+				.tuesday {
+					left: 20%;
+					right: 60%;
+				}
+
+				.wednesday {
+					left: 40%;
+					right: 40%;
+				}
+
+				.thursday {
+					left: 60%;
+					right: 20%;
+				}
+
+				.friday {
+					left: 80%;
+					right: 0;
+				}
+			}
+		}
+	}
+}

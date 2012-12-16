@@ -6,7 +6,7 @@
 	modules: [
 		{
 			name: 'js/main',
-			exclude: ['controller-test']
+			exclude: []
 		}
 	],
 	paths: {
@@ -30,14 +30,14 @@
 		'foundation-topbar': 'empty:',
 		'foundation-placeholder': 'empty:',
 		'modernizr-foundation': 'empty:',
-		'less': 'empty:'
+		'less': 'empty:',
+		'underscore': 'empty:',
+		'moment': 'empty:'
 	},
 	inlineText: false,
 	skipModuleInsertion: true,
 	optimizeCss: 'none',
 	optimize: 'uglify2',
-	uglify2: {
-		'comments': /foobar/
-	},
+	uglify2: {},
 	fileExclusionRegExp: /(^\.)|(^less$)/
 })
