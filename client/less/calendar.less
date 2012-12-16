@@ -182,7 +182,37 @@
 @media (max-width: @mediaQueryMax) {
 
 	#menu {
-      width: 100%;
+        width: 100%;
+
+
+        .options {
+            width: 100%;
+            text-align: center;
+            .options-icon{
+              display: none;
+            }
+            .button {
+                font-size: 14px;
+                padding: 10px 20px 11px;
+            }
+        }
+
+        .search-span {
+            width: 100%;
+            padding: 8px 0;
+            input {
+                .border-radius(5px);
+                border: 1px solid #CCC;
+                width: 90%;
+                margin: auto;
+                height: 34px;
+                font-size: 19px;
+                line-height: 21px;
+            }
+            .search-icon {
+                display: none;
+            }
+        }
 	}
 
 	#calendar {
