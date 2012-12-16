@@ -60,11 +60,16 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 		menuController: function($scope) {
 			$scope.targetType = 'day';
 
+
 			$scope.changeTargetType = function($event) {
 				$scope.targetType = $($event.target).attr('data-value');
                 log('scope : '+$scope.targetType);
                 $event.preventDefault();
 			};
+
+            $scope.searchChange = function() {
+                log('search : '+$scope.search);
+            };
 		}
 	});
 });
