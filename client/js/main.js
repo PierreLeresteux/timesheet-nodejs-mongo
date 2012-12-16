@@ -30,6 +30,7 @@ requirejs.config({
 		// local app
 		'controller': 'js/app/Controller',
 		'router': 'js/app/Router',
+		'main-controller': 'js/app/MainController',
 		'calendar-controller': 'js/app/CalendarController',
 		'stats-controller': 'js/app/StatsController'
 	},
@@ -59,26 +60,28 @@ requirejs.config({
 	}
 });
 
-require(['angular','zepto','text','underscore','foundation-app'],
-	function() {
-		window.log = function(log) {
-			console.log(log);
-		}
+var dependencies = ['angular','zepto','text','underscore','foundation-app'];
+if(window.debug) {
+	dependencies.push('less');
+}
 
-		if(window.debug) {
-			require(['less']);
-		}
+require(dependencies, function() {
+	window.log = function(log) {
+		console.log(log);
+	}
 
-		var init = function() {
-			log('init');
-			window.$body = $(document.getElementsByTagName('body')[0]);
-			require(['router'], function(Router){
-				new Router();
-			});
-		}
-
-		$(document).ready(function(){
-			init();
+	var init = function() {
+		log('init');
+		window.$body = $(document.getElementsByTagName('body')[0]);
+		require(['router','text!html/main.html'], function(Router,Template){
+			$body.html(Template);
+			$(document.getElementById('topBar')).foundationTopBar();
+			window.$container = $(document.getElementById('mainContainer'));
+			new Router();
 		});
 	}
-);
+
+	$(document).ready(function(){
+		init();
+	});
+});

@@ -17,24 +17,37 @@ define([], function(){
 			angular.module('timesheet', []).config(['$routeProvider', function($routeProvider) {
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
+						that.hide();
 						log('Router > load CalendarController');
 						require(['calendar-controller'], function(CalendarController) {
-							 new CalendarController('CalendarController').render();
+							new CalendarController('CalendarController').render();
+							that.show();
 						});
 					}
 				});
 				$routeProvider.when('/stats', {
 					'redirectTo': function() {
+						that.hide();
 						require(['stats-controller'], function(StatsController) {
 							log('Router > load StatsController');
 							require(['stats-controller'], function(StatsController) {
 								new StatsController('StatsController').render();
+								that.show();
 							});
 						});
 					}
 				});
 				$routeProvider.otherwise({'redirectTo': 'calendar'});
 			}]);
+		},
+		show: function() {
+			$body.removeAttr('style');
+			$container.addClass('fade-in');
+			$container.css('opacity', '1');
+		},
+		hide: function() {
+			$container.removeClass('fade-in');
+			$container.css('opacity', '0');
 		}
 	}
 
