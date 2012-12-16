@@ -61,6 +61,8 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 
 			$scope.changeTargetType = function($event) {
 				$scope.targetType = $($event.target).attr('data-value');
+                log('scope : '+$scope.targetType);
+                $event.preventDefault();
 			};
 		}
 	});
