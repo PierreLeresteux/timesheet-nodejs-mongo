@@ -59,7 +59,7 @@ requirejs.config({
 	}
 });
 
-require(['angular', 'zepto', 'text', 'underscore', 'foundation-app'],
+require(['angular','zepto','text','underscore','foundation-app'],
 	function() {
 		window.log = function(log) {
 			console.log(log);

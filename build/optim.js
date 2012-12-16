@@ -6,7 +6,7 @@
 	modules: [
 		{
 			name: 'js/main',
-			exclude: []
+			exclude: ['angular','zepto','text','underscore','foundation-app','router']
 		}
 	],
 	paths: {

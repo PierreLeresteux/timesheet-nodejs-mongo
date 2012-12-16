@@ -1,4 +1,15 @@
-<div id="menu">
+<div id="menu" ng-controller="MenuController">
+	<div class="options">
+		<span class="options-radio">
+			<span ng-click="changeTargetType($event)" data-value="day">day</span>
+			<input type="radio" ng-model="targetType" value="day"/>
+			<span ng-click="changeTargetType($event)" data-value="week">week</span>
+			<input type="radio" ng-model="targetType" value="week"/>
+			<span ng-click="changeTargetType($event)" data-value="month">month</span>
+			<input type="radio" ng-model="targetType" value="month"/>
+		</span>
+		<span class="options-icon"></span>
+	</div>
 	<ul class="accordion">
 		<li class="active">
 			<div class="title">
@@ -21,12 +32,16 @@
 	</ul>
 </div>
 <div id="calendar" ng-controller="CalendarController">
+	<div class="date">
+		<span class="calendar-icon"></span>
+		<span class="title">EMV Timesheet - {{selectedMonth}}</span>
+	</div>
 	<div class="weekdays">
-		<div class="weekday"><span>monday</span></div>
-		<div class="weekday"><span>tuesday</span></div>
-		<div class="weekday"><span>wednesday</span></div>
-		<div class="weekday"><span>thursday</span></div>
-		<div class="weekday"><span>friday</span></div>
+		<div class="weekday"><span>Monday</span></div>
+		<div class="weekday"><span>Tuesday</span></div>
+		<div class="weekday"><span>Wednesday</span></div>
+		<div class="weekday"><span>Thursday</span></div>
+		<div class="weekday"><span>Friday</span></div>
 	</div>
 	<div class="month">
 		<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">

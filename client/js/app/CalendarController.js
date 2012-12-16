@@ -4,7 +4,13 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 		render: function() {
 			log(this.name + ' > render');
 			$body.empty().append(this.template);
-			$(document.getElementById('menu')).foundationAccordion();
+
+			window.MenuController = this.menuController;
+			window.MenuController.$inject = ['$scope'];
+			var menuElem = document.getElementById('menu');
+			$(menuElem).foundationAccordion();
+
+			angular.bootstrap(menuElem);
 			angular.bootstrap(document.getElementById('calendar'));
 		},
 		controller: function($scope){
@@ -12,6 +18,7 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 			var days, i, j, className, start=moment().startOf('month');
 			var date=moment().startOf('month'), now=start.format('dddd');
 			var today=moment().format('D');
+			$scope.selectedMonth = start.format('MMMM YYYY');
 
 			switch(now){
 				case 'Saturday': date.add('days', 2); break;
@@ -48,6 +55,13 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 					bottom: 100-((i*20)+20)
 				});
 			}
+		},
+		menuController: function($scope) {
+			$scope.targetType = 'day';
+
+			$scope.changeTargetType = function($event) {
+				$scope.targetType = $($event.target).attr('data-value');
+			};
 		}
 	});
 });

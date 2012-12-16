@@ -1,5 +1,36 @@
 
+@headerHeight: 29px;
+@weekDaysHeight: 20px;
+
 #calendar {
+
+	.date {
+		font-size: 0;
+		white-space: nowrap;
+		border-bottom: 1px solid @borderColor;
+		text-align: center;
+
+		.calendar-icon {
+			background-image: url("../img/batch/16x16/calendar.png");
+			background-position: center center;
+			background-repeat: no-repeat;
+			width: 16px;
+			margin: 0 5px;
+			.opacity(0.8);
+		}
+
+		.title {
+			font-size: 14px;
+			font-weight: bold;
+		}
+
+		span {
+			display: inline-block;
+			vertical-align: top;
+			line-height: @headerHeight;
+			height: @headerHeight;
+		}
+	}
 
 	.month {
 
@@ -7,7 +38,7 @@
 
 			.day {
 				font-size: 13px;
-				border-color: #e9e9e9;
+				border-color: @borderColor;
 				border-style: solid;
 				.transition(background-color 0.2s ease);
 
@@ -30,6 +61,45 @@
 }
 
 #menu {
+
+	.options {
+		white-space: nowrap;
+		font-size: 0;
+		border-bottom: 1px solid @borderColor;
+		text-align: right;
+		overflow: hidden;
+
+		.options-icon {
+			background-image: url("../img/batch/16x16/settings-3.png");
+			background-repeat: no-repeat;
+			background-position: center center;
+			height: @headerHeight;
+			width: 16px;
+			margin: 0 5px 0 8px;
+			.opacity(0.8);
+		}
+
+		.options-radio {
+
+			span {
+				line-height: @headerHeight;
+				font-size: 12px;
+				padding: 0 2px 0 5px;
+			}
+			
+			input[type=radio] {
+				padding: 0;
+				margin: 0;
+				vertical-align: middle;
+				margin-bottom: 1px;
+			}
+		}
+
+		span {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
 
 	.accordion {
 
@@ -106,18 +176,19 @@
 		bottom: 0;
 		left: 20%;
 		right: 0;
-		border-left: 1px solid #e9e9e9;
+		border-left: 1px solid @borderColor;
 
 		.weekdays {
 			white-space: nowrap;
+			font-size: 0;
 
 			.weekday {
 				display: inline-block;
 				width: 20%;
-				line-height: 20px;
-				font-size: 13px;
+				line-height: @weekDaysHeight;
 
 				span {
+					font-size: 13px;
 					padding-left: 5px;
 				}
 			}
@@ -125,7 +196,7 @@
 		
 		.month {
 			position: inherit;
-			top: 20px;
+			top: @weekDaysHeight + @headerHeight;
 			bottom: 0;
 			left: 0;
 			right: 0;
