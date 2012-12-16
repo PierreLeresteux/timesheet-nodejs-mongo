@@ -12,6 +12,8 @@
 }
 
 @borderColor: #e9e9e9;
+@mediaQueryMin: 641px;
+@mediaQueryMax: 640px;
 
 body {
 	position: static !important;
@@ -20,6 +22,22 @@ body {
 	.user-select(none);
 	font-size: 0;
 	cursor: default;
+	.transition(opacity 1s ease);
+}
+
+.fade-in {
+	.transition(opacity 1s ease);
+}
+
+@media (min-width: @mediaQueryMin) {
+
+	#mainContainer {
+		position: absolute;
+		top: 45px;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
 }
 
 .ie {

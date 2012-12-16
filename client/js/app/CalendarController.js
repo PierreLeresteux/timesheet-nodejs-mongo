@@ -3,14 +3,15 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 		template: Template,
 		render: function() {
 			log(this.name + ' > render');
-			$body.empty().append(this.template);
+			$container.empty().append(this.template);
 
 			window.MenuController = this.menuController;
 			window.MenuController.$inject = ['$scope'];
+			
 			var menuElem = document.getElementById('menu');
 			$(menuElem).foundationAccordion();
-
 			angular.bootstrap(menuElem);
+
 			angular.bootstrap(document.getElementById('calendar'));
 		},
 		controller: function($scope){

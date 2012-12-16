@@ -42,11 +42,15 @@ define([], function(){
 		render: function() {
 			log(this.name + ' > render');
 			var $template = $(this.template);
-			var $body = window.$body;
-			if(!$body) {
-				$body = $(document.getElementsByTagName('body')[0]);
+			var $container;
+			if(window.$container) {
+				$container = window.$container;
+			} else if(window.$body) {
+				$container = window.$body;
+			} else {
+				$container = $(document.getElementsByTagName('body')[0]);
 			}
-			$body.empty().append($template);
+			$container.empty().append($template);
 			angular.bootstrap($template.get(0));
 		},
 		controller: function($scope) {
