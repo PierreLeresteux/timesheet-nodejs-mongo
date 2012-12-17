@@ -47,8 +47,10 @@
 <div id="calendar" ng-controller="CalendarController">
 	<div class="date">
         <span ng-click="prevMonth()" class="prev-month-icon"></span>
-		<span class="calendar-icon"></span>
-		<span class="title">{{selectedMonth}}</span>
+        <span class="title-container">
+			<span class="calendar-icon"></span>
+			<span class="title">{{selectedMonth}}</span>
+        </span>
         <span ng-click="nextMonth()" class="next-month-icon"></span>
 	</div>
 	<div class="weekdays">
