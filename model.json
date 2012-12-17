@@ -23,6 +23,7 @@
 
         "activities" : [{
             "_id" : "ActivityId",
+            "user" : "user_login",
             "date" : {
                 "year" : 2012,
                 "month" : 12,
@@ -50,11 +51,12 @@
     "rest_examples" : [{
         "request" : {
             "method" : "GET",
-            "url" : "/activities?year=2012&month=12&day=14"
+            "url" : "/activities?year=2012&month=12&day=14&user=sjob"
         },
         "response" : {
             "data" : [{
                 "id" : "3d396cd4",
+                "user" : "sjob",
                 "date" : {
                     "year" : 2012,
                     "month" : 12,
@@ -78,6 +80,7 @@
                 }
             },{
                 "id" : "375ae043",
+                "user" : "sjob",
                 "date" : {
                     "year" : 2012,
                     "month" : 12,
