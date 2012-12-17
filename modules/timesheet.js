@@ -14,6 +14,32 @@ Db.connect(mongoUri, function (err, database) {
 
 /*------------- TIMESHEET ------------------*/
 
+exports.categories = {};
+
+exports.categories.findAll = function(req, res) {
+    db.collection('categories', function(err, collection) {
+        mongUtil.getAll(collection, res);
+    });
+}
+
+exports.categories.findById = function(req, res) {
+    var id = req.params.id;
+    db.collection('categories', function(err, collection) {
+        mongUtil.getById(collection, id, res);
+    });
+}
+
+exports.categories.projects = {};
+
+exports.categories.projects.findAll = function(req, res) {
+    var id = req.params.id;
+    db.collection('categories', function(err, collection) {
+        collection.findOne({'_id': new BSON.ObjectID(id)}, function (err, item) {
+            res.send(item.projects);
+        });
+    });
+}
+
 exports.findAll = function(req, res) {
     db.collection('timesheet', function(err, collection) {
 	    mongUtil.getAll(collection, res);
@@ -66,7 +92,7 @@ exports.findByProject = function(req, res){
 	}
 
 	db.collection('timesheet', function(err, collection) {
-		mongUtil.findByQuery(collection,query,res);
+		mongUtil.findByQuery(collection, query, res);
 	});
 };
 
@@ -358,6 +384,63 @@ var populateDB = function() {
         project: "POC_JS"
     }];
 
+    var categories = [{
+        "name" : "Future Architecture",
+        "authorized_users" : [
+            { "login" : "sjob" }
+        ],
+        "projects" : [{
+            "id" : "1006a33c",
+            "name" : "DataStore",
+            "accounting" : {
+                "name" : "prd"
+            },
+            "tasks" : [{
+                "id" : "94d6114e",
+                "name" : "PoC"
+            },{
+                "id" : "32f69a6a",
+                "name" : "Implementation"
+            }]
+        }]
+    },{
+        "name" : "Holiday/Off",
+        "authorized_users" : [
+            { "login" : "sjob" }
+        ],
+        "projects" : [{
+            "id" : "1006a33c",
+            "name" : "RTT",
+            "accounting" : {
+                "name" : "abs"
+            },
+            "tasks" : [{
+                "id" : "94d6114e",
+                "name" : "RTT"
+            }]
+        },{
+            "id" : "51713df0",
+            "name" : "Sick",
+            "accounting" : {
+                "name" : "abs"
+            },
+            "tasks" : [{
+                "id" : "32f69a6a",
+                "name" : "Sick"
+            }]
+        },{
+            "id" : "c7a515fa",
+            "name" : "Vacation",
+            "accounting" : {
+                "name" : "abs"
+            },
+            "tasks" : [{
+                "id" : "5e15cdf3",
+                "name" : "Vacation"
+            }]
+        }]
+    }];
+
     db.collection('timesheet', function(err, collection) {
         collection.drop();
         collection.insert(timesheet, {safe:true}, function(err, result) {});
@@ -369,5 +452,9 @@ var populateDB = function() {
     db.collection('project', function(err, collection) {
         collection.drop();
         collection.insert(project,  {safe:true}, function(err, result) {});
+    });
+    db.collection('categories', function(err, collection) {
+        collection.drop();
+        collection.insert(categories, {safe:true}, function(err, result) {});
     });
 };

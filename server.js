@@ -70,6 +70,10 @@ app.post('/project', ts.addProject);
 app.put('/ts/:id', ts.updateProject);
 app.delete('/project/:id', ts.deleteProject);
 
+app.get('/categories', ts.categories.findAll);
+app.get('/categories/:id', ts.categories.findById);
+app.get('/categories/:id/projects', ts.categories.projects.findAll);
+
 // 3rd party libs
 libs.init(app);
 
