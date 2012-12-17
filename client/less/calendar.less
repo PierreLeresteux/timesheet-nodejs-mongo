@@ -26,7 +26,7 @@
 		.title {
 			font-size: 14px;
 			font-weight: bold;
-			width: 150px;
+			margin-right: 5px;
 		}
 
 		span {
@@ -110,54 +110,38 @@
 		white-space: nowrap;
 		font-size: 0;
 		border-bottom: 1px solid @borderColor;
-		text-align: right;
+		text-align: center;
 		overflow: hidden;
 
 		.search-span, .search-icon {
 			display: inline-block;
 			vertical-align: middle;
+			margin: 12px 0;
 		}
 
 		input {
 			width: 165px;
-			margin: 12px 0;
+			margin: 0;
 			font-size: 13px;
 			height: 25px;
-			border-right: 0;
-			border-radius: 0;
-			-webkit-border-radius: 0;
-			-moz-border-radius: 0;
-			-webkit-border-top-left-radius: 2px;
-			-webkit-border-bottom-left-radius: 2px;
-			-moz-border-radius-topleft: 2px;
-			-moz-border-radius-bottomleft: 2px;
-			border-top-left-radius: 2px;
-			border-bottom-left-radius: 2px;
-			box-shadow: none;
-			-webkit-box-shadow: none;
-			--moz-box-shadow: none;
-
+			border-right: none;
+			.border-radius(2px 0 0 2px);
+			.box-shadow(none);
 		}
+
 		input:focus {
 			background-color: white;
-			border-color: #CCC;
+			border-color: #ccc;
 		}
 
 		.search-icon {
 			.icon16("../img/batch/16x16/search.png");
 			background-color: #E9E9E9;
 			height: 25px;
-			width:28px;
-			margin:0px;
-			margin-right: 8px;
-			border: 1px solid #CCC;
-			border-left: 0;
-			-webkit-border-top-right-radius: 2px;
-			-webkit-border-bottom-right-radius: 2px;
-			-moz-border-radius-topright: 2px;
-			-moz-border-radius-bottomright: 2px;
-			border-top-right-radius: 2px;
-			border-bottom-right-radius: 2px;
+			width: 28px;
+			margin: 0;
+			border: 1px solid #ccc;
+			.border-radius(0 2px 2px 0);
 		}
 	}
 
