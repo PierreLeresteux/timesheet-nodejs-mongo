@@ -7,20 +7,24 @@ define([], function(){
 	Router.prototype = {
 		init: function() {
 			log('Router > init');
+			window.$module = angular.module('timesheet', []);
 			this.initRoutes();
 			$(document.getElementsByTagName('html')[0]).attr('ng-app', 'timesheet');
 			angular.bootstrap(document, ['timesheet']);
 		},
 		initRoutes: function() {
 			log('Router > init routes');
-			var that = this;
-			angular.module('timesheet', []).config(['$routeProvider', function($routeProvider) {
+			var that = this, calendarController, statsController;
+			$module.config(['$routeProvider', function($routeProvider) {
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
 						that.hide();
 						log('Router > load CalendarController');
 						require(['calendar-controller'], function(CalendarController) {
-							new CalendarController('CalendarController').render();
+							if(!calendarController) {
+								calendarController = new CalendarController();
+							}
+							calendarController.render();
 							that.show();
 						});
 					}
@@ -31,7 +35,10 @@ define([], function(){
 						require(['stats-controller'], function(StatsController) {
 							log('Router > load StatsController');
 							require(['stats-controller'], function(StatsController) {
-								new StatsController('StatsController').render();
+								if(!statsController) {
+									statsController = new StatsController('StatsController');
+								}
+								statsController.render();
 								that.show();
 							});
 						});
