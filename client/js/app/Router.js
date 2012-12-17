@@ -7,6 +7,7 @@ define([], function(){
 	Router.prototype = {
 		init: function() {
 			log('Router > init');
+			window.$module = angular.module('timesheet', []);
 			this.initRoutes();
 			$(document.getElementsByTagName('html')[0]).attr('ng-app', 'timesheet');
 			angular.bootstrap(document, ['timesheet']);
@@ -14,13 +15,13 @@ define([], function(){
 		initRoutes: function() {
 			log('Router > init routes');
 			var that = this;
-			angular.module('timesheet', []).config(['$routeProvider', function($routeProvider) {
+			$module.config(['$routeProvider', function($routeProvider) {
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
 						that.hide();
 						log('Router > load CalendarController');
 						require(['calendar-controller'], function(CalendarController) {
-							new CalendarController('CalendarController').render();
+							new CalendarController().render();
 							that.show();
 						});
 					}
