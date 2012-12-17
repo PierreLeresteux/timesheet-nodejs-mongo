@@ -14,14 +14,17 @@ define([], function(){
 		},
 		initRoutes: function() {
 			log('Router > init routes');
-			var that = this;
+			var that = this, calendarController, statsController;
 			$module.config(['$routeProvider', function($routeProvider) {
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
 						that.hide();
 						log('Router > load CalendarController');
 						require(['calendar-controller'], function(CalendarController) {
-							new CalendarController().render();
+							if(!calendarController) {
+								calendarController = new CalendarController();
+							}
+							calendarController.render();
 							that.show();
 						});
 					}
@@ -32,7 +35,10 @@ define([], function(){
 						require(['stats-controller'], function(StatsController) {
 							log('Router > load StatsController');
 							require(['stats-controller'], function(StatsController) {
-								new StatsController('StatsController').render();
+								if(!statsController) {
+									statsController = new StatsController('StatsController');
+								}
+								statsController.render();
 								that.show();
 							});
 						});
