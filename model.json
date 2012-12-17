@@ -1,11 +1,6 @@
 {
     "model" : {
 
-        "accountings" : [{
-            "_id" : "AccountingId",
-            "name" : "Accounting Name"
-        }],
-
         "categories" : [{
             "_id" : "CategoryId",
             "name" : "Category Name",
@@ -17,7 +12,7 @@
                 "id" : "ProjectId",
                 "name" : "Project Name",
                 "accounting" : {
-                    "id" : "AccountingId"
+                    "name" : "Accounting Name"
                 },
                 "tasks" : [{
                     "id" : "TaskId",
@@ -34,7 +29,21 @@
                 "day" : 14
             },
             "hours" : 8,
-            "task" : { "id" : "TaskId" }
+            "task" : {
+                "id" : "TaskId", // The link with categories/projects/tasks
+                "name" : "Task Name" // Derived from task.id
+            },
+            "project" : {
+                "id" : "ProjectId", // Derived from task.id
+                "name" : "Project Name" // Derived from task.id
+            },
+            "category" : {
+                "id" : "CategoryId", // Derived from task.id
+                "name" : "Category Name" // Derived from task.id
+            },
+            "accounting" : {
+                "name" : "Accounting Name" // Derived from task.id
+            }
         }]
     },
 
@@ -65,7 +74,6 @@
                     "name" : "Vacation/Off"
                 },
                 "accounting" : {
-                    "id" : "ef3281ef",
                     "name" : "abs"
                 }
             },{
@@ -89,7 +97,6 @@
                     "name" : "Future Architecture"
                 },
                 "accounting" : {
-                    "id" : "293ce3dc",
                     "name" : "prd"
                 }
             }]
@@ -110,7 +117,6 @@
                     "id" : "1006a33c",
                     "name" : "DataStore",
                     "accounting" : {
-                        "id" : "293ce3dc",
                         "name" : "prd"
                     },
                     "tasks" : [{
