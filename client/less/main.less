@@ -10,7 +10,14 @@
 	-ms-user-select: @value;
 	user-select: @value;
 }
-
+.icon16(@url){
+	background-image: url(@url);
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	margin: 0 5px;
+	.opacity(0.8);
+}
 @borderColor: #e9e9e9;
 @mediaQueryMin: 641px;
 @mediaQueryMax: 640px;
