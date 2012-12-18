@@ -13,17 +13,17 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					restrict: 'E',
 					replace: true,
 					scope: true,
-					template: '<div project-ready class="project" ng-repeat="item in projects" data-projectid="{{item.id}}">'+
-								'<span>{{item.value}}</span>'+
+					template: '<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}">'+
+								'<span>{{item.name}}</span>'+
 							  '</div>'
 				};
 			}).directive('projectReady', function(){
 				return that.projectDirective;
-			});
-
-			$module.directive('dragOver', function(){
+			}).directive('dragOver', function(){
 				return that.dragOver;
-			});
+			}).directive('accordion', function(){
+                return that.loadAccordion;
+            });
 
 			$module.controller('CalendarController', ['$scope','$generateCalendar',that.calendarController]);
 
@@ -33,9 +33,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			log('CalendarController > render');
 			$container.empty().append(Template);
 
-			var menuElem = document.getElementById('menu');
-			$(menuElem).foundationAccordion();
-			angular.bootstrap(menuElem, ['timesheet']);
+
+			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
 
 			angular.bootstrap(document.getElementById('calendar'), ['timesheet']);
 		},
@@ -56,24 +55,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 		menuController: function ($scope,$resource) {
 			$scope.targetType = 'day';
 			var Categories = $resource('/categories');
-			var categories = Categories.query();
-			$scope.projects= [
-				{
-					"id": 1,
-					"value": "LandingPages"
-				},
-				{
-					"id": 2,
-					"value": "POC JS"
-				},
-				{
-					"id": 3,
-					"value": "SSO"
-				}
-			];
-			$scope.$watch("projects", function(value) {
-				console.log("Project: " + value.map(function(e){return e.id}).join(','));
-			},true);
+			$scope.categories = Categories.query();
 
 			$scope.changeTargetType = function($event) {
 				$scope.targetType = $($event.target).attr('data-value');
@@ -91,15 +73,6 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return false;
 			};
 
-			$scope.dragstart = function() {
-				$.log('start drag');
-			};
-
-		},
-		categories: function ($resource) {
-			return $resource('api/wines/:wineId', {}, {
-				update: {method:'PUT'}
-			});
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
@@ -180,6 +153,12 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					log('on '+$(this).html());
 				}
 			});
-		}
+		},
+        loadAccordion: function(scope, element, attrs) {
+            if (scope.$last){
+                var menuElem = document.getElementById('menu');
+                $(menuElem).foundationAccordion();
+            }
+        }
 	});
 });

@@ -23,27 +23,15 @@
         </span>
         <span class="search-icon"></span>
     </div>
-	<ul class="accordion">
-		<li class="active" >
+	<ul class="accordion" >
+		<li ng-repeat="category in categories" accordion >
 			<div class="title">
-				<h5>Projects</h5>
+				<h5>{{category.name}}</h5>
 			</div>
 			<div class="content" ng-click="noEvent($event)" >
                 <project>
                 </project>
             </div>
-		</li>
-		<li>
-			<div class="title">
-				<h5>Holidays/Off</h5>
-			</div>
-			<div class="content">Some content...</div>
-		</li>
-		<li>
-			<div class="title">
-				<h5>Training/Conference</h5>
-			</div>
-			<div class="content">Some content...</div>
 		</li>
 	</ul>
 </div>
