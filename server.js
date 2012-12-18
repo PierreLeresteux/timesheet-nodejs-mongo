@@ -73,6 +73,7 @@ app.delete('/project/:id', ts.deleteProject);
 app.get('/categories', ts.categories.findAll);
 app.get('/categories/:id', ts.categories.findById);
 app.get('/categories/:id/projects', ts.categories.projects.findAll);
+app.get('/categories/:cid/projects/:pid', ts.categories.projects.findById);
 
 // 3rd party libs
 libs.init(app);

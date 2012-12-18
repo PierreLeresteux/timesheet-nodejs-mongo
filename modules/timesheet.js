@@ -34,8 +34,29 @@ exports.categories.projects = {};
 exports.categories.projects.findAll = function(req, res) {
     var id = req.params.id;
     db.collection('categories', function(err, collection) {
-        collection.findOne({'_id': new BSON.ObjectID(id)}, function (err, item) {
-            res.send(item.projects);
+        collection.findOne({'_id': new BSON.ObjectID(id)}, function (err, category) {
+            res.send(category.projects);
+        });
+    });
+}
+
+exports.categories.projects.findById = function(req, res) {
+    var category_id = req.params.cid;
+    var project_id = req.params.pid;
+    db.collection('categories', function(err, collection) {
+        collection.findOne({'_id': new BSON.ObjectID(category_id), 'projects.id': new BSON.ObjectID(project_id)}, function (err, category) {
+            for (var i = 0; i < category.projects.length; i++) {
+                var project = category.projects[i];
+                var curr_prj_id = project.id;
+                if (curr_prj_id == project_id) {
+                    return res.send(project);
+                }
+            }
+            var error = {
+                status : 404,
+                message : "Couldn't find project id '" + project_id + "' for category id '" + category_id + "'"
+            };
+            res.send(error, 404);
         });
     });
 }
@@ -390,16 +411,16 @@ var populateDB = function() {
             { "login" : "sjob" }
         ],
         "projects" : [{
-            "id" : "1006a33c",
+            "id" : mongo.ObjectID(),
             "name" : "DataStore",
             "accounting" : {
                 "name" : "prd"
             },
             "tasks" : [{
-                "id" : "94d6114e",
+                "id" : mongo.ObjectID(),
                 "name" : "PoC"
             },{
-                "id" : "32f69a6a",
+                "id" : mongo.ObjectID(),
                 "name" : "Implementation"
             }]
         }]
@@ -409,33 +430,33 @@ var populateDB = function() {
             { "login" : "sjob" }
         ],
         "projects" : [{
-            "id" : "1006a33c",
+            "id" : mongo.ObjectID(),
             "name" : "RTT",
             "accounting" : {
                 "name" : "abs"
             },
             "tasks" : [{
-                "id" : "94d6114e",
+                "id" : mongo.ObjectID(),
                 "name" : "RTT"
             }]
         },{
-            "id" : "51713df0",
+            "id" : mongo.ObjectID(),
             "name" : "Sick",
             "accounting" : {
                 "name" : "abs"
             },
             "tasks" : [{
-                "id" : "32f69a6a",
+                "id" : mongo.ObjectID(),
                 "name" : "Sick"
             }]
         },{
-            "id" : "c7a515fa",
+            "id" : mongo.ObjectID(),
             "name" : "Vacation",
             "accounting" : {
                 "name" : "abs"
             },
             "tasks" : [{
-                "id" : "5e15cdf3",
+                "id" : mongo.ObjectID(),
                 "name" : "Vacation"
             }]
         }]
@@ -447,11 +468,11 @@ var populateDB = function() {
     });
     db.collection('account', function(err, collection) {
         collection.drop();
-        collection.insert(account,  {safe:true}, function(err, result) {});
+        collection.insert(account, {safe:true}, function(err, result) {});
     });
     db.collection('project', function(err, collection) {
         collection.drop();
-        collection.insert(project,  {safe:true}, function(err, result) {});
+        collection.insert(project, {safe:true}, function(err, result) {});
     });
     db.collection('categories', function(err, collection) {
         collection.drop();
