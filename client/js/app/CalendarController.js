@@ -25,7 +25,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
                 return that.loadAccordion;
             });
 
-			$module.controller('CalendarController', ['$scope','$generateCalendar',that.calendarController]);
+			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
 
 			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
 		},
@@ -38,7 +38,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			angular.bootstrap(document.getElementById('calendar'), ['timesheet']);
 		},
-		calendarController: function($scope, $generateCalendar){
+		calendarController: function($scope, $resource,$generateCalendar){
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
 				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
@@ -51,6 +51,11 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			var days, i, j, className, start=moment().startOf('month');
 			$generateCalendar($scope, start);
+            var Activities = $resource('/activities?user=:user&year=:year&month=:month',
+                {user: 'sjob', year:start.format('YYYY'), month:start.format('M')});
+            $scope.activities = Activities.query(function(){
+                log($scope.activities);
+            });
 		},
 		menuController: function ($scope,$resource) {
 			$scope.targetType = 'day';
