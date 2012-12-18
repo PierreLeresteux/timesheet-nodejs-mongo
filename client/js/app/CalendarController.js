@@ -153,7 +153,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
                         var data = event.dataTransfer.getData('text/emv-project');
                         $(this).removeClass('dayInHover');
                         log('data : '+data);
-                        log('on '+$(this).html());
+                        log('on '+$(this).attr('data-day'));
                     }
                 });
             }

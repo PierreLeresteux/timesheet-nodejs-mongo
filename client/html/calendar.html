@@ -53,7 +53,7 @@
 	</div>
 	<div class="month">
 		<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">
-			<div drag-over ng-repeat="day in week.days" class="day {{day.class}}"><span>{{day.text}}</span></div>
+			<div data-day="{{day.text}}" drag-over ng-repeat="day in week.days" class="day {{day.class}}"><span>{{day.text}}</span></div>
 		</div>
 	</div>
 </div>
