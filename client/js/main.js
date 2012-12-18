@@ -3,6 +3,7 @@ requirejs.config({
 	paths: {
 		// 3rd party
 		'angular': '/libs/google/angularjs/1.0.3/angular.min',
+		'angular-resource': '/libs/google/angularjs/1.0.3/angular-resource.min',
 		'zepto': '/libs/cdnjs/zepto/1.0rc1/zepto.min',
 		'foundation': 'js/foundation/foundation.min',
 		'foundation-app': 'js/foundation/app',
@@ -36,6 +37,7 @@ requirejs.config({
 	},
 	shim: {
 		'angular': {deps: ['zepto']},
+		'angular-resource': {deps: ['angular']},
 		'foundation': {deps: ['zepto']},
 		'foundation-app': {deps: ['foundation-accordion', 'foundation-alerts', 'foundation-buttons', 'foundation-clearing',
 			'foundation-forms', 'foundation-joyride', 'foundation-magellan', 'foundation-mediaQueryToggle', 'foundation-navigation',
@@ -60,7 +62,7 @@ requirejs.config({
 	}
 });
 
-var dependencies = ['angular','zepto','text','underscore','foundation-app'];
+var dependencies = ['angular','angular-resource','zepto','text','underscore','foundation-app'];
 if(window.debug) {
 	dependencies.push('less');
 }

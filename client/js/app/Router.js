@@ -7,7 +7,7 @@ define([], function(){
 	Router.prototype = {
 		init: function() {
 			log('Router > init');
-			window.$module = angular.module('timesheet', []);
+			window.$module = angular.module('timesheet',  ['ngResource']);
 			this.initRoutes();
 			$(document.getElementsByTagName('html')[0]).attr('ng-app', 'timesheet');
 			angular.bootstrap(document, ['timesheet']);

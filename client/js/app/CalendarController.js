@@ -27,7 +27,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('CalendarController', ['$scope','$generateCalendar',that.calendarController]);
 
-			$module.controller('MenuController', ['$scope',that.menuController]);
+			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
 		},
 		render: function() {
 			log('CalendarController > render');
@@ -53,8 +53,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			var days, i, j, className, start=moment().startOf('month');
 			$generateCalendar($scope, start);
 		},
-		menuController: function ($scope) {
+		menuController: function ($scope,$resource) {
 			$scope.targetType = 'day';
+			var Categories = $resource('/categories');
+			var categories = Categories.query();
 			$scope.projects= [
 				{
 					"id": 1,
@@ -93,6 +95,11 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				$.log('start drag');
 			};
 
+		},
+		categories: function ($resource) {
+			return $resource('api/wines/:wineId', {}, {
+				update: {method:'PUT'}
+			});
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
