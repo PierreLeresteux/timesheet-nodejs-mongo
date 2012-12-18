@@ -123,12 +123,14 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				element.attr('draggable', 'true');
 				element.on({
 					dragstart: function(e){
-						e.dataTransfer.setData('text/html', $(this).text());
+                        e.dataTransfer.effectAllowed = 'copy';
+                        e.dataTransfer.dropEffect = 'copy';
+                        e.dataTransfer.setData('text/emv-project', $(this).attr('data-projectid'));
 						$(this).css('border-style','dotted');
 						$(this).css('border-width','2px');
 					},
 					dragend: function(e){
-						e.dataTransfer.setData('text/html', undefined);
+						e.dataTransfer.setData('text/emv-project', undefined);
 						$(this).css('border-style','solid');
 						$(this).css('border-width','1px');
 					}
@@ -136,23 +138,25 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			});
 		},
 		dragOver: function(scope, element, attrs) {
-			element.on({
-				dragenter: function(event){
-					$(this).addClass('dayInHover');
-				},
-				dragleave: function(event){
-					$(this).removeClass('dayInHover');
-				},
-				dragover: function(event){
-					event.preventDefault();
-				},
-				drop: function(event){
-					var data = event.dataTransfer.getData('text/html');
-					$(this).removeClass('dayInHover');
-					log('data : '+data);
-					log('on '+$(this).html());
-				}
-			});
+            if (scope.$eval('day.class').indexOf('empty')<0){
+                element.on({
+                    dragenter: function(event){
+                        $(this).addClass('dayInHover');
+                    },
+                    dragleave: function(event){
+                        $(this).removeClass('dayInHover');
+                    },
+                    dragover: function(event){
+                        event.preventDefault();
+                    },
+                    drop: function(event){
+                        var data = event.dataTransfer.getData('text/emv-project');
+                        $(this).removeClass('dayInHover');
+                        log('data : '+data);
+                        log('on '+$(this).html());
+                    }
+                });
+            }
 		},
         loadAccordion: function(scope, element, attrs) {
             if (scope.$last){
