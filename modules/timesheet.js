@@ -64,8 +64,22 @@ exports.categories.projects.findById = function(req, res) {
 exports.activities = {};
 
 exports.activities.findAll = function(req, res) {
+    var user = req.query.user;
+    var year = req.query.year;
+    var month = req.query.month;
+    var query = {};
+    if (user) {
+        query.user = user;
+    }
+    if (year) {
+        query["date.year"] = ~~year;
+    }
+    if (month) {
+        query["date.month"] = ~~month;
+    }
+
     db.collection('activities', function(err, collection) {
-        mongUtil.getAll(collection, res);
+        mongUtil.findByQuery(collection, query, res);
     });
 }
 
