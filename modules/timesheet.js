@@ -355,115 +355,6 @@ exports.init = function(req, res){
 };
 var populateDB = function() {
 	console.log('populateDB');
-	var timesheet = [
-	{
-		day:11 ,
-		year: 2012,
-		month: 12,
-		user: {
-			lastname: "Leresteux",
-			firstname: "Pierre",
-			login: "pleresteux"
-		},
-		tasks: [{
-			project:"LANPA",
-			hours: 6
-		},{
-			project: "BUG_PROD",
-			hours: 2
-		}]
-	},
-	{
-		day:10 ,
-		year: 2012,
-		month: 12,
-		user: {
-			lastname: "Leresteux",
-			firstname: "Pierre",
-			login: "pleresteux"
-		},
-		tasks: [{
-			project: "LANPA",
-			hours: 8
-		}]
-	},
-    {
-        day:10 ,
-        year: 2011,
-        month: 12,
-        user: {
-            lastname: "Leresteux",
-            firstname: "Pierre",
-            login: "pleresteux"
-        },
-        tasks: [{
-            project: "IMG_LIB",
-            hours: 8
-        }]
-    },
-	{
-		day:11 ,
-		year: 2012,
-		month: 12,
-		user: {
-			lastname: "David",
-			firstname: "Sebastien",
-			login: "sdavid"
-		},
-		tasks: [{
-			project: "LANPA",
-			hours: 4
-		},{
-			project: "BUG_PROD",
-			hours: 3
-		},{
-			project: "POC_JS",
-			hours: 1
-		}]
-	},
-	{
-		day:10 ,
-		year: 2012,
-		month: 12,
-		user: {
-            lastname: "Leresteux",
-            firstname: "Pierre",
-            login: "pleresteux"
-        },
-		tasks: [{
-			project: "BUG_PROD",
-			hours: 5
-		},{
-			project: "POC_EMV_PAPERBOY",
-			hours: 1
-		}]
-	}];
-    var account = [{
-        lastname: "Leresteux",
-        firstname: "Pierre",
-        login: "pleresteux",
-        email: "pleresteux@emailvision.com",
-        pass : "$2a$10$mR8PzOjlCoKiEcfzM4ITvOx7vu1UeUj5rTcwbY4jFBBPpyBtT0P6S",
-        date : "December 12th 2012, 8:59:17 pm"
-    },{
-        lastname: "David",
-        firstname: "Sebastien",
-        login: "sdavid",
-        email: "sdavid@emailvision.com",
-        pass : "$2a$10$mR8PzOjlCoKiEcfzM4ITvOx7vu1UeUj5rTcwbY4jFBBPpyBtT0P6S",
-        date : "December 12th 2012, 9:02:53 pm"
-    }];
-    var project = [{
-        project: "BUG_PROD"
-    },{
-        project: "POC_EMV_PAPERBOY"
-    },{
-        project: "LANPA"
-    },{
-        project: "IMG_LIB"
-    },{
-        project: "POC_JS"
-    }];
 
     var categories = [{
         "name" : "Future Architecture",
@@ -549,7 +440,7 @@ var populateDB = function() {
         "date" : {
             "year" : 2012,
             "month" : 12,
-            "day" : 15
+            "day" : 17
         },
         "hours" : 8,
         "task" : {
@@ -615,18 +506,6 @@ var populateDB = function() {
         }
     }];
 
-    db.collection('timesheet', function(err, collection) {
-        collection.drop();
-        collection.insert(timesheet, {safe:true}, function(err, result) {});
-    });
-    db.collection('account', function(err, collection) {
-        collection.drop();
-        collection.insert(account, {safe:true}, function(err, result) {});
-    });
-    db.collection('project', function(err, collection) {
-        collection.drop();
-        collection.insert(project, {safe:true}, function(err, result) {});
-    });
     db.collection('categories', function(err, collection) {
         collection.drop();
         collection.insert(categories, {safe:true}, function(err, result) {
