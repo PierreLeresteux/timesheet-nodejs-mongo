@@ -92,6 +92,35 @@ exports.activities.findAll = function(req, res) {
     });
 }
 
+exports.activities.toCsv = function(req, res) {
+    var year = req.params.year;
+    var month = req.params.month;
+    var query = {
+        "date.year": ~~year,
+        "date.month": ~~month
+    };
+    db.collection('activities', function(err, collection) {
+        collection.find(query).toArray(function(err, activities) {
+            res.contentType('csv');
+            var result = 'Year,Month,Day,User,Category,Project,Accounting,Hours\n';
+            for (var i = activities.length - 1; i >= 0; i--) {
+                var activity = activities[i];
+                result = result +
+                    activity.date.year + ',' +
+                    activity.date.month + ',' +
+                    activity.date.day + ',' +
+                    '"' + activity.user + '",' +
+                    '"' + activity.category.name + '",' +
+                    '"' + activity.project.name + '",' +
+                    '"' + activity.accounting.name + '",' +
+                    activity.hours + '\n';
+            };
+            console.log('Result: "' + result + '" (' + activities.length + ' results)');
+            res.send(result);
+        });
+    });
+}
+
 exports.findAll = function(req, res) {
     db.collection('timesheet', function(err, collection) {
 	    mongUtil.getAll(collection, res);

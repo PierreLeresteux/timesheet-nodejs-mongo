@@ -77,6 +77,8 @@ app.get('/categories/:cid/projects/:pid', ts.categories.projects.findById);
 
 app.get('/activities', ts.activities.findAll);
 
+app.get('/activities-:year-:month.csv', ts.activities.toCsv);
+
 // 3rd party libs
 libs.init(app);
 
