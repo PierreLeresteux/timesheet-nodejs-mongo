@@ -41,6 +41,14 @@ __URLs__
     - delete('/project/:id') => DELETE project<br/>
 	- get('/ts/project/:project?year=[&month=]') => GET timesheet BY TASKS (project) <br/>
 
+* categories
+    - ```GET /categories``` => Get all categories with all their projects
+    - ```GET /categories/:cid``` => Get a single category with all its projects
+    - ```GET /categories/:cid/projects``` => Get all projects of a category
+    - ```GET /categories/:cid/projects/:pid``` => Get a single project of a category
+
+* activities
+    - ```GET /activities?[user=][&year=][&month=]``` => find all activities by user, year and/or month
 
 
 ___Pour info :___

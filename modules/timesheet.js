@@ -69,7 +69,7 @@ exports.activities.findAll = function(req, res) {
     var month = req.query.month;
     var query = {};
     if (user) {
-        query.user = user;
+        query["user"] = user;
     }
     if (year) {
         query["date.year"] = ~~year;
@@ -591,19 +591,19 @@ var populateDB = function() {
     });
     db.collection('categories', function(err, collection) {
         collection.drop();
-        collection.insert(categories, {safe:true}, function(err, result) {});
+        collection.insert(categories, {safe:true}, function(err, result) {
+            if (!err) {
+                // Adding activities asynchronously after categories are added since we need their id
+                activities[0].category.id = result[1]._id;
+                activities[1].category.id = result[1]._id;
+                activities[2].category.id = result[1]._id;
+                activities[3].category.id = result[0]._id;
 
-        // Adding activities asynchronously after categories are added since we need their id
-        collection.find().toArray(function(err, found_categories) {
-            activities[0].category.id = found_categories[1]._id;
-            activities[1].category.id = found_categories[1]._id;
-            activities[2].category.id = found_categories[1]._id;
-            activities[3].category.id = found_categories[0]._id;
-
-            db.collection('activities', function(err, collection) {
-                collection.drop();
-                collection.insert(activities, {safe:true}, function(err, result) {});
-            });
+                db.collection('activities', function(err, collection) {
+                    collection.drop();
+                    collection.insert(activities, {safe:true}, function(err, result) {});
+                });
+            }
         });
     });
 };
