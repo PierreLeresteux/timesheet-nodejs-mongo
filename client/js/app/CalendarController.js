@@ -144,9 +144,13 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				element.on({
 					dragstart: function(e){
 						e.dataTransfer.setData('text/html', $(this).text());
+						$(this).css('border-style','dotted');
+						$(this).css('border-width','2px');
 					},
-					dragleave: function(e){
+					dragend: function(e){
 						e.dataTransfer.setData('text/html', undefined);
+						$(this).css('border-style','solid');
+						$(this).css('border-width','1px');
 					}
 				});
 			});
