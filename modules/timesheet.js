@@ -79,7 +79,26 @@ exports.activities.findAll = function(req, res) {
     }
 
     db.collection('activities', function(err, collection) {
-        mongUtil.findByQuery(collection, query, res);
+        collection.find(query, {limit:100}).toArray(function(err, activities) {
+            // Sort by year/month/day/category.name/project.name
+            activities.sort(function (activity1, activity2) {
+                var diff = activity1.date.year - activity2.date.year;
+                if (diff === 0) {
+                    diff = activity1.date.month - activity2.date.month;
+                    if (diff === 0) {
+                        diff = activity1.date.day - activity2.date.day;
+                        if (diff === 0) {
+                            diff = activity1.category.name.localeCompare(activity2.category.name);
+                            if (diff === 0) {
+                                diff = activity1.project.name.localeCompare(activity2.project.name);
+                            }
+                        }
+                    }
+                }
+                return diff;
+            });
+            res.send(activities);
+        });
     });
 }
 
