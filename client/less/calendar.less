@@ -64,6 +64,11 @@
 				}
 			}
 
+			.dayInHover {
+				background-color: #AEBDCC !important;
+				border-style: dashed;
+			}
+
 			.today {
 				background-color: #ccff99;
 			}
@@ -162,6 +167,19 @@
 				overflow: hidden;
 				padding-right: 8px;
 			}
+
+		}
+		.content {
+			padding-top: 0;
+			.project {
+				.border-radius(5px);
+				border: 1px #CCC solid;
+				margin-bottom: 2px;
+				height: 30px;
+				line-height: 30px;
+				font-size: 11px;
+				padding: 0 6px;
+			}
 		}
 	}
 }
@@ -214,6 +232,13 @@
 				.day {
 					border-width: 1px 1px 0 1px;
 					min-height: 80px;
+					background-color: white;
+					border-style: solid;
+				}
+
+				.dayInHover {
+					background-color: #AEBDCC;
+					border-style: dashed;
 				}
 
 				.empty {

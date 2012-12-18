@@ -24,11 +24,14 @@
         <span class="search-icon"></span>
     </div>
 	<ul class="accordion">
-		<li class="active">
+		<li class="active" >
 			<div class="title">
 				<h5>Projects</h5>
 			</div>
-			<div class="content">Some content...</div>
+			<div class="content" ng-click="noEvent($event)" >
+                <project>
+                </project>
+            </div>
 		</li>
 		<li>
 			<div class="title">
@@ -62,7 +65,7 @@
 	</div>
 	<div class="month">
 		<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">
-			<div ng-repeat="day in week.days" class="day {{day.class}}"><span>{{day.text}}</span></div>
+			<div drag-over ng-repeat="day in week.days" class="day {{day.class}}"><span>{{day.text}}</span></div>
 		</div>
 	</div>
 </div>

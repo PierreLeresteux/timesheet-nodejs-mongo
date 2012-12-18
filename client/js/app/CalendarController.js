@@ -1,12 +1,30 @@
-define(['controller','text!html/calendar.html','moment'], function(Controller,Template,Moment){
+define(['controller', 'text!html/calendar.html', 'moment'], function (Controller, Template, Moment) {
 	return Controller.extend({
 		init: function() {
 			log('CalendarController > init');
 			var that = this;
-
+			$.event.props.push('dataTransfer');
 			$module.factory('$generateCalendar', function(){
 				return that.generateCalendar;
 			});
+
+			$module.directive('project', function(){
+				return {
+					restrict: 'E',
+					replace: true,
+					scope: true,
+					template: '<div project-ready class="project" ng-repeat="item in projects" data-projectid="{{item.id}}">'+
+								'<span>{{item.value}}</span>'+
+							  '</div>'
+				};
+			}).directive('projectReady', function(){
+				return that.projectDirective;
+			});
+
+			$module.directive('dragOver', function(){
+				return that.dragOver;
+			});
+
 			$module.controller('CalendarController', ['$scope','$generateCalendar',that.calendarController]);
 
 			$module.controller('MenuController', ['$scope',that.menuController]);
@@ -35,8 +53,25 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 			var days, i, j, className, start=moment().startOf('month');
 			$generateCalendar($scope, start);
 		},
-		menuController: function($scope) {
+		menuController: function ($scope) {
 			$scope.targetType = 'day';
+			$scope.projects= [
+				{
+					"id": 1,
+					"value": "LandingPages"
+				},
+				{
+					"id": 2,
+					"value": "POC JS"
+				},
+				{
+					"id": 3,
+					"value": "SSO"
+				}
+			];
+			$scope.$watch("projects", function(value) {
+				console.log("Project: " + value.map(function(e){return e.id}).join(','));
+			},true);
 
 			$scope.changeTargetType = function($event) {
 				$scope.targetType = $($event.target).attr('data-value');
@@ -47,6 +82,17 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 			$scope.searchChange = function() {
 				log('search : '+$scope.search);
 			};
+
+			$scope.noEvent = function($event) {
+				$event.stopPropagation();
+				$event.preventDefault();
+				return false;
+			};
+
+			$scope.dragstart = function() {
+				$.log('start drag');
+			};
+
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
@@ -84,13 +130,45 @@ define(['controller','text!html/calendar.html','moment'], function(Controller,Te
 						});
 					}
 				}
-
+			
 				$scope.weeks.push({
 					'days': days,
 					top: i*20,
 					bottom: 100-((i*20)+20)
 				});
 			}
+		},
+		projectDirective: function(scope, element, attrs) {
+			element.ready(function(){
+				element.attr('draggable', 'true');
+				element.on({
+					dragstart: function(e){
+						e.dataTransfer.setData('text/html', $(this).text());
+					},
+					dragleave: function(e){
+						e.dataTransfer.setData('text/html', undefined);
+					}
+				});
+			});
+		},
+		dragOver: function(scope, element, attrs) {
+			element.on({
+				dragenter: function(event){
+					$(this).addClass('dayInHover');
+				},
+				dragleave: function(event){
+					$(this).removeClass('dayInHover');
+				},
+				dragover: function(event){
+					event.preventDefault();
+				},
+				drop: function(event){
+					var data = event.dataTransfer.getData('text/html');
+					$(this).removeClass('dayInHover');
+					log('data : '+data);
+					log('on '+$(this).html());
+				}
+			});
 		}
 	});
 });
