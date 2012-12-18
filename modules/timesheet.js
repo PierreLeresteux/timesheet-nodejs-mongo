@@ -61,6 +61,14 @@ exports.categories.projects.findById = function(req, res) {
     });
 }
 
+exports.activities = {};
+
+exports.activities.findAll = function(req, res) {
+    db.collection('activities', function(err, collection) {
+        mongUtil.getAll(collection, res);
+    });
+}
+
 exports.findAll = function(req, res) {
     db.collection('timesheet', function(err, collection) {
 	    mongUtil.getAll(collection, res);
@@ -461,6 +469,99 @@ var populateDB = function() {
             }]
         }]
     }];
+    var activities = [{
+        "user" : "sdavid",
+        "date" : {
+            "year" : 2012,
+            "month" : 12,
+            "day" : 14
+        },
+        "hours" : 8,
+        "task" : {
+            "id" : categories[1].projects[2].tasks[0].id,
+            "name" : "Vacation"
+        },
+        "project" : {
+            "id" : categories[1].projects[2].id,
+            "name" : "Vacation"
+        },
+        "category" : {
+            "id" : categories[1]._id, // null at this time, need first to save categories to DB
+            "name" : "Holiday/Off"
+        },
+        "accounting" : {
+            "name" : "abs"
+        }
+    },{
+        "user" : "sdavid",
+        "date" : {
+            "year" : 2012,
+            "month" : 12,
+            "day" : 15
+        },
+        "hours" : 8,
+        "task" : {
+            "id" : categories[1].projects[2].tasks[0].id,
+            "name" : "Vacation"
+        },
+        "project" : {
+            "id" : categories[1].projects[2].id,
+            "name" : "Vacation"
+        },
+        "category" : {
+            "id" : categories[1]._id, // null at this time, need first to save categories to DB
+            "name" : "Holiday/Off"
+        },
+        "accounting" : {
+            "name" : "abs"
+        }
+    },{
+        "user" : "sjob",
+        "date" : {
+            "year" : 2012,
+            "month" : 12,
+            "day" : 14
+        },
+        "hours" : 4,
+        "task" : {
+            "id" : categories[1].projects[0].tasks[0].id,
+            "name" : "RTT"
+        },
+        "project" : {
+            "id" : categories[1].projects[0].id,
+            "name" : "RTT"
+        },
+        "category" : {
+            "id" : categories[1]._id, // null at this time, need first to save categories to DB
+            "name" : "Holiday/Off"
+        },
+        "accounting" : {
+            "name" : "abs"
+        }
+    },{
+        "user" : "sjob",
+        "date" : {
+            "year" : 2012,
+            "month" : 12,
+            "day" : 14
+        },
+        "hours" : 4,
+        "task" : {
+            "id" : categories[0].projects[0].tasks[0].id,
+            "name" : "PoC"
+        },
+        "project" : {
+            "id" : categories[0].projects[0].id,
+            "name" : "DataStore"
+        },
+        "category" : {
+            "id" : categories[0]._id, // null at this time, need first to save categories to DB
+            "name" : "Future Architecture"
+        },
+        "accounting" : {
+            "name" : "prd"
+        }
+    }];
 
     db.collection('timesheet', function(err, collection) {
         collection.drop();
@@ -477,5 +578,18 @@ var populateDB = function() {
     db.collection('categories', function(err, collection) {
         collection.drop();
         collection.insert(categories, {safe:true}, function(err, result) {});
+
+        // Adding activities asynchronously after categories are added since we need their id
+        collection.find().toArray(function(err, found_categories) {
+            activities[0].category.id = found_categories[1]._id;
+            activities[1].category.id = found_categories[1]._id;
+            activities[2].category.id = found_categories[1]._id;
+            activities[3].category.id = found_categories[0]._id;
+
+            db.collection('activities', function(err, collection) {
+                collection.drop();
+                collection.insert(activities, {safe:true}, function(err, result) {});
+            });
+        });
     });
 };
