@@ -12,6 +12,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$.event.props.push('dataTransfer');
 			$module.factory('$generateCalendar', function(){
 				return that.generateCalendar;
+			}).factory('$that', function(){
+				return that;
 			});
 
 			$module.directive('project', function(){
@@ -31,7 +33,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
 			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
-			$module.controller('DayItemController', ['$scope',that.dayItemController]);
+			$module.controller('DayItemController', ['$scope','$that',that.dayItemController]);
 		},
 		render: function() {
 			log('CalendarController > render');
@@ -43,10 +45,12 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			var $calendar = $(calendarElem);
 			$calendar.on('addDayItemEvent', function(event){
 				log('addDayItemEvent handler');
-				var $day = $(event.dayElem);
 				var $item = $(that.dayItemTemplate);
-				$day.append($item);
-				angular.bootstrap($item.get(0));
+				$(event.dayElem).append($item);
+				that.dayItemData = {
+					'projectId': event.projectId
+				};
+				angular.bootstrap($item.get(0), ['timesheet']);
 			});
 		},
 		calendarController: function($scope, $resource, $generateCalendar){
@@ -89,8 +93,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return false;
 			};
 		},
-		dayItemController: function($scope) {
-			$scope.title = "project";
+		dayItemController: function($scope, $that) {
+			var projectId = $that.dayItemData.projectId;
+			var length = projectId.length;
+			$scope.title = "project "+projectId.substring(length-3,length);
 			$scope.hours = "8";
 		},
 		generateCalendar: function($scope, start){
