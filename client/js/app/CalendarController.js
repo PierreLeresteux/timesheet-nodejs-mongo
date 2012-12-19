@@ -31,14 +31,24 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
 			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
+			//$module.controller('ItemController', ['$scope',that.itemController]);
+
+			that.$calendar = $(document.getElementById('calendar'));
+			that.$calendar.on('addDayItemEvent', function(event){
+				log('addDayItemEvent');
+				var $day = $(event.dayElem);
+				var $item = $(that.dayItemTemplate);
+				$day.append($item);
+				angular.bootstrap($item.get(0));
+			});
 		},
 		render: function() {
 			log('CalendarController > render');
 			$container.empty().append(this.mainTemplate);
 			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
-			angular.bootstrap(document.getElementById('calendar'), ['timesheet']);
+			angular.bootstrap(this.$calendar, ['timesheet']);
 		},
-		calendarController: function($scope, $resource,$generateCalendar){
+		calendarController: function($scope, $resource, $generateCalendar){
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
 				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
@@ -57,7 +67,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				log($scope.activities);
 			});
 		},
-		menuController: function ($scope,$resource) {
+		menuController: function ($scope, $resource) {
 			$scope.targetType = 'day';
 			var Categories = $resource('/categories');
 			$scope.categories = Categories.query();
@@ -77,6 +87,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				$event.preventDefault();
 				return false;
 			};
+		},
+		itemController: function($scope) {
 
 		},
 		generateCalendar: function($scope, start){
@@ -157,6 +169,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 						$(this).removeClass('dayInHover');
 						log('data : '+data);
 						log('on '+$(this).attr('data-day'));
+						var addDayItemEvent = new $.Event('addDayItemEvent');
+						addDayItemEvent.dayElem = event.target;
+						addDayItemEvent.projectId = data;
+						$(document.getElementById('calendar')).trigger(addDayItemEvent);
 					}
 				});
 			}
