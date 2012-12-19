@@ -171,14 +171,50 @@
 		}
 		.content {
 			padding-top: 0;
+			padding: 15px 0 0 0 !important;
+
 			.project {
-				.border-radius(5px);
-				border: 1px #CCC solid;
-				margin-bottom: 2px;
+				position: relative;
+				border-style: solid;
+				border-color: #E9E9E9;
+				border-width: 1px 0 0 0;
 				height: 30px;
 				line-height: 30px;
 				font-size: 11px;
-				padding: 0 6px;
+				padding: 0 6px 0 30px;
+				cursor: move;
+
+				&:hover {
+					background-color: #cce6ff;
+				}
+
+				.icon {
+					position: absolute;
+					top: 0;
+					left: 0;
+					display: inline-block;
+					height: 30px;
+					.icon16("../img/batch/16x16/in.png");
+				}
+
+				.input {
+					position: absolute;
+					display: inline-block;
+					top: 0;
+					right: 0;
+					background-color: transparent;
+					border: none;
+					outline: none;
+					width: 25px;
+					height: 20px;
+					margin: 5px 0 0 0;
+					font-weight: bold;
+					.box-shadow(none);
+				}
+			}
+
+			.dragged {
+				background-color: #cce6ff;
 			}
 		}
 	}
