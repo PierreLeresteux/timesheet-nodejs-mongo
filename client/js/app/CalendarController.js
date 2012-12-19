@@ -31,22 +31,23 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
 			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
-			//$module.controller('ItemController', ['$scope',that.itemController]);
-
-			that.$calendar = $(document.getElementById('calendar'));
-			that.$calendar.on('addDayItemEvent', function(event){
-				log('addDayItemEvent');
+			$module.controller('DayItemController', ['$scope',that.dayItemController]);
+		},
+		render: function() {
+			log('CalendarController > render');
+			var that = this;
+			$container.empty().append(this.mainTemplate);
+			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
+			var calendarElem = document.getElementById('calendar');
+			angular.bootstrap(calendarElem, ['timesheet']);
+			var $calendar = $(calendarElem);
+			$calendar.on('addDayItemEvent', function(event){
+				log('addDayItemEvent handler');
 				var $day = $(event.dayElem);
 				var $item = $(that.dayItemTemplate);
 				$day.append($item);
 				angular.bootstrap($item.get(0));
 			});
-		},
-		render: function() {
-			log('CalendarController > render');
-			$container.empty().append(this.mainTemplate);
-			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
-			angular.bootstrap(this.$calendar, ['timesheet']);
 		},
 		calendarController: function($scope, $resource, $generateCalendar){
 			$scope.prevMonth = function() {
@@ -88,8 +89,9 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return false;
 			};
 		},
-		itemController: function($scope) {
-
+		dayItemController: function($scope) {
+			$scope.title = "project";
+			$scope.hours = "8";
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
@@ -167,11 +169,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					drop: function(event){
 						var data = event.dataTransfer.getData('text/emv-project');
 						$(this).removeClass('dayInHover');
-						log('data : '+data);
-						log('on '+$(this).attr('data-day'));
 						var addDayItemEvent = new $.Event('addDayItemEvent');
 						addDayItemEvent.dayElem = event.target;
 						addDayItemEvent.projectId = data;
+						log('trigger addDayItemEvent');
 						$(document.getElementById('calendar')).trigger(addDayItemEvent);
 					}
 				});
