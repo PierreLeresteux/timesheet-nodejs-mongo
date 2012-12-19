@@ -1,57 +1,72 @@
 #categories {
-		.title {
-			height: 35px;
-			line-height: 35px;
-			padding-left: 40px;
-			border: none;
+	.title {
+		height: 35px;
+		line-height: 35px;
+		padding-left: 40px;
+		border: none;
 
-			h5 {
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				width: auto;
-				overflow: hidden;
-				padding-right: 8px;
+		h5 {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			width: auto;
+			overflow: hidden;
+			padding-right: 8px;
+			vertical-align: middle;
+			cursor:pointer;
+		}
+		img{
+			cursor:pointer;
+			vertical-align: middle;
+		}
+	}
+	li {
+		line-height: 35px;
+	}
+	.content {
+		padding-top: 0;
+
+		.project {
+			max-width: 220px;
+			background-color: white;
+			margin-left: 40px;
+			margin-bottom: 20px;
+			border: 2px solid @borderColor;
+			.border-radius(5px);
+			height: 60px;
+			cursor:pointer;
+			div {
+				margin: 0 20px;
+				height: 30px;
+				line-height: 30px;
+			}
+
+			&:hover {
+				border: 2px solid #2284A1;
+			}
+
+			.options {
+				text-align: center;
 			}
 
 		}
-		.content {
-			padding-top: 0;
-			.project {
-				max-width: 220px;
-				background-color: white;
-				margin-left: 40px;
-				margin-bottom: 40px;
-				border: 2px solid @borderColor;
-				.border-radius(5px);
-				height: 60px;
-				div {
-					margin:0 20px;
-					height: 30px;
-					line-height: 30px;
-				}
+	}
 
-				&:hover{
-					border: 2px solid #2284A1;
-				}
+	.icon-edit {
+		.icon16("../img/batch/16x16/pencil.png");
+		width: 22px;
+		height: 22px;
+		cursor: pointer;
+	}
 
-				.options{
-					text-align: center;
-				}
-				.icon-edit{
-					.icon16("../img/batch/16x16/pencil.png");
-					width: 22px;
-					height: 22px;
-					cursor: pointer;
-				}
+	.icon-delete {
+		.icon16("../img/batch/16x16/delete-white.png");
+		width: 22px;
+		height: 22px;
+		cursor: pointer;
+	}
 
-				.icon-delete{
-					.icon16("../img/batch/16x16/delete-white.png");
-					width: 22px;
-					height: 22px;
-					cursor: pointer;
-				}
-			}
-		}
+	.icon-add {
+		.icon16("../img/batch/16x16/add.png");
 	}
 
 }

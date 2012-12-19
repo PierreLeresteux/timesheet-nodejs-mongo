@@ -1,8 +1,10 @@
 <div ng-controller="ProjectsController">
+    <h2>Categories</h2>
     <ul id="categories" ng-controller="CategoriesController">
-        <li ng-repeat="category in categories">
-            <div class="title">
-                <h5>{{category.name}}</h5>
+        <li><div class="title"><h5><img src="../img/batch/16x16/add.png"/> Add a category</h5></div></li>
+        <li ng-repeat="category in categories" mouse-over-category>
+            <div cat-dblclick class="title" title="Double-click to edit">
+                <h5 >{{category.name}}</h5>
             </div>
             <div class="content" ng-click="noEvent($event)" >
                 <projectlist>
