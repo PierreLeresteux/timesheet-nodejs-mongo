@@ -17,6 +17,7 @@ Db.connect(mongoUri, function (err, database) {
 exports.categories = {};
 
 exports.categories.findAll = function(req, res) {
+    console.log('Retrieving all categories');
     db.collection('categories', function(err, collection) {
         mongUtil.getAll(collection, res);
     });
@@ -24,8 +25,30 @@ exports.categories.findAll = function(req, res) {
 
 exports.categories.findById = function(req, res) {
     var categoryId = req.params.cid;
+    console.log('Retrieving category id "' + categoryId + '"');
     db.collection('categories', function(err, collection) {
         mongUtil.getById(collection, categoryId, res);
+    });
+}
+
+exports.categories.replace = function(req, res) {
+    var categoryId = req.params.cid;
+    var category = req.body;
+    console.log('Replacing category id "' + categoryId + '" with category ' + JSON.stringify(category));
+    db.collection('categories', function(err, collection) {
+        mongUtil.updateEntity(collection, categoryId, category, res);
+    });
+}
+
+exports.categories.update = function(req, res) {
+    var categoryId = req.params.cid;
+    var category = req.body;
+    console.log('Updating category id "' + categoryId + '" with category ' + JSON.stringify(category));
+    var update = {
+        $set: { name: category.name }
+    };
+    db.collection('categories', function(err, collection) {
+        mongUtil.updateEntity(collection, categoryId, update, res);
     });
 }
 
@@ -33,6 +56,7 @@ exports.categories.projects = {};
 
 exports.categories.projects.findAll = function(req, res) {
     var categoryId = req.params.cid;
+    console.log('Retrieving all projects of category id "' + categoryId + '"');
     db.collection('categories', function(err, collection) {
         collection.findOne({'_id': new BSON.ObjectID(categoryId)}, function (err, category) {
             res.send(category.projects);
@@ -43,6 +67,7 @@ exports.categories.projects.findAll = function(req, res) {
 exports.categories.projects.findById = function(req, res) {
     var categoryId = req.params.cid;
     var projectId = req.params.pid;
+    console.log('Retrieving project id "' + projectId + '" of category id "' + categoryId + '"');
     db.collection('categories', function(err, collection) {
         collection.findOne({'_id': new BSON.ObjectID(categoryId), 'projects.id': new BSON.ObjectID(projectId)}, function (err, category) {
             for (var i = 0; i < category.projects.length; i++) {
@@ -84,6 +109,7 @@ exports.activities.findAll = function(req, res) {
         'project.name' : 1,
     };
     var pipeline = [{ $match: query }, { $sort: sortKeys }, { $limit: 100}];
+    console.log('Retrieving all activities with query ' + JSON.stringify(query));
     db.collection('activities', function(err, collection) {
         collection.aggregate(pipeline, function(err, activities) {
             res.send(activities);
@@ -98,6 +124,7 @@ exports.activities.toCsv = function(req, res) {
         'date.year': ~~year,
         'date.month': ~~month
     };
+    console.log('Exporting all activities of ' + month + '/' + year);
     db.collection('activities', function(err, collection) {
         collection.find(query).toArray(function(err, activities) {
             res.contentType('csv');
@@ -114,7 +141,6 @@ exports.activities.toCsv = function(req, res) {
                     '"' + activity.accounting.name + '",' +
                     activity.hours + '\n';
             };
-            console.log('Result: "' + result + '" (' + activities.length + ' results)');
             res.send(result);
         });
     });
