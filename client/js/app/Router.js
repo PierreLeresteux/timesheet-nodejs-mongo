@@ -14,7 +14,7 @@ define([], function(){
 		},
 		initRoutes: function() {
 			log('Router > init routes');
-			var that = this, calendarController, statsController;
+			var that = this, calendarController, statsController, projectsController;
 			$module.config(['$routeProvider', function($routeProvider) {
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
@@ -34,13 +34,24 @@ define([], function(){
 						that.hide();
 						require(['stats-controller'], function(StatsController) {
 							log('Router > load StatsController');
-							require(['stats-controller'], function(StatsController) {
-								if(!statsController) {
-									statsController = new StatsController('StatsController');
-								}
-								statsController.render();
-								that.show();
-							});
+							if(!statsController) {
+								statsController = new StatsController('StatsController');
+							}
+							statsController.render();
+							that.show();
+						});
+					}
+				});
+				$routeProvider.when('/projects', {
+					'redirectTo': function() {
+						that.hide();
+						require(['projects-controller'], function(ProjectsController) {
+							log('Router > load ProjectsController');
+							if(!projectsController) {
+								projectsController = new ProjectsController('ProjectsController');
+							}
+							projectsController.render();
+							that.show();
 						});
 					}
 				});

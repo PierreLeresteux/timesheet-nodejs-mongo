@@ -1,0 +1,13 @@
+<div ng-controller="ProjectsController">
+    <ul id="categories" ng-controller="CategoriesController">
+        <li ng-repeat="category in categories">
+            <div class="title">
+                <h5>{{category.name}}</h5>
+            </div>
+            <div class="content" ng-click="noEvent($event)" >
+                <projectlist>
+                </projectlist>
+            </div>
+        </li>
+    </ul>
+</div>

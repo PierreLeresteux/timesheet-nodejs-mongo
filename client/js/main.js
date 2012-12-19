@@ -33,7 +33,8 @@ requirejs.config({
 		'router': 'js/app/Router',
 		'main-controller': 'js/app/MainController',
 		'calendar-controller': 'js/app/CalendarController',
-		'stats-controller': 'js/app/StatsController'
+		'stats-controller': 'js/app/StatsController',
+		'projects-controller': 'js/app/ProjectsController'
 	},
 	shim: {
 		'angular': {deps: ['zepto']},
