@@ -23,38 +23,37 @@ exports.categories.findAll = function(req, res) {
 }
 
 exports.categories.findById = function(req, res) {
-    var id = req.params.id;
+    var categoryId = req.params.cid;
     db.collection('categories', function(err, collection) {
-        mongUtil.getById(collection, id, res);
+        mongUtil.getById(collection, categoryId, res);
     });
 }
 
 exports.categories.projects = {};
 
 exports.categories.projects.findAll = function(req, res) {
-    var id = req.params.id;
+    var categoryId = req.params.cid;
     db.collection('categories', function(err, collection) {
-        collection.findOne({'_id': new BSON.ObjectID(id)}, function (err, category) {
+        collection.findOne({'_id': new BSON.ObjectID(categoryId)}, function (err, category) {
             res.send(category.projects);
         });
     });
 }
 
 exports.categories.projects.findById = function(req, res) {
-    var category_id = req.params.cid;
-    var project_id = req.params.pid;
+    var categoryId = req.params.cid;
+    var projectId = req.params.pid;
     db.collection('categories', function(err, collection) {
-        collection.findOne({'_id': new BSON.ObjectID(category_id), 'projects.id': new BSON.ObjectID(project_id)}, function (err, category) {
+        collection.findOne({'_id': new BSON.ObjectID(categoryId), 'projects.id': new BSON.ObjectID(projectId)}, function (err, category) {
             for (var i = 0; i < category.projects.length; i++) {
                 var project = category.projects[i];
-                var curr_prj_id = project.id;
-                if (curr_prj_id == project_id) {
+                if (project.id == projectId) {
                     return res.send(project);
                 }
             }
             var error = {
                 status : 404,
-                message : "Couldn't find project id '" + project_id + "' for category id '" + category_id + "'"
+                message : 'Couldn\'t find project id "' + projectId + '" for category id "' + categoryId + '"'
             };
             res.send(error, 404);
         });
@@ -77,14 +76,14 @@ exports.activities.findAll = function(req, res) {
     if (month) {
         query['date.month'] = ~~month;
     }
-    var sort_keys = {
+    var sortKeys = {
         'date.year' : 1,
         'date.month' : 1,
         'date.day' : 1,
         'category.name' : 1,
         'project.name' : 1,
     };
-    var pipeline = [{ $match: query }, { $sort: sort_keys }, { $limit: 100}];
+    var pipeline = [{ $match: query }, { $sort: sortKeys }, { $limit: 100}];
     db.collection('activities', function(err, collection) {
         collection.aggregate(pipeline, function(err, activities) {
             res.send(activities);
@@ -96,8 +95,8 @@ exports.activities.toCsv = function(req, res) {
     var year = req.params.year;
     var month = req.params.month;
     var query = {
-        "date.year": ~~year,
-        "date.month": ~~month
+        'date.year': ~~year,
+        'date.month': ~~month
     };
     db.collection('activities', function(err, collection) {
         collection.find(query).toArray(function(err, activities) {
@@ -357,152 +356,152 @@ var populateDB = function() {
 	console.log('populateDB');
 
     var categories = [{
-        "name" : "Future Architecture",
-        "authorized_users" : [
-            { "login" : "sjob" }
+        'name' : 'Future Architecture',
+        'authorized_users' : [
+            { 'login' : 'sjob' }
         ],
-        "projects" : [{
-            "id" : mongo.ObjectID(),
-            "name" : "DataStore",
-            "accounting" : {
-                "name" : "prd"
+        'projects' : [{
+            'id' : mongo.ObjectID(),
+            'name' : 'DataStore',
+            'accounting' : {
+                'name' : 'prd'
             },
-            "tasks" : [{
-                "id" : mongo.ObjectID(),
-                "name" : "PoC"
+            'tasks' : [{
+                'id' : mongo.ObjectID(),
+                'name' : 'PoC'
             },{
-                "id" : mongo.ObjectID(),
-                "name" : "Implementation"
+                'id' : mongo.ObjectID(),
+                'name' : 'Implementation'
             }]
         }]
     },{
-        "name" : "Holiday/Off",
-        "authorized_users" : [
-            { "login" : "sjob" }
+        'name' : 'Holiday/Off',
+        'authorized_users' : [
+            { 'login' : 'sjob' }
         ],
-        "projects" : [{
-            "id" : mongo.ObjectID(),
-            "name" : "RTT",
-            "accounting" : {
-                "name" : "abs"
+        'projects' : [{
+            'id' : mongo.ObjectID(),
+            'name' : 'RTT',
+            'accounting' : {
+                'name' : 'abs'
             },
-            "tasks" : [{
-                "id" : mongo.ObjectID(),
-                "name" : "RTT"
+            'tasks' : [{
+                'id' : mongo.ObjectID(),
+                'name' : 'RTT'
             }]
         },{
-            "id" : mongo.ObjectID(),
-            "name" : "Sick",
-            "accounting" : {
-                "name" : "abs"
+            'id' : mongo.ObjectID(),
+            'name' : 'Sick',
+            'accounting' : {
+                'name' : 'abs'
             },
-            "tasks" : [{
-                "id" : mongo.ObjectID(),
-                "name" : "Sick"
+            'tasks' : [{
+                'id' : mongo.ObjectID(),
+                'name' : 'Sick'
             }]
         },{
-            "id" : mongo.ObjectID(),
-            "name" : "Vacation",
-            "accounting" : {
-                "name" : "abs"
+            'id' : mongo.ObjectID(),
+            'name' : 'Vacation',
+            'accounting' : {
+                'name' : 'abs'
             },
-            "tasks" : [{
-                "id" : mongo.ObjectID(),
-                "name" : "Vacation"
+            'tasks' : [{
+                'id' : mongo.ObjectID(),
+                'name' : 'Vacation'
             }]
         }]
     }];
     var activities = [{
-        "user" : "sdavid",
-        "date" : {
-            "year" : 2012,
-            "month" : 12,
-            "day" : 14
+        'user' : 'sdavid',
+        'date' : {
+            'year' : 2012,
+            'month' : 12,
+            'day' : 14
         },
-        "hours" : 8,
-        "task" : {
-            "id" : categories[1].projects[2].tasks[0].id,
-            "name" : "Vacation"
+        'hours' : 8,
+        'task' : {
+            'id' : categories[1].projects[2].tasks[0].id,
+            'name' : 'Vacation'
         },
-        "project" : {
-            "id" : categories[1].projects[2].id,
-            "name" : "Vacation"
+        'project' : {
+            'id' : categories[1].projects[2].id,
+            'name' : 'Vacation'
         },
-        "category" : {
-            "id" : categories[1]._id, // null at this time, need first to save categories to DB
-            "name" : "Holiday/Off"
+        'category' : {
+            'id' : categories[1]._id, // null at this time, need first to save categories to DB
+            'name' : 'Holiday/Off'
         },
-        "accounting" : {
-            "name" : "abs"
+        'accounting' : {
+            'name' : 'abs'
         }
     },{
-        "user" : "sdavid",
-        "date" : {
-            "year" : 2012,
-            "month" : 12,
-            "day" : 17
+        'user' : 'sdavid',
+        'date' : {
+            'year' : 2012,
+            'month' : 12,
+            'day' : 17
         },
-        "hours" : 8,
-        "task" : {
-            "id" : categories[1].projects[2].tasks[0].id,
-            "name" : "Vacation"
+        'hours' : 8,
+        'task' : {
+            'id' : categories[1].projects[2].tasks[0].id,
+            'name' : 'Vacation'
         },
-        "project" : {
-            "id" : categories[1].projects[2].id,
-            "name" : "Vacation"
+        'project' : {
+            'id' : categories[1].projects[2].id,
+            'name' : 'Vacation'
         },
-        "category" : {
-            "id" : categories[1]._id, // null at this time, need first to save categories to DB
-            "name" : "Holiday/Off"
+        'category' : {
+            'id' : categories[1]._id, // null at this time, need first to save categories to DB
+            'name' : 'Holiday/Off'
         },
-        "accounting" : {
-            "name" : "abs"
+        'accounting' : {
+            'name' : 'abs'
         }
     },{
-        "user" : "sjob",
-        "date" : {
-            "year" : 2012,
-            "month" : 12,
-            "day" : 14
+        'user' : 'sjob',
+        'date' : {
+            'year' : 2012,
+            'month' : 12,
+            'day' : 14
         },
-        "hours" : 4,
-        "task" : {
-            "id" : categories[1].projects[0].tasks[0].id,
-            "name" : "RTT"
+        'hours' : 4,
+        'task' : {
+            'id' : categories[1].projects[0].tasks[0].id,
+            'name' : 'RTT'
         },
-        "project" : {
-            "id" : categories[1].projects[0].id,
-            "name" : "RTT"
+        'project' : {
+            'id' : categories[1].projects[0].id,
+            'name' : 'RTT'
         },
-        "category" : {
-            "id" : categories[1]._id, // null at this time, need first to save categories to DB
-            "name" : "Holiday/Off"
+        'category' : {
+            'id' : categories[1]._id, // null at this time, need first to save categories to DB
+            'name' : 'Holiday/Off'
         },
-        "accounting" : {
-            "name" : "abs"
+        'accounting' : {
+            'name' : 'abs'
         }
     },{
-        "user" : "sjob",
-        "date" : {
-            "year" : 2012,
-            "month" : 12,
-            "day" : 14
+        'user' : 'sjob',
+        'date' : {
+            'year' : 2012,
+            'month' : 12,
+            'day' : 14
         },
-        "hours" : 4,
-        "task" : {
-            "id" : categories[0].projects[0].tasks[0].id,
-            "name" : "PoC"
+        'hours' : 4,
+        'task' : {
+            'id' : categories[0].projects[0].tasks[0].id,
+            'name' : 'PoC'
         },
-        "project" : {
-            "id" : categories[0].projects[0].id,
-            "name" : "DataStore"
+        'project' : {
+            'id' : categories[0].projects[0].id,
+            'name' : 'DataStore'
         },
-        "category" : {
-            "id" : categories[0]._id, // null at this time, need first to save categories to DB
-            "name" : "Future Architecture"
+        'category' : {
+            'id' : categories[0]._id, // null at this time, need first to save categories to DB
+            'name' : 'Future Architecture'
         },
-        "accounting" : {
-            "name" : "prd"
+        'accounting' : {
+            'name' : 'prd'
         }
     }];
 

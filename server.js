@@ -71,8 +71,8 @@ app.put('/ts/:id', ts.updateProject);
 app.delete('/project/:id', ts.deleteProject);
 
 app.get('/categories', ts.categories.findAll);
-app.get('/categories/:id', ts.categories.findById);
-app.get('/categories/:id/projects', ts.categories.projects.findAll);
+app.get('/categories/:cid', ts.categories.findById);
+app.get('/categories/:cid/projects', ts.categories.projects.findAll);
 app.get('/categories/:cid/projects/:pid', ts.categories.projects.findById);
 
 app.get('/activities', ts.activities.findAll);
