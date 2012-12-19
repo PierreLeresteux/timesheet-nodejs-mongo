@@ -4,8 +4,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			log('CalendarController > init');
 			var that = this;
 
-			that.mainTemplate = $(Template).find('#template').html();
-			that.projectTemplate = $(Template).find('#projectTemplate').html();
+			var $template = $(Template);
+			that.mainTemplate = $template.find('#main-template').html();
+			that.projectTemplate = $template.find('#project-template').html();
+			that.dayItemTemplate = $template.find('#day-item-template').html();
 
 			$.event.props.push('dataTransfer');
 			$module.factory('$generateCalendar', function(){

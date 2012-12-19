@@ -1,12 +1,13 @@
 <div>
-	<div id="template">
+	<div id="main-template">
 		<div id="menu" ng-controller="MenuController">
 			<div class="options">
 				<span class="options-radio">
 		            <ul class="button-group radius">
 		                <li ng-switch on="targetType" >
 		                    <a ng-switch-when="day" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="day">day</a>
-		                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="day">day</a>                </li>
+		                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="day">day</a>
+		                </li>
 		                <li ng-switch on="targetType" >
 		                    <a ng-switch-when="week" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="week">week</a>
 		                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="week">week</a>
@@ -55,17 +56,26 @@
 			</div>
 			<div class="month">
 				<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">
-					<div data-day="{{day.text}}" drag-over ng-repeat="day in week.days" class="day {{day.class}}"><span>{{day.text}}</span></div>
+					<div data-day="{{day.text}}" drag-over ng-repeat="day in week.days" class="day {{day.class}}">
+						<span class="numDay">{{day.text}}</span>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div id="projectTemplate">
+	<div id="project-template">
 		<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}">
 			<span class="icon"></span>
 			<span>{{item.name}}</span>
 			<input class="input" type="text" maxlength="1" value="8"/>
+		</div>
+	</div>
+
+	<div id="day-item-template">
+		<div class="item">
+			<span class="title">{{title}}</span>
+			<span class="hours">{{hours}}</span>
 		</div>
 	</div>
 </div>

@@ -52,15 +52,47 @@
 				border-color: @borderColor;
 				border-style: solid;
 				.transition(background-color 0.2s ease);
+				padding: 5px;
 
 				&:hover {
 					background-color: #cce6ff;
 					.transition(background-color 0.3s ease);
 				}
 
-				span {
+				.numDay {
 					display: inline-block;
-					padding: 5px;
+					padding: 0 5px 5px 0;
+					vertical-align: top;
+				}
+
+				.item {
+					display: inline-block;
+					background-color: @blueColor;
+					border: 1px solid @borderColor;
+					padding: 0 2px 2px 0;
+					line-height: 18px;
+					white-space: nowrap;
+					vertical-align: top;
+					margin-bottom: 5px;
+					color: white;
+					border: 1px solid #1E728C;
+					.border-radius(3px);
+					.box-shadow(0 1px 0 rgba(255, 255, 255, 0.5) inset);
+
+					.title, .hours {
+						display: inline-block;
+						vertical-align: top;
+					}
+
+					.title {
+						font-weight: bold;
+						padding: 0 2px 0 4px;
+					}
+
+					.hours {
+						font-size: 10px;
+						padding: 0 2px;
+					}
 				}
 			}
 
@@ -147,7 +179,7 @@
 
 		.search-icon {
 			.icon16("../img/batch/16x16/search.png");
-			background-color: #E9E9E9;
+			background-color: @backgroundColor;
 			height: 25px;
 			width: 28px;
 			margin: 0;
@@ -176,7 +208,7 @@
 			.project {
 				position: relative;
 				border-style: solid;
-				border-color: #E9E9E9;
+				border-color: @borderColor;
 				border-width: 1px 0 0 0;
 				height: 30px;
 				line-height: 30px;
@@ -205,7 +237,7 @@
 					background-color: transparent;
 					border-style: solid;
 					border-width: 0 0 0 1px;
-					border-color: #E9E9E9;
+					border-color: @borderColor;
 					padding-left: 10px;
 					outline: none;
 					width: 30px;
@@ -353,7 +385,9 @@
 					position: inherit;
 					top: 0;
 					bottom: 0;
+					padding: 5px;
 					border-width: 1px 0 0 1px;
+					overflow: hidden;
 
 					&:first-child {
 						border-left: none;
@@ -361,10 +395,10 @@
 				}
 
 				.empty {
-					background-color: #f6f6f6;
+					background-color: @backgroundColor;
 
 					&:hover {
-						background-color: #f6f6f6 !important;
+						background-color: @backgroundColor !important;
 					}
 				}
 
