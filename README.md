@@ -43,6 +43,8 @@ __URLs__
 * Categories
     - ```GET /categories``` => Get all categories with all their projects
     - ```GET /categories/:cid``` => Get a single category with all its projects
+    - ```PUT /categories/:cid``` => Replace a category with the data passed in the body
+    - ```PATCH /categories/:cid``` => Update a category with the data passed in the body
     - ```GET /categories/:cid/projects``` => Get all projects of a category
     - ```GET /categories/:cid/projects/:pid``` => Get a single project of a category
 * Activities

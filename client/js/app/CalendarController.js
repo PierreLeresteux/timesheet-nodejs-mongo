@@ -3,6 +3,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 		init: function() {
 			log('CalendarController > init');
 			var that = this;
+
+			that.mainTemplate = $(Template).find('#template').html();
+			that.projectTemplate = $(Template).find('#projectTemplate').html();
+
 			$.event.props.push('dataTransfer');
 			$module.factory('$generateCalendar', function(){
 				return that.generateCalendar;
@@ -13,29 +17,23 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					restrict: 'E',
 					replace: true,
 					scope: true,
-					template: '<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}">'+
-								'<span>{{item.name}}</span>'+
-							  '</div>'
+					template: that.projectTemplate
 				};
 			}).directive('projectReady', function(){
 				return that.projectDirective;
 			}).directive('dragOver', function(){
 				return that.dragOver;
 			}).directive('accordion', function(){
-                return that.loadAccordion;
-            });
+				return that.loadAccordion;
+			});
 
 			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
-
 			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
 		},
 		render: function() {
 			log('CalendarController > render');
-			$container.empty().append(Template);
-
-
+			$container.empty().append(this.mainTemplate);
 			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
-
 			angular.bootstrap(document.getElementById('calendar'), ['timesheet']);
 		},
 		calendarController: function($scope, $resource,$generateCalendar){
@@ -51,11 +49,11 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			var days, i, j, className, start=moment().startOf('month');
 			$generateCalendar($scope, start);
-            var Activities = $resource('/activities?user=:user&year=:year&month=:month',
-                {user: 'sjob', year:start.format('YYYY'), month:start.format('M')});
-            $scope.activities = Activities.query(function(){
-                log($scope.activities);
-            });
+			var Activities = $resource('/activities?user=:user&year=:year&month=:month',
+				{user: 'sjob', year:start.format('YYYY'), month:start.format('M')});
+			$scope.activities = Activities.query(function(){
+				log($scope.activities);
+			});
 		},
 		menuController: function ($scope,$resource) {
 			$scope.targetType = 'day';
@@ -128,46 +126,44 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				element.attr('draggable', 'true');
 				element.on({
 					dragstart: function(e){
-                        e.dataTransfer.effectAllowed = 'copy';
-                        e.dataTransfer.dropEffect = 'copy';
-                        e.dataTransfer.setData('text/emv-project', $(this).attr('data-projectid'));
-						$(this).css('border-style','dotted');
-						$(this).css('border-width','2px');
+						e.dataTransfer.effectAllowed = 'copy';
+						e.dataTransfer.dropEffect = 'copy';
+						e.dataTransfer.setData('text/emv-project', $(this).attr('data-projectid'));
+						$(element).addClass('dragged');
 					},
 					dragend: function(e){
 						e.dataTransfer.setData('text/emv-project', undefined);
-						$(this).css('border-style','solid');
-						$(this).css('border-width','1px');
+						$(element).removeClass('dragged');
 					}
 				});
 			});
 		},
 		dragOver: function(scope, element, attrs) {
-            if (scope.$eval('day.class').indexOf('empty')<0){
-                element.on({
-                    dragenter: function(event){
-                        $(this).addClass('dayInHover');
-                    },
-                    dragleave: function(event){
-                        $(this).removeClass('dayInHover');
-                    },
-                    dragover: function(event){
-                        event.preventDefault();
-                    },
-                    drop: function(event){
-                        var data = event.dataTransfer.getData('text/emv-project');
-                        $(this).removeClass('dayInHover');
-                        log('data : '+data);
-                        log('on '+$(this).attr('data-day'));
-                    }
-                });
-            }
+			if (scope.$eval('day.class').indexOf('empty')<0){
+				element.on({
+					dragenter: function(event){
+						$(this).addClass('dayInHover');
+					},
+					dragleave: function(event){
+						$(this).removeClass('dayInHover');
+					},
+					dragover: function(event){
+						event.preventDefault();
+					},
+					drop: function(event){
+						var data = event.dataTransfer.getData('text/emv-project');
+						$(this).removeClass('dayInHover');
+						log('data : '+data);
+						log('on '+$(this).attr('data-day'));
+					}
+				});
+			}
 		},
-        loadAccordion: function(scope, element, attrs) {
-            if (scope.$last){
-                var menuElem = document.getElementById('menu');
-                $(menuElem).foundationAccordion();
-            }
-        }
+		loadAccordion: function(scope, element, attrs) {
+			if (scope.$last){
+				var menuElem = document.getElementById('menu');
+				$(menuElem).foundationAccordion();
+			}
+		}
 	});
 });
