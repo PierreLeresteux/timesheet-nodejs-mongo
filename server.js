@@ -71,11 +71,15 @@ app.put('/ts/:id', ts.updateProject);
 app.delete('/project/:id', ts.deleteProject);
 
 app.get('/categories', ts.categories.findAll);
+app.post('/categories', ts.categories.create);
 app.get('/categories/:cid', ts.categories.findById);
 app.put('/categories/:cid', ts.categories.replace);
 app.patch('/categories/:cid', ts.categories.update);
 app.get('/categories/:cid/projects', ts.categories.projects.findAll);
+app.post('/categories/:cid/projects', ts.categories.projects.create);
 app.get('/categories/:cid/projects/:pid', ts.categories.projects.findById);
+app.put('/categories/:cid/projects/:pid', ts.categories.projects.replace);
+app.patch('/categories/:cid/projects/:pid', ts.categories.projects.update);
 
 app.get('/activities', ts.activities.findAll);
 

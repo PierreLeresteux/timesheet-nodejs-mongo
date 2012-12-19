@@ -48,7 +48,23 @@ exports.categories.update = function(req, res) {
         $set: { name: category.name }
     };
     db.collection('categories', function(err, collection) {
-        mongUtil.updateEntity(collection, categoryId, update, res);
+        collection.update({'_id': new BSON.ObjectID(categoryId)}, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                res.send({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                res.send(category);
+            }
+        });
+    });
+}
+
+exports.categories.create = function(req, res) {
+    var category = req.body;
+    console.log('Adding category ' + JSON.stringify(category));
+    db.collection('categories', function(err, collection) {
+        mongUtil.insertEntity(collection, category, res);
     });
 }
 
@@ -59,6 +75,9 @@ exports.categories.projects.findAll = function(req, res) {
     console.log('Retrieving all projects of category id "' + categoryId + '"');
     db.collection('categories', function(err, collection) {
         collection.findOne({'_id': new BSON.ObjectID(categoryId)}, function (err, category) {
+            if (!category.projects) {
+                category.projects = [];
+            }
             res.send(category.projects);
         });
     });
@@ -70,10 +89,12 @@ exports.categories.projects.findById = function(req, res) {
     console.log('Retrieving project id "' + projectId + '" of category id "' + categoryId + '"');
     db.collection('categories', function(err, collection) {
         collection.findOne({'_id': new BSON.ObjectID(categoryId), 'projects.id': new BSON.ObjectID(projectId)}, function (err, category) {
-            for (var i = 0; i < category.projects.length; i++) {
-                var project = category.projects[i];
-                if (project.id == projectId) {
-                    return res.send(project);
+            if (category && category.projects) {
+                for (var i = 0; i < category.projects.length; i++) {
+                    var project = category.projects[i];
+                    if (project.id == projectId) {
+                        return res.send(project);
+                    }
                 }
             }
             var error = {
@@ -81,6 +102,88 @@ exports.categories.projects.findById = function(req, res) {
                 message : 'Couldn\'t find project id "' + projectId + '" for category id "' + categoryId + '"'
             };
             res.send(error, 404);
+        });
+    });
+}
+
+exports.categories.projects.replace = function(req, res) {
+    var categoryId = req.params.cid;
+    var projectId = req.params.pid;
+    var project = req.body;
+    console.log('Replacing project id "' + projectId + '" of category id "' + categoryId + '" with project ' + JSON.stringify(project));
+    db.collection('categories', function(err, collection) {
+        collection.findOne({'_id': new BSON.ObjectID(categoryId), 'projects.id': new BSON.ObjectID(projectId)}, function (err, category) {
+            if (category && category.projects) {
+                for (var i = 0; i < category.projects.length; i++) {
+                    var currentProject = category.projects[i];
+                    if (currentProject.id == projectId) {
+                        // TODO: Modify currentProject with project in the categories collection
+                        category.projects[i] = project;
+                        category.projects[i].id = projectId;
+                        console.log('Replacing category id "' + categoryId + '" with category ' + JSON.stringify(category));
+                        db.collection('categories', function(err, collection) {
+                            mongUtil.updateEntity(collection, categoryId, category, res);
+                        });
+                        return res.send(category.projects[i]);
+                    }
+                }
+            }
+            var error = {
+                status : 404,
+                message : 'Couldn\'t find project id "' + projectId + '" for category id "' + categoryId + '"'
+            };
+            res.send(error, 404);
+        });
+    });
+}
+
+exports.categories.projects.update = function(req, res) {
+    var categoryId = req.params.cid;
+    var projectId = req.params.pid;
+    var project = req.body;
+    console.log('Updating project id "' + projectId + '" of category id "' + categoryId + '" with project ' + JSON.stringify(project));
+    db.collection('categories', function(err, collection) {
+        collection.findOne({'_id': new BSON.ObjectID(categoryId), 'projects.id': new BSON.ObjectID(projectId)}, function (err, category) {
+            if (category && category.projects) {
+                for (var i = 0; i < category.projects.length; i++) {
+                    var currentProject = category.projects[i];
+                    if (currentProject.id == projectId) {
+                        // TODO: Modify currentProject with project in the categories collection
+                        category.projects[i].name = project.name;
+                        console.log('Replacing category id "' + categoryId + '" with category ' + JSON.stringify(category));
+                        db.collection('categories', function(err, collection) {
+                            mongUtil.updateEntity(collection, categoryId, category, res);
+                        });
+                        return res.send(category.projects[i]);
+                    }
+                }
+            }
+            var error = {
+                status : 404,
+                message : 'Couldn\'t find project id "' + projectId + '" for category id "' + categoryId + '"'
+            };
+            res.send(error, 404);
+        });
+    });
+}
+
+exports.categories.projects.create = function(req, res) {
+    var categoryId = req.params.cid;
+    var project = req.body;
+    project.id = mongo.ObjectID();
+    console.log('Adding project ' + JSON.stringify(project) + '" on category id "' + categoryId + '"');
+    var update = {
+        $push: { projects: project }
+    };
+    db.collection('categories', function(err, collection) {
+        collection.update({'_id': new BSON.ObjectID(categoryId)}, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                res.send({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                res.send(project);
+            }
         });
     });
 }
