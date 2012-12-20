@@ -1,65 +1,82 @@
 <div>
 	<div id="main-template">
-		<div id="menu" ng-controller="MenuController">
-			<div class="options">
-				<span class="options-radio">
-		            <ul class="button-group radius">
-		                <li ng-switch on="targetType" >
-		                    <a ng-switch-when="day" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="day">day</a>
-		                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="day">day</a>
-		                </li>
-		                <li ng-switch on="targetType" >
-		                    <a ng-switch-when="week" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="week">week</a>
-		                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="week">week</a>
-		                </li>
-		                <li ng-switch on="targetType" >
-		                    <a ng-switch-when="month" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="month">month</a>
-		                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="month">month</a>
-		                </li>
-		            </ul>
-				</span>
-				<span class="options-icon"></span>
+		<div id="mainController" ng-controller="MainController">
+			<div id="menu" ng-controller="MenuController">
+				<div class="options">
+					<span class="options-radio">
+			            <ul class="button-group radius">
+			                <li ng-switch on="targetType" >
+			                    <a ng-switch-when="day" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="day">day</a>
+			                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="day">day</a>
+			                </li>
+			                <li ng-switch on="targetType" >
+			                    <a ng-switch-when="week" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="week">week</a>
+			                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="week">week</a>
+			                </li>
+			                <li ng-switch on="targetType" >
+			                    <a ng-switch-when="month" href="#" class="button small radius" ng-click="changeTargetType($event)" data-value="month">month</a>
+			                    <a ng-switch-default="day" href="#" class="button secondary small radius" ng-click="changeTargetType($event)" data-value="month">month</a>
+			                </li>
+			            </ul>
+					</span>
+					<span class="options-icon"></span>
+				</div>
+			    <div class="search">
+			        <span class="search-span">
+			            <input type="text" placeholder="search" ng-model="search" ng-change="searchChange()"/>
+			        </span>
+			        <span class="search-icon"></span>
+			    </div>
+				<ul class="accordion" >
+					<li ng-repeat="category in categories" accordion >
+						<div class="title">
+							<h5>{{category.name}}</h5>
+						</div>
+						<div class="content" ng-click="noEvent($event)" >
+			                <project>
+			                </project>
+			            </div>
+					</li>
+				</ul>
 			</div>
-		    <div class="search">
-		        <span class="search-span">
-		            <input type="text" placeholder="search" ng-model="search" ng-change="searchChange()"/>
-		        </span>
-		        <span class="search-icon"></span>
-		    </div>
-			<ul class="accordion" >
-				<li ng-repeat="category in categories" accordion >
-					<div class="title">
-						<h5>{{category.name}}</h5>
-					</div>
-					<div class="content" ng-click="noEvent($event)" >
-		                <project>
-		                </project>
-		            </div>
-				</li>
-			</ul>
-		</div>
-		<div id="calendar" ng-controller="CalendarController">
-			<div class="date">
-		        <span ng-click="prevMonth()" class="prev-month-icon"></span>
-		        <span class="title-container">
-					<span class="calendar-icon"></span>
-					<span class="title">{{selectedMonth}}</span>
-		        </span>
-		        <span ng-click="nextMonth()" class="next-month-icon"></span>
-			</div>
-			<div class="weekdays">
-				<div class="weekday"><span>Monday</span></div>
-				<div class="weekday"><span>Tuesday</span></div>
-				<div class="weekday"><span>Wednesday</span></div>
-				<div class="weekday"><span>Thursday</span></div>
-				<div class="weekday"><span>Friday</span></div>
-			</div>
-			<div class="month">
-				<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">
-					<div data-day="{{day.text}}" drag-over ng-repeat="day in week.days" class="day {{day.class}}">
-						<span class="numDay">{{day.text}}</span>
+
+			<div id="calendar" ng-controller="CalendarController">
+				<div class="date">
+			        <span ng-click="prevMonth()" class="prev-month-icon"></span>
+			        <span class="title-container">
+						<span class="calendar-icon"></span>
+						<span class="title">{{selectedMonth}}</span>
+			        </span>
+			        <span ng-click="nextMonth()" class="next-month-icon"></span>
+				</div>
+				<div class="weekdays">
+					<div class="weekday"><span>Monday</span></div>
+					<div class="weekday"><span>Tuesday</span></div>
+					<div class="weekday"><span>Wednesday</span></div>
+					<div class="weekday"><span>Thursday</span></div>
+					<div class="weekday"><span>Friday</span></div>
+				</div>
+				<div class="month">
+					<div ng-repeat="week in weeks" class="week" style="top:{{week.top}}%; bottom:{{week.bottom}}%;">
+						<div data-day="{{day.text}}" drag-over ng-repeat="day in week.days" class="day {{day.class}}">
+							<span class="numDay">{{day.text}}</span>
+						</div>
 					</div>
 				</div>
+			</div>
+
+			<div id="day-item-edit-modal" class="reveal-modal">
+				<h2>Edit</h2>
+				<div class="row">
+					<div class="two mobile-one columns">
+						<label class="right inline">Hours:</label>
+					</div>
+					<div class="ten mobile-three columns">
+						<input type="text" placeholder="Hours" class="eight" ng-bind="dayItemHours"/>
+					</div>
+				</div>
+				<a class="secondary button" href="#" ng-click="cancel($event)">Cancel</a>
+				<a class="button" href="#" ng-click="confirm($event)">Confirm</a>
 			</div>
 		</div>
 	</div>
@@ -73,10 +90,10 @@
 	</div>
 
 	<div id="day-item-template">
-		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}">
+		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}" ng-dblclick="edit($event)">
 			<span class="icon" ng-click="removeItem($event)"></span>
 			<span class="project-label">{{label}}</span>
-			<span class="hours claquos-{{hours}}"></span>
+			<span class="hours" ng-bind="hours"></span>
 		</div>
 	</div>
 </div>

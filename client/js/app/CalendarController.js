@@ -31,19 +31,19 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return that.loadAccordion;
 			});
 
+			$module.controller('MainController', ['$scope',that.mainController]);
 			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
 			$module.controller('MenuController', ['$scope','$resource','$that',that.menuController]);
-			$module.controller('DayItemController', ['$scope','$that',that.dayItemController]);
+			$module.controller('DayItemController', ['$scope','$that','$rootScope',that.dayItemController]);
 		},
 		render: function() {
 			log('CalendarController > render');
 			var that = this;
-			$container.empty().append(this.mainTemplate);
-			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
-			var calendarElem = document.getElementById('calendar');
-			angular.bootstrap(calendarElem, ['timesheet']);
 
-			var $calendar = $(calendarElem);
+			$container.empty().append(this.mainTemplate);
+			angular.bootstrap(document.getElementById('mainController'), ['timesheet']);
+
+			var $calendar = $(document.getElementById('calendar'));
 			$calendar.on('addDayItemEvent', function(event){
 				log('addDayItemEvent handler');
 				that.dayItemData = {
@@ -65,11 +65,6 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				};
 				
 				switch(that.targetType) {
-					case 'day':
-						var $item = $(that.dayItemTemplate);
-						$(event.dayElem).append($item);
-						angular.bootstrap($item.get(0), ['timesheet']);
-						break;
 					case 'week':
 						var $week = $(event.dayElem).parent();
 						appendItems($week.find('.day'));
@@ -82,8 +77,36 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 							appendItems($($weeks.get(i)).find('.day'));
 						}
 						break;
+					default:
+						var $item = $(that.dayItemTemplate);
+						$(event.dayElem).append($item);
+						angular.bootstrap($item.get(0), ['timesheet']);
+						break;
 				}
+			});
+		},
+		mainController: function($scope) {
+			$scope.dayItemHours = 8;
+			$scope.$modal = $(document.getElementById('day-item-edit-modal'));
 
+			$scope.close = function() {
+				$scope.$modal.trigger('reveal:close');
+			};
+
+			$scope.cancel = function(event) {
+				event.preventDefault();
+				$scope.close();
+			};
+
+			$scope.confirm = function(event) {
+				event.preventDefault();
+				$rootScope.$broadcast('updateDayItemHoursEvent');
+				$scope.close();
+			};
+
+			$scope.$on('editDayItemEvent', function() {
+				log('editDayItemEvent');
+				$scope.$modal.reveal();
 			});
 		},
 		calendarController: function($scope, $resource, $generateCalendar){
@@ -127,7 +150,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return false;
 			};
 		},
-		dayItemController: function($scope, $that) {
+		dayItemController: function($scope, $that, $rootScope) {
 			$scope.id = $that.dayItemData.id;
 			$scope.label = $that.dayItemData.name;
 			$scope.hours = $that.dayItemData.hours;
@@ -136,6 +159,19 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				event.stopPropagation();
 				$(event.target).parent().remove();
 			};
+
+			$scope.edit = function(event) {
+				log('emit');
+				$scope.$emit('editDayItemEvent');
+				$scope.$broadcast('editDayItemEvent');
+				$rootScope.$emit('editDayItemEvent');
+				$rootScope.$broadcast('editDayItemEvent');
+			};
+
+			$scope.$on('updateDayItemHoursEvent', function() {
+				log('updateDayItemHoursEvent');
+				$scope.hours = $rootScope.hours;
+			});
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
