@@ -40,6 +40,24 @@ exports.categories.replace = function(req, res) {
     db.collection('categories', function(err, collection) {
         mongUtil.updateEntity(collection, categoryId, category, res);
     });
+    var query2 = {
+        'category.id': new BSON.ObjectID(categoryId)
+    };
+    var update2 = {
+        $set: {
+            'category.name': category.name
+        }
+    };
+    db.collection('activities', function(err, collection) {
+        collection.update(query2, update2, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                res.send({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+            }
+        });
+    });
 }
 
 exports.categories.update = function(req, res) {
@@ -62,6 +80,24 @@ exports.categories.update = function(req, res) {
             } else {
                 console.log('' + result + ' document(s) updated');
                 res.send(category);
+            }
+        });
+    });
+    var query2 = {
+        'category.id': new BSON.ObjectID(categoryId)
+    };
+    var update2 = {
+        $set: {
+            'category.name': category.name
+        }
+    };
+    db.collection('activities', function(err, collection) {
+        collection.update(query2, update2, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                res.send({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
             }
         });
     });
@@ -148,30 +184,76 @@ exports.categories.projects.replace = function(req, res) {
             }
         });
     });
+    var query2 = {
+        'project.id': new BSON.ObjectID(projectId)
+    };
+    var update2 = {
+        $set: {
+            'project.name': project.name
+        }
+    };
+    if (project.accounting && project.accounting.name) {
+        update2.$set['accounting.name'] = project.accounting.name;
+    }
+    db.collection('activities', function(err, collection) {
+        collection.update(query2, update2, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                res.send({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+            }
+        });
+    });
 }
- 
+
 exports.categories.projects.update = function(req, res) {
     var categoryId = req.params.cid;
     var projectId = req.params.pid;
     var project = req.body;
     console.log('Updating project id "' + projectId + '" of category id "' + categoryId + '" with project ' + JSON.stringify(project));
-    var query = {
+
+    var query1 = {
         '_id': new BSON.ObjectID(categoryId),
         'projects.id': new BSON.ObjectID(projectId)
     };
-    var update = {
+    var update1 = {
         $set: {
             'projects.$.name': project.name
         }
     };
+    if (project.accounting && project.accounting.name) {
+        update1.$set['accounting.name'] = project.accounting.name;
+    }
     db.collection('categories', function(err, collection) {
-        collection.update(query, update, {safe: true}, function (err, result) {
+        collection.update(query1, update1, {safe: true}, function (err, result) {
             if (err) {
                 console.log('Error updating collection: ' + err);
                 res.send({'error': 'An error has occurred'});
             } else {
                 console.log('' + result + ' document(s) updated');
                 res.send(project);
+            }
+        });
+    });
+    var query2 = {
+        'project.id': new BSON.ObjectID(projectId)
+    };
+    var update2 = {
+        $set: {
+            'project.name': project.name
+        }
+    };
+    if (project.accounting && project.accounting.name) {
+        update2.$set['accounting.name'] = project.accounting.name;
+    }
+    db.collection('activities', function(err, collection) {
+        collection.update(query2, update2, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                res.send({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
             }
         });
     });
