@@ -69,7 +69,7 @@
 					display: inline-block;
 					background-color: @blueColor;
 					border: 1px solid @borderColor;
-					padding: 0 2px 2px 0;
+					padding: 0 2px 0 0;
 					line-height: 18px;
 					white-space: nowrap;
 					vertical-align: top;
@@ -79,20 +79,40 @@
 					border: 1px solid #1E728C;
 					.border-radius(3px);
 					.box-shadow(0 1px 0 rgba(255, 255, 255, 0.5) inset);
+					font-size: 0;
 
-					.project-label, .hours {
+					.icon, .project-label, .hours {
 						display: inline-block;
 						vertical-align: top;
 					}
 
+					.icon {
+						background-position: center center;
+						background-repeat: no-repeat;
+						background-image: url("../img/batch/16x16/arrow-right-white.png");
+						width: 20px;
+						height: 20px;
+						.transition(background-image 0.5 ease);
+						cursor: pointer;
+					}
+
 					.project-label {
 						font-weight: bold;
-						padding: 0 2px 0 4px;
+						padding: 0 2px 0 2px;
+						font-size: 13px;
+						line-height: 20px;
 					}
 
 					.hours {
 						font-size: 10px;
-						padding: 0 2px;
+						padding: 0 2px 0 4px;
+					}
+
+					&:hover {
+
+						.icon {
+							background-image: url("../img/batch/16x16/delete-white.png");
+						}
 					}
 				}
 			}

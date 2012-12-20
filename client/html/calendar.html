@@ -74,6 +74,7 @@
 
 	<div id="day-item-template">
 		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}">
+			<span class="icon" ng-click="removeItem($event)"></span>
 			<span class="project-label">{{label}}</span>
 			<span class="hours">{{hours}}</span>
 		</div>

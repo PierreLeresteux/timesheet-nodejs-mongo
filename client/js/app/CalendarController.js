@@ -81,7 +81,6 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$scope.changeTargetType = function($event) {
 				$scope.targetType = $($event.target).attr('data-value');
-
 				$event.preventDefault();
 			};
 
@@ -99,6 +98,10 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$scope.id = $that.dayItemData.id;
 			$scope.label = $that.dayItemData.name;
 			$scope.hours = $that.dayItemData.hours;
+
+			$scope.removeItem = function(event) {
+				$(event.target).parent().remove();
+			};
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
