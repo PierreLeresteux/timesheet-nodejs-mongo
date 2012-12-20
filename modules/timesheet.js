@@ -114,8 +114,8 @@ exports.categories.projects.findById = function(req, res) {
                 }
             }
             var error = {
-                status : 404,
-                message : 'Couldn\'t find project id "' + projectId + '" for category id "' + categoryId + '"'
+                status: 404,
+                message: 'Couldn\'t find project id "' + projectId + '" for category id "' + categoryId + '"'
             };
             res.send(error, 404);
         });
@@ -217,11 +217,11 @@ exports.activities.findAll = function(req, res) {
         query['date.month'] = ~~month;
     }
     var sortKeys = {
-        'date.year' : 1,
-        'date.month' : 1,
-        'date.day' : 1,
-        'category.name' : 1,
-        'project.name' : 1,
+        'date.year': 1,
+        'date.month': 1,
+        'date.day': 1,
+        'category.name': 1,
+        'project.name': 1,
     };
     var pipeline = [{ $match: query }, { $sort: sortKeys }, { $limit: 100}];
     console.log('Retrieving all activities with query ' + JSON.stringify(query));
@@ -338,10 +338,10 @@ exports.aggregByProject = function(req, res) {
 
 	 var pipelineYM = [
 		 {
-			 $project :
+			 $project:
 			 {
 				'tasks': "$tasks",
-			    'year' :1,
+			    'year':1,
 			    'month':1
 			 }
 		 },
@@ -362,17 +362,17 @@ exports.aggregByProject = function(req, res) {
 				 _id: "$tasks.project",
 				 hours:
 				 {
-					 $sum : "$tasks.hours"
+					 $sum: "$tasks.hours"
 				 }
 			 }
 		 }
 	 ];
 	var pipelineY = [
 		{
-			$project :
+			$project:
 			{
 				'tasks': "$tasks",
-				'year' :1
+				'year':1
 			}
 		},
 		{
@@ -391,7 +391,7 @@ exports.aggregByProject = function(req, res) {
 				_id: "$tasks.project",
 				hours:
 				{
-					$sum : "$tasks.hours"
+					$sum: "$tasks.hours"
 				}
 			}
 		}
@@ -497,111 +497,111 @@ var populateDB = function() {
 	console.log('populateDB');
 
     var categories = [{
-        'name' : 'Future Architecture',
-        'projects' : [{
-            'id' : mongo.ObjectID(),
-            'name' : 'DataStore',
-            'accounting' : {
-                'name' : 'prd'
+        'name': 'Future Architecture',
+        'projects': [{
+            'id': mongo.ObjectID(),
+            'name': 'DataStore',
+            'accounting': {
+                'name': 'prd'
             }
         }]
     },{
-        'name' : 'Holiday/Off',
-        'projects' : [{
-            'id' : mongo.ObjectID(),
-            'name' : 'RTT',
-            'accounting' : {
-                'name' : 'abs'
+        'name': 'Holiday/Off',
+        'projects': [{
+            'id': mongo.ObjectID(),
+            'name': 'RTT',
+            'accounting': {
+                'name': 'abs'
             }
         },{
-            'id' : mongo.ObjectID(),
-            'name' : 'Sick',
-            'accounting' : {
-                'name' : 'abs'
+            'id': mongo.ObjectID(),
+            'name': 'Sick',
+            'accounting': {
+                'name': 'abs'
             }
         },{
-            'id' : mongo.ObjectID(),
-            'name' : 'Vacation',
-            'accounting' : {
-                'name' : 'abs'
+            'id': mongo.ObjectID(),
+            'name': 'Vacation',
+            'accounting': {
+                'name': 'abs'
             }
         }]
     }];
     var activities = [{
-        'user' : 'sdavid',
-        'date' : {
-            'year' : 2012,
-            'month' : 12,
-            'day' : 14
+        'user': 'sdavid',
+        'date': {
+            'year': 2012,
+            'month': 12,
+            'day': 14
         },
-        'hours' : 8,
-        'project' : {
-            'id' : categories[1].projects[2].id,
-            'name' : 'Vacation'
+        'hours': 8,
+        'project': {
+            'id': categories[1].projects[2].id,
+            'name': 'Vacation'
         },
-        'category' : {
-            'id' : categories[1]._id, // null at this time, need first to save categories to DB
-            'name' : 'Holiday/Off'
+        'category': {
+            'id': categories[1]._id, // null at this time, need first to save categories to DB
+            'name': 'Holiday/Off'
         },
-        'accounting' : {
-            'name' : 'abs'
+        'accounting': {
+            'name': 'abs'
         }
     },{
-        'user' : 'sdavid',
-        'date' : {
-            'year' : 2012,
-            'month' : 12,
-            'day' : 17
+        'user': 'sdavid',
+        'date': {
+            'year': 2012,
+            'month': 12,
+            'day': 17
         },
-        'hours' : 8,
-        'project' : {
-            'id' : categories[1].projects[2].id,
-            'name' : 'Vacation'
+        'hours': 8,
+        'project': {
+            'id': categories[1].projects[2].id,
+            'name': 'Vacation'
         },
-        'category' : {
-            'id' : categories[1]._id, // null at this time, need first to save categories to DB
-            'name' : 'Holiday/Off'
+        'category': {
+            'id': categories[1]._id, // null at this time, need first to save categories to DB
+            'name': 'Holiday/Off'
         },
-        'accounting' : {
-            'name' : 'abs'
+        'accounting': {
+            'name': 'abs'
         }
     },{
-        'user' : 'sjob',
-        'date' : {
-            'year' : 2012,
-            'month' : 12,
-            'day' : 14
+        'user': 'sjob',
+        'date': {
+            'year': 2012,
+            'month': 12,
+            'day': 14
         },
-        'hours' : 4,
-        'project' : {
-            'id' : categories[1].projects[0].id,
-            'name' : 'RTT'
+        'hours': 4,
+        'project': {
+            'id': categories[1].projects[0].id,
+            'name': 'RTT'
         },
-        'category' : {
-            'id' : categories[1]._id, // null at this time, need first to save categories to DB
-            'name' : 'Holiday/Off'
+        'category': {
+            'id': categories[1]._id, // null at this time, need first to save categories to DB
+            'name': 'Holiday/Off'
         },
-        'accounting' : {
-            'name' : 'abs'
+        'accounting': {
+            'name': 'abs'
         }
     },{
-        'user' : 'sjob',
-        'date' : {
-            'year' : 2012,
-            'month' : 12,
-            'day' : 14
+        'user': 'sjob',
+        'date': {
+            'year': 2012,
+            'month': 12,
+            'day': 14
         },
-        'hours' : 4,
-        'project' : {
-            'id' : categories[0].projects[0].id,
-            'name' : 'DataStore'
+        'hours': 4,
+        'project': {
+            'id': categories[0].projects[0].id,
+            'name': 'DataStore'
         },
-        'category' : {
-            'id' : categories[0]._id, // null at this time, need first to save categories to DB
-            'name' : 'Future Architecture'
+        'category': {
+            'id': categories[0]._id, // null at this time, need first to save categories to DB
+            'name': 'Future Architecture'
         },
-        'accounting' : {
-            'name' : 'prd'
+        'accounting': {
+            'name': 'prd'
         }
     }];
 
