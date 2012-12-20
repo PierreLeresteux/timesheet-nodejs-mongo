@@ -48,7 +48,9 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				var $item = $(that.dayItemTemplate);
 				$(event.dayElem).append($item);
 				that.dayItemData = {
-					'projectId': event.projectId
+					'id': event.projectId,
+					'name': event.projectName,
+					'hours': event.projectHours
 				};
 				angular.bootstrap($item.get(0), ['timesheet']);
 			});
@@ -94,10 +96,9 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			};
 		},
 		dayItemController: function($scope, $that) {
-			var projectId = $that.dayItemData.projectId;
-			var length = projectId.length;
-			$scope.title = "project "+projectId.substring(length-3,length);
-			$scope.hours = "8";
+			$scope.id = $that.dayItemData.id;
+			$scope.label = $that.dayItemData.name;
+			$scope.hours = $that.dayItemData.hours;
 		},
 		generateCalendar: function($scope, start){
 			$scope.activeDate=moment(start);
@@ -150,11 +151,13 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					dragstart: function(e){
 						e.dataTransfer.effectAllowed = 'copy';
 						e.dataTransfer.dropEffect = 'copy';
-						e.dataTransfer.setData('text/emv-project', $(this).attr('data-projectid'));
+						e.dataTransfer.setData('text/project-id', $(this).attr('data-projectid'));
+						e.dataTransfer.setData('text/project-name', $(this).attr('data-project-name'));
+						e.dataTransfer.setData('text/project-hours', $(this).find('.input').val());
 						$(element).addClass('dragged');
 					},
 					dragend: function(e){
-						e.dataTransfer.setData('text/emv-project', undefined);
+						e.dataTransfer.setData('object/project-data', {});
 						$(element).removeClass('dragged');
 					}
 				});
@@ -173,11 +176,12 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 						event.preventDefault();
 					},
 					drop: function(event){
-						var data = event.dataTransfer.getData('text/emv-project');
 						$(this).removeClass('dayInHover');
 						var addDayItemEvent = new $.Event('addDayItemEvent');
 						addDayItemEvent.dayElem = event.target;
-						addDayItemEvent.projectId = data;
+						addDayItemEvent.projectId = event.dataTransfer.getData('text/project-id');
+						addDayItemEvent.projectName = event.dataTransfer.getData('text/project-name');
+						addDayItemEvent.projectHours = event.dataTransfer.getData('text/project-hours');
 						log('trigger addDayItemEvent');
 						$(document.getElementById('calendar')).trigger(addDayItemEvent);
 					}

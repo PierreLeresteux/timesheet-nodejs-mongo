@@ -65,7 +65,7 @@
 	</div>
 
 	<div id="project-template">
-		<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}">
+		<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}" data-project-name="{{item.name}}">
 			<span class="icon"></span>
 			<span>{{item.name}}</span>
 			<input class="input" type="text" maxlength="1" value="8"/>
@@ -73,8 +73,8 @@
 	</div>
 
 	<div id="day-item-template">
-		<div class="item" ng-controller="DayItemController">
-			<span class="title">{{title}}</span>
+		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}">
+			<span class="project-label">{{label}}</span>
 			<span class="hours">{{hours}}</span>
 		</div>
 	</div>
