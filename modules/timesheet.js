@@ -283,6 +283,46 @@ exports.activities.findAll = function(req, res) {
     });
 }
 
+exports.activities.create = function(req, res) {
+    var projectId = req.body.project.id;
+    var query = {
+        'projects.id': new BSON.ObjectID(projectId)
+    };
+    db.collection('categories', function(err, collection) {
+        collection.findOne(query, function (err, category) {
+            if (category && category.projects) {
+                for (var i = 0; i < category.projects.length; i++) {
+                    var project = category.projects[i];
+                    if (project.id == projectId) {
+                        var activity = {
+                            user: req.body.user,
+                            date: {
+                                year: req.body.date.year,
+                                month: req.body.date.month,
+                                day: req.body.date.day
+                            },
+                            project: {
+                                id: projectId,
+                                name: project.name
+                            },
+                            category: {
+                                id: category._id,
+                                name: category.name
+                            },
+                            accounting: {
+                                name: project.accounting.name
+                            }
+                        };
+                        db.collection('activities', function(err, collection) {
+                            mongUtil.insertEntity(collection, activity, res);
+                        });
+                    }
+                }
+            }
+        });
+    });
+}
+
 exports.activities.toCsv = function(req, res) {
     var year = req.params.year;
     var month = req.params.month;

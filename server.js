@@ -46,30 +46,6 @@ app.get('/index', function(req, res){
     res.render('index', {'dev': dev});
 });
 
-// timesheet CRUD
-app.get('/ts', ts.findAll);
-
-app.get('/ts/:id', ts.findById);
-app.post('/ts', ts.addTimesheet);
-app.put('/ts/:id', ts.updateTimesheet);
-app.delete('/ts/:id', ts.deleteTimesheet);
-// timesheet EXTENDED
-app.get('/ts/project/:project', ts.findByProject);
-app.get('/ts/project/:project/stat', ts.aggregByProject);
-app.get('/ts/user/:user', ts.findByUser);
-// user CRUD
-app.get('/user', ts.allUsers);
-app.post('/user', ts.addUser);
-app.get('/user/:id', ts.findUserById);
-app.put('/user/:id', ts.updateUser);
-app.delete('/user/:id', ts.deleteUser);
-// project CRUD
-app.get('/project', ts.allProjects);
-app.get('/project/:id', ts.findProjectById);
-app.post('/project', ts.addProject);
-app.put('/ts/:id', ts.updateProject);
-app.delete('/project/:id', ts.deleteProject);
-
 app.get('/categories', ts.categories.findAll);
 app.post('/categories', ts.categories.create);
 app.get('/categories/:id', ts.categories.findById);
@@ -82,6 +58,7 @@ app.put('/projects/:id', ts.projects.replace);
 app.patch('/projects/:id', ts.projects.update);
 
 app.get('/activities', ts.activities.findAll);
+app.post('/activities', ts.activities.create);
 
 app.get('/activities-:year-:month.csv', ts.activities.toCsv);
 

@@ -32,7 +32,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			});
 
 			$module.controller('CalendarController', ['$scope','$resource','$generateCalendar',that.calendarController]);
-			$module.controller('MenuController', ['$scope','$resource',that.menuController]);
+			$module.controller('MenuController', ['$scope','$resource','$that',that.menuController]);
 			$module.controller('DayItemController', ['$scope','$that',that.dayItemController]);
 		},
 		render: function() {
@@ -42,17 +42,48 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			angular.bootstrap(document.getElementById('menu'), ['timesheet']);
 			var calendarElem = document.getElementById('calendar');
 			angular.bootstrap(calendarElem, ['timesheet']);
+
 			var $calendar = $(calendarElem);
 			$calendar.on('addDayItemEvent', function(event){
 				log('addDayItemEvent handler');
-				var $item = $(that.dayItemTemplate);
-				$(event.dayElem).append($item);
 				that.dayItemData = {
 					'id': event.projectId,
 					'name': event.projectName,
 					'hours': event.projectHours
 				};
-				angular.bootstrap($item.get(0), ['timesheet']);
+
+				var appendItems = function($days) {
+					var i=0, length=$days.length;
+					for(; i<length; i++){
+						$day = $($days.get(i));
+						if(!$day.hasClass('empty')) {
+							$item = $(that.dayItemTemplate);
+							$day.append($item);
+							angular.bootstrap($item.get(0), ['timesheet']);
+						}
+					}
+				};
+				
+				switch(that.targetType) {
+					case 'day':
+						var $item = $(that.dayItemTemplate);
+						$(event.dayElem).append($item);
+						angular.bootstrap($item.get(0), ['timesheet']);
+						break;
+					case 'week':
+						var $week = $(event.dayElem).parent();
+						appendItems($week.find('.day'));
+						break;
+					case 'month':
+						var $month = $calendar.find('.month');
+						var $weeks = $month.find('.week');
+						var i=0, length=$weeks.length;
+						for(; i<length; i++){
+							appendItems($($weeks.get(i)).find('.day'));
+						}
+						break;
+				}
+
 			});
 		},
 		calendarController: function($scope, $resource, $generateCalendar){
@@ -74,13 +105,15 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				log($scope.activities);
 			});
 		},
-		menuController: function ($scope, $resource) {
+		menuController: function ($scope, $resource, $that) {
 			$scope.targetType = 'day';
 			var Categories = $resource('/categories');
 			$scope.categories = Categories.query();
 
 			$scope.changeTargetType = function($event) {
-				$scope.targetType = $($event.target).attr('data-value');
+				var value = $($event.target).attr('data-value');
+				$scope.targetType = value;
+				$that.targetType = value;
 				$event.preventDefault();
 			};
 
@@ -100,6 +133,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$scope.hours = $that.dayItemData.hours;
 
 			$scope.removeItem = function(event) {
+				event.stopPropagation();
 				$(event.target).parent().remove();
 			};
 		},
@@ -147,7 +181,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				});
 			}
 		},
-		projectDirective: function(scope, element, attrs) {
+		projectDirective: function($scope, element, attrs) {
 			element.ready(function(){
 				element.attr('draggable', 'true');
 				element.on({
@@ -166,8 +200,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				});
 			});
 		},
-		dragOver: function(scope, element, attrs) {
-			if (scope.$eval('day.class').indexOf('empty')<0){
+		dragOver: function($scope, element, attrs) {
+			if($scope.$eval('day.class').indexOf('empty')<0){
 				element.on({
 					dragenter: function(event){
 						$(this).addClass('dayInHover');
@@ -191,8 +225,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				});
 			}
 		},
-		loadAccordion: function(scope, element, attrs) {
-			if (scope.$last){
+		loadAccordion: function($scope, element, attrs) {
+			if ($scope.$last){
 				var menuElem = document.getElementById('menu');
 				$(menuElem).foundationAccordion();
 			}
