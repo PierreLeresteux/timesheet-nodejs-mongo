@@ -54,12 +54,16 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 		openModalCatProject: function($scope, catid, projectid){
 			if (catid && projectid) {
 				log("Edit project "+catid+"-"+projectid);
+				$scope.title="Edit a project";
 			} else if (catid && projectid == undefined){
 				log("Edit category "+catid);
+				$scope.title="Edit a category";
 			} else if (catid == undefined) {
 				log("New category");
+				$scope.title="Create a new category";
 			} if (catid && projectid == -1) {
 				log("New project");
+				$scope.title="Create a new project";
 			}
 			$("#myModal").reveal();
 		}
