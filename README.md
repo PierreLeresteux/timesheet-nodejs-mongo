@@ -42,11 +42,13 @@ __URLs__
 	- ```GET /ts/project/:project?year=[&month=]``` => GET timesheet BY TASKS (project)<br />
 * Categories
     - ```GET /categories``` => Get all categories with all their projects
-    - ```GET /categories/:cid``` => Get a single category with all its projects
-    - ```PUT /categories/:cid``` => Replace a category with the data passed in the body
-    - ```PATCH /categories/:cid``` => Update a category with the data passed in the body
-    - ```GET /categories/:cid/projects``` => Get all projects of a category
-    - ```GET /categories/:cid/projects/:pid``` => Get a single project of a category
+    - ```GET /categories/:id``` => Get a single category with all its projects
+    - ```PUT /categories/:id``` => Replace a category with the data passed in the body
+    - ```PATCH /categories/:id``` => Update a category with the data passed in the body
+    - ```GET /projects``` => Get all projects of a category
+    - ```GET /projects/:id``` => Get a single project of a category
+    - ```PUT /projects/:id``` => Replace a project with the data passed in the body
+    - ```PATCH /projects/:id``` => Update a project with the data passed in the body
 * Activities
     - ```GET /activities?[user=][&year=][&month=]``` => Get all activities by user, year and/or month
     - ```GET /activities-:year-:month.csv``` => Export all activities of the specified month formatted in CSV

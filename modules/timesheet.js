@@ -26,7 +26,7 @@ exports.categories.findAll = function(req, res) {
 }
 
 exports.categories.findById = function(req, res) {
-    var categoryId = req.params.cid;
+    var categoryId = req.params.id;
     console.log('Retrieving category id "' + categoryId + '"');
     db.collection('categories', function(err, collection) {
         mongUtil.getById(collection, categoryId, res);
@@ -34,7 +34,7 @@ exports.categories.findById = function(req, res) {
 }
 
 exports.categories.replace = function(req, res) {
-    var categoryId = req.params.cid;
+    var categoryId = req.params.id;
     var category = req.body;
     console.log('Replacing category id "' + categoryId + '" with category ' + JSON.stringify(category));
     db.collection('categories', function(err, collection) {
@@ -52,7 +52,7 @@ exports.categories.replace = function(req, res) {
 }
 
 exports.categories.update = function(req, res) {
-    var categoryId = req.params.cid;
+    var categoryId = req.params.id;
     var category = req.body;
     console.log('Updating category id "' + categoryId + '" with category ' + JSON.stringify(category));
     var query = {
@@ -113,7 +113,7 @@ exports.projects.findAll = function(req, res) {
 }
 
 exports.projects.findById = function(req, res) {
-    var projectId = req.params.pid;
+    var projectId = req.params.id;
     console.log('Retrieving project id "' + projectId + '"');
     var query = {
         'projects.id': new BSON.ObjectID(projectId)
@@ -138,7 +138,7 @@ exports.projects.findById = function(req, res) {
 }
 
 exports.projects.replace = function(req, res) {
-    var projectId = req.params.pid;
+    var projectId = req.params.id;
     var project = req.body;
     console.log('Replacing project id "' + projectId + '" with project ' + JSON.stringify(project));
     project.id = new BSON.ObjectID(projectId);
@@ -176,7 +176,7 @@ exports.projects.replace = function(req, res) {
 }
 
 exports.projects.update = function(req, res) {
-    var projectId = req.params.pid;
+    var projectId = req.params.id;
     var project = req.body;
     console.log('Updating project id "' + projectId + '" with project ' + JSON.stringify(project));
 
@@ -217,7 +217,7 @@ exports.projects.update = function(req, res) {
 }
 
 exports.projects.create = function(req, res) {
-    var categoryId = req.params.cid;
+    var categoryId = req.params.id;
     var project = req.body;
     project.id = mongo.ObjectID();
     console.log('Adding project ' + JSON.stringify(project) + '" on category id "' + categoryId + '"');

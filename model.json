@@ -105,7 +105,7 @@
     },{
         "request" : {
             "method" : "GET",
-            "url" : "/categories/707abfa3/projects/1006a33c"
+            "url" : "/projects/1006a33c"
         },
         "response" : {
             "data" : {

@@ -72,14 +72,14 @@ app.delete('/project/:id', ts.deleteProject);
 
 app.get('/categories', ts.categories.findAll);
 app.post('/categories', ts.categories.create);
-app.get('/categories/:cid', ts.categories.findById);
-app.put('/categories/:cid', ts.categories.replace);
-app.patch('/categories/:cid', ts.categories.update);
+app.get('/categories/:id', ts.categories.findById);
+app.put('/categories/:id', ts.categories.replace);
+app.patch('/categories/:id', ts.categories.update);
 app.get('/projects', ts.projects.findAll);
 app.post('/projects', ts.projects.create);
-app.get('/projects/:pid', ts.projects.findById);
-app.put('/projects/:pid', ts.projects.replace);
-app.patch('/projects/:pid', ts.projects.update);
+app.get('/projects/:id', ts.projects.findById);
+app.put('/projects/:id', ts.projects.replace);
+app.patch('/projects/:id', ts.projects.update);
 
 app.get('/activities', ts.activities.findAll);
 
