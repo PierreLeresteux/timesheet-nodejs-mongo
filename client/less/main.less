@@ -20,6 +20,17 @@
 	.opacity(0.8);
 }
 
+.claquos(@index:0){
+	background-image: url("../img/spinner-white.png");
+	width: 16px;
+	.transition(background-image 0.5 ease);
+	height: 15px;
+	margin-top: 2px;
+	margin-left: 7px;
+	@posy: -((@index - 1)*15);
+	background-position-y:~"@{posy}px";
+}
+
 @borderColor: #e9e9e9;
 @backgroundColor: #F6F6F6;
 @mediaQueryMin: 641px;
