@@ -1,15 +1,24 @@
 <div ng-controller="ProjectsController">
     <h2>Categories</h2>
     <ul id="categories" ng-controller="CategoriesController">
-        <li><div class="title"><h5><img src="../img/batch/16x16/add.png"/> Add a category</h5></div></li>
-        <li ng-repeat="category in categories" mouse-over-category>
-            <div cat-dblclick class="title" title="Double-click to edit">
+        <li><div cat-dblclick class="title"><h5><img src="../img/batch/16x16/add.png"/> Add a category</h5></div></li>
+        <li ng-repeat="category in categories" mouse-over-category >
+            <div cat-dblclick class="title" title="Double-click to edit" data-catId="{{category._id}}">
                 <h5 >{{category.name}}</h5>
             </div>
             <div class="content" ng-click="noEvent($event)" >
                 <projectlist>
                 </projectlist>
+                <div class="project projectadd" title="Double-click to create a project" edit-project data-projectid="-1">
+                    <div class="name"><img src="../img/batch/16x16/add.png"/> Add a project</div>
+                </div>
             </div>
         </li>
     </ul>
+    <div id="myModal" class="reveal-modal normal">
+        <h2>Awesome. I have it.</h2>
+        <p class="lead">Your couch.  It is mine.</p>
+        <p>Im a cool paragraph that lives inside of an even cooler modal. Wins</p>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
 </div>

@@ -18,9 +18,11 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 				return that.editProject;
 			}).directive('catDblclick', function(){
 				return that.catDblclick;
+			}).factory('$openModalCatProject', function(){
+				return that.openModalCatProject;
 			});
 
-			$module.controller('CategoriesController', ['$scope','$resource',that.categoriesController]);
+			$module.controller('CategoriesController', ['$scope','$resource','$openModalCatProject',that.categoriesController]);
 		},
 		render: function() {
 			log('ProjectsController > render');
@@ -28,24 +30,38 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 
 			angular.bootstrap(document.getElementById('categories'), ['timesheet']);
 		},
-		categoriesController: function($scope, $resource){
-
+		categoriesController: function($scope, $resource,$openModalCatProject){
+			$scope.$openModalCatProject = $openModalCatProject;
 			var Categories = $resource('/categories');
 			$scope.categories = Categories.query();
 		},
 		editProject: function(scope, element, attrs) {
 			element.ready(function(){
 				element.dblclick(function(){
-					log('project dblclick');
+					var pid = $(this).attr('data-projectId');
+					var cid = $(this).closest('li').find('.title').attr('data-catid');
+					scope.$openModalCatProject(scope, cid, pid );
 				});
 			});
 		},
 		catDblclick: function(scope, element, attrs) {
 			element.ready(function(){
 				element.dblclick(function(){
-					log('cat dblclick');
+					scope.$openModalCatProject(scope, $(this).attr('data-catId'), undefined);
 				});
 			});
+		},
+		openModalCatProject: function($scope, catid, projectid){
+			if (catid && projectid) {
+				log("Edit project "+catid+"-"+projectid);
+			} else if (catid && projectid == undefined){
+				log("Edit category "+catid);
+			} else if (catid == undefined) {
+				log("New category");
+			} if (catid && projectid == -1) {
+				log("New project");
+			}
+			$("#myModal").reveal();
 		}
 	});
 });
