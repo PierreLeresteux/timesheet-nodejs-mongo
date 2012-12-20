@@ -4,20 +4,12 @@
         "categories" : [{
             "_id" : "CategoryId",
             "name" : "Category Name",
-            "authorized_users" : [
-                { "login" : "user_login" },
-                { "login" : "user_login" }
-            ],
             "projects" : [{
                 "id" : "ProjectId",
                 "name" : "Project Name",
                 "accounting" : {
                     "name" : "Accounting Name"
-                },
-                "tasks" : [{
-                    "id" : "TaskId",
-                    "name" : "Task Name"
-                }]
+                }
             }]
         }],
 
@@ -30,20 +22,16 @@
                 "day" : 14
             },
             "hours" : 8,
-            "task" : {
-                "id" : "TaskId", // The link with categories/projects/tasks
-                "name" : "Task Name" // Derived from task.id
-            },
             "project" : {
-                "id" : "ProjectId", // Derived from task.id
-                "name" : "Project Name" // Derived from task.id
+                "id" : "ProjectId", // The link with categories/projects
+                "name" : "Project Name" // Derived from project.id
             },
             "category" : {
-                "id" : "CategoryId", // Derived from task.id
-                "name" : "Category Name" // Derived from task.id
+                "id" : "CategoryId", // Derived from project.id
+                "name" : "Category Name" // Derived from project.id
             },
             "accounting" : {
-                "name" : "Accounting Name" // Derived from task.id
+                "name" : "Accounting Name" // Derived from project.id
             }
         }]
     },
@@ -63,10 +51,6 @@
                     "day" : 14
                 },
                 "hours" : 4,
-                "task" : {
-                    "id" : "94d6114e",
-                    "name" : "RTT"
-                },
                 "project" : {
                     "id" : "1006a33c",
                     "name" : "RTT"
@@ -87,10 +71,6 @@
                     "day" : 14
                 },
                 "hours" : 4,
-                "task" : {
-                    "id" : "94d6114e",
-                    "name" : "PoC"
-                },
                 "project" : {
                     "id" : "1006a33c",
                     "name" : "DataStore"
@@ -113,38 +93,28 @@
             "data" : {
                 "id" : "707abfa3",
                 "name" : "Future Architecture",
-                "authorized_users" : [
-                    { "login" : "sjob" }
-                ],
                 "projects" : [{
                     "id" : "1006a33c",
                     "name" : "DataStore",
                     "accounting" : {
                         "name" : "prd"
-                    },
-                    "tasks" : [{
-                        "id" : "94d6114e",
-                        "name" : "PoC"
-                    },{
-                        "id" : "32f69a6a",
-                        "name" : "Implementation"
-                    }]
+                    }
                 }]
             }
         }
     },{
         "request" : {
             "method" : "GET",
-            "url" : "/categories/707abfa3/projects/1006a33c/tasks"
+            "url" : "/projects/1006a33c"
         },
         "response" : {
-            "data" : [{
-                "id" : "94d6114e",
-                "name" : "PoC"
-            },{
-                "id" : "32f69a6a",
-                "name" : "Implementation"
-            }]
+            "data" : {
+                "id" : "1006a33c",
+                "name" : "DataStore",
+                "accounting" : {
+                    "name" : "prd"
+                }
+            }
         }
     }]
 }
