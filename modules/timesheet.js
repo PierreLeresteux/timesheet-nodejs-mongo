@@ -12,9 +12,7 @@ Db.connect(mongoUri, function (err, database) {
     db = database;
 });
 
-/*------------- TIMESHEET ------------------*/
-
-// Categories
+/*------------- CATEGORIES ------------------*/
 
 exports.categories = {};
 
@@ -107,7 +105,7 @@ var createCategory = function (category, resultCallback) {
     });
 }
 
-// Projects
+/*------------- PROJECTS ------------------*/
 
 exports.projects = {};
 
@@ -282,7 +280,7 @@ var createProjects = function(projects, categoryId, resultCallback) {
     });
 }
 
-// Activities
+/*------------- ACTIVITIES ------------------*/
 
 var updateActivities = function(query, update) {
     db.collection('activities', function(err, collection) {
@@ -396,232 +394,6 @@ exports.activities.toCsv = function(req, res) {
         });
     });
 }
-
-exports.findAll = function(req, res) {
-    db.collection('timesheet', function(err, collection) {
-	    mongUtil.getAll(collection, res);
-    });
-};
-
-exports.addTimesheet = function(req, res) {
-	var timesheet = req.body;
-	console.log('Adding timesheet: ' + JSON.stringify(timesheet));
-    db.collection('timesheet', function(err, collection) {
-	    mongUtil.insertEntity(collection, timesheet, res);
-    });
-};
-
-exports.updateTimesheet = function(req, res) {
-	var id = req.params.id;
-	var timesheet = req.body;
-    console.log('Updating timesheet: ' + id);
-	console.log(JSON.stringify(timesheet));
-    db.collection('timesheet', function(err, collection) {
-	    mongUtil.updateEntity(collection, id, timesheet, res);
-    });
-};
-
-exports.deleteTimesheet = function(req, res) {
-	var id = req.params.id;
-	console.log('Deleting timesheet: ' + id);
-    db.collection('timesheet', function(err, collection) {
-	    mongUtil.deleteById(collection, id, res, req);
-    });
-};
-
-exports.findById = function(req, res) {
-    var id = req.params.id;
-    console.log('Retrieving timesheet: ' + id);
-    db.collection('timesheet', function(err, collection) {
-	    mongUtil.getById(collection,id, res);
-    });
-};
-/*------------- TIMESHEET EXTENDED ------------------*/
-
-exports.findByProject = function(req, res){
-	var project = req.params.project;
-	var year = ~~req.query.year;
-	var month = ~~req.query.month;
-
-	var query = {'tasks.project':project, 'year': year};
-	if (month){
-		query.month = month;
-	}
-
-	db.collection('timesheet', function(err, collection) {
-		mongUtil.findByQuery(collection, query, res);
-	});
-};
-
-exports.findByUser = function(req, res) {
-	var user = req.params.user;
-	var year = ~~req.query.year;
-	var month = ~~req.query.month;
-
-	var query = {'user.login':user, 'year': year};
-	if (month){
-		query.month = month;
-	}
-	db.collection('timesheet', function(err, collection) {
-		mongUtil.findByQuery(collection,query,res);
-	});
-};
-
-exports.aggregByProject = function(req, res) {
-	var project = req.params.project;
-	var year = ~~req.query.year;
-	var month = ~~req.query.month;
-
-	 var pipelineYM = [
-		 {
-			 $project:
-			 {
-				'tasks': "$tasks",
-			    'year':1,
-			    'month':1
-			 }
-		 },
-		 {
-			 $unwind: "$tasks"
-		 },
-		 {
-			 $match:
-			 {
-			    year:year,
-			    month: month,
-				"tasks.project": project
-			 }
-		 },
-		 {
-			 $group:
-			 {
-				 _id: "$tasks.project",
-				 hours:
-				 {
-					 $sum: "$tasks.hours"
-				 }
-			 }
-		 }
-	 ];
-	var pipelineY = [
-		{
-			$project:
-			{
-				'tasks': "$tasks",
-				'year':1
-			}
-		},
-		{
-			$unwind: "$tasks"
-		},
-		{
-			$match:
-			{
-				year:year,
-				"tasks.project": project
-			}
-		},
-		{
-			$group:
-			{
-				_id: "$tasks.project",
-				hours:
-				{
-					$sum: "$tasks.hours"
-				}
-			}
-		}
-	];
-	db.collection('timesheet', function(err, collection) {
-		if (month){
-			mongUtil.aggregate(collection,pipelineYM,res);
-		}else{
-			mongUtil.aggregate(collection,pipelineY,res);
-		}
-	});
-
-};
-/*------------- PROJECT ------------------*/
-
-exports.allProjects = function(req, res){
-    db.collection('project', function(err, collection) {
-	    mongUtil.getAll(collection, res);
-    });
-};
-
-exports.findProjectById = function(req, res){
-    var id = req.params.id;
-    console.log('Retrieving project: ' + id);
-    db.collection('project', function(err, collection) {
-	    mongUtil.getById(collection,id, res);
-    });
-};
-
-exports.addProject = function(req, res) {
-	var project = req.body;
-	console.log('Adding timesheet: ' + JSON.stringify(project));
-	db.collection('project', function(err, collection) {
-		mongUtil.insertEntity(collection, project, res);
-	});
-};
-exports.updateProject = function(req, res) {
-	var id = req.params.id;
-	var project = req.body;
-	console.log('Updating project: ' + id);
-	console.log(JSON.stringify(project));
-	db.collection('project', function(err, collection) {
-		mongUtil.updateEntity(collection, id, project, res);
-	});
-};
-
-exports.deleteProject = function(req, res) {
-    var id = req.params.id;
-    console.log('Deleting project: ' + id);
-    db.collection('project', function(err, collection) {
-	    mongUtil.deleteById(collection, id, res, req);
-    });
-};
-/*------------- USER ------------------*/
-
-exports.allUsers = function(req, res){
-    db.collection('account', function(err, collection) {
-	    mongUtil.getAll(collection, res);
-    });
-};
-
-exports.findUserById = function(req, res){
-    var id = req.params.id;
-    console.log('Retrieving user: ' + id);
-    db.collection('account', function(err, collection) {
-	    mongUtil.getById(collection,id, res);
-    });
-};
-
-exports.deleteUser = function(req, res) {
-    var id = req.params.id;
-    console.log('Deleting user: ' + id);
-    db.collection('account', function(err, collection) {
-	    mongUtil.deleteById(collection, id, res, req);
-    });
-};
-exports.updateUser = function(req, res) {
-	var id = req.params.id;
-	var user = req.body;
-	console.log('Updating user: ' + id);
-	console.log(JSON.stringify(user));
-	db.collection('account', function(err, collection) {
-		mongUtil.updateEntity(collection, id, user, res);
-	});
-};
-
-exports.addUser = function(req, res) {
-	var user = req.body;
-	console.log('Adding User: ' + JSON.stringify(user));
-	db.collection('account', function(err, collection) {
-		mongUtil.insertEntity(collection, user, res);
-	});
-};
-
 
 /*------------- INIT ------------------*/
 
