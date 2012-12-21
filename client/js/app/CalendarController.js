@@ -91,6 +91,12 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			var days, i, j, className, start=moment().startOf('month');
 			$generateCalendar($scope, start);
 			
+			var addItem = function(dayElem) {
+				$compile($dayItemTemplate)($scope, function(elem, $scope){
+					$(dayElem).append(elem);
+				});
+			};
+
 			var Activities = $resource(
 				'/activities?user=:user&year=:year&month=:month',
 				{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
@@ -98,6 +104,18 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$scope.activities = Activities.query(function(){
 				log('success when calling Activities');
 				log($scope.activities);
+				var i=0, length=$scope.activities.length, dayId, activity;
+				for(;i<length;i++){
+					activity = $scope.activities[i];
+					$scope.dayItemData = {
+						'id': activity._id,
+						'name': activity.category.name,
+						'hours': activity.hours
+					};
+					dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
+					log(dayId);
+					addItem(document.getElementById(dayId));
+				}
 			}, function() {
 				log('error when calling Activities');
 			});
@@ -111,19 +129,13 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					'hours': data.projectHours
 				};
 
-				var addItem = function(dayElem) {
-					$compile($dayItemTemplate)($scope, function(elem, $scope){
-						$(dayElem).append(elem);
-					});
-					$scope.$apply();
-				};
-
 				var appendItems = function($days) {
 					var i=0, length=$days.length;
 					for(; i<length; i++){
 						$day = $($days.get(i));
 						if(!$day.hasClass('empty')) {
 							addItem($day);
+							$scope.$apply();
 						}
 					}
 				};
@@ -143,6 +155,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 						break;
 					default:
 						addItem($(data.dayElem));
+						$scope.$apply();
 						break;
 				}
 			});
@@ -210,6 +223,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					}
 					if(className==date.format('dddd').toLowerCase() && date.format('M')==start.format('M')){
 						days.push({
+							'id': date.format('YYYYMMD'),
 							'class': className+(today == date.format('D') ? ' today' : ''),
 							'text': date.format('D')
 						});
