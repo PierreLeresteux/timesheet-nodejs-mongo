@@ -110,9 +110,9 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					'hours': data.projectHours
 				};
 
-				var addItem = function() {
+				var addItem = function(dayElem) {
 					$compile($dayItemTemplate)($scope, function(elem, $scope){
-						$(data.dayElem).append(elem);
+						$(dayElem).append(elem);
 					});
 					$scope.$apply();
 				};
@@ -122,7 +122,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					for(; i<length; i++){
 						$day = $($days.get(i));
 						if(!$day.hasClass('empty')) {
-							addItem();
+							addItem($day);
 						}
 					}
 				};
@@ -141,7 +141,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 						}
 						break;
 					default:
-						addItem();
+						addItem($(data.dayElem));
 						break;
 				}
 			});
