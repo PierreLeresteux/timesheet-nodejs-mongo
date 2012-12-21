@@ -72,7 +72,7 @@
 						<label class="right inline">Hours:</label>
 					</div>
 					<div class="ten mobile-three columns">
-						<input type="text" placeholder="Hours" class="eight" ng-bind="dayItemHours"/>
+						<input type="text" placeholder="Hours" class="eight" ng-model="dayItemHours"/>
 					</div>
 				</div>
 				<a class="secondary button" href="#" ng-click="cancel($event)">Cancel</a>
@@ -92,8 +92,8 @@
 	<div id="day-item-template">
 		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}" ng-dblclick="edit($event)">
 			<span class="icon" ng-click="removeItem($event)"></span>
-			<span class="project-label">{{label}}</span>
-			<span class="hours claquos-{{hours}}"></span>
+			<span class="project-label" ng-bind="label"></span>
+			<span class="hours claquos-{{hours}}" ng-bind="hours"></span>
 		</div>
 	</div>
 </div>
