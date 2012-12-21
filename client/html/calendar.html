@@ -65,18 +65,19 @@
 				</div>
 			</div>
 
-			<div id="day-item-edit-modal" class="reveal-modal">
+			<div id="day-item-edit-modal" class="reveal-modal small">
 				<h2>Edit</h2>
 				<div class="row">
 					<div class="two mobile-one columns">
 						<label class="right inline">Hours:</label>
 					</div>
 					<div class="ten mobile-three columns">
-						<input type="text" placeholder="Hours" class="eight" ng-model="dayItemHours"/>
+						<input type="text" class="one" maxlength="1" ng-model="dayItemHours"/>
 					</div>
 				</div>
 				<a class="secondary button" href="#" ng-click="cancel($event)">Cancel</a>
 				<a class="button" href="#" ng-click="confirm($event)">Confirm</a>
+				<a class="close-reveal-modal">&#215;</a>
 			</div>
 		</div>
 	</div>
@@ -93,7 +94,7 @@
 		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}" ng-dblclick="edit($event)">
 			<span class="icon" ng-click="removeItem($event)"></span>
 			<span class="project-label" ng-bind="label"></span>
-			<span class="hours claquos-{{hours}}" ng-bind="hours"></span>
+			<span class="hours claquos-{{hours}}"></span>
 		</div>
 	</div>
 </div>

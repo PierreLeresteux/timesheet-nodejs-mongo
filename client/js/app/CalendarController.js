@@ -45,6 +45,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 		mainController: function($scope) {
 			$scope.dayItemHours = 8;
 			$scope.$modal = $(document.getElementById('day-item-edit-modal'));
+			$scope.$hoursInput = $scope.$modal.find('input');
 
 			$scope.close = function() {
 				$scope.$modal.trigger('reveal:close');
@@ -63,8 +64,16 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$scope.$on('editDayItemEvent', function(event, data){
 				$scope.dayItemHours = data.hours;
-				$scope.$modal.reveal();
+				$scope.$modal.reveal({'opened': function(){
+					$scope.$hoursInput.focus().select();
+				}});
 				$scope.scopeToEdit = event.targetScope;
+			});
+
+			$scope.$hoursInput.on('keyup', function(event){
+				if(event.keyCode == 13){
+					$scope.confirm(event);
+				}
 			});
 		},
 		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate){
