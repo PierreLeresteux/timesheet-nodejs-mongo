@@ -30,8 +30,8 @@ app.configure(function () {
     app.use(express.cookieParser());
     app.use(express.session({ secret: 'allez-la-le-secret-la' }));
     app.use(express.methodOverride());
-    app.use(express.static(dev ? __dirname+'/client' : __dirname+'/build/output'));
-    app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
+    app.use(express.static(dev ? __dirname + '/client' : __dirname + '/build/output'));
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 // INIT (must be removed later)
@@ -51,7 +51,7 @@ app.get('/index', function(req, res){
 
 var resultSender = function(res) {
     return function(result, status) {
-        status ? res.send(result, status) : res.send(result);
+        status ? res.send(status, result) : res.send(result);
     }
 };
 

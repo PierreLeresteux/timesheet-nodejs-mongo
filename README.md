@@ -38,6 +38,7 @@ __URLs__
     - ```PATCH /projects/:id``` => Update a project with the data passed in the body
 * Activities
     - ```GET /activities?[user=][&year=][&month=]``` => Get all activities by user, year and/or month
+    - ```POST /activities``` => Create a new activity with the data passed in the body
     - ```GET /activities-:year-:month.csv``` => Export all activities of the specified month formatted in CSV
 
 
