@@ -32,7 +32,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			});
 
 			$module.controller('MainController', ['$scope',that.mainController]);
-			$module.controller('CalendarController', ['$rootScope','$scope','$resource','$compile','$generateCalendar','$dayItemTemplate',that.calendarController]);
+			$module.controller('CalendarController', ['$rootScope','$scope','$resource','$compile','$generateCalendar','$dayItemTemplate','$timeout',
+				that.calendarController]);
 			$module.controller('MenuController', ['$rootScope', '$scope','$resource',that.menuController]);
 			$module.controller('DayItemController', ['$scope',that.dayItemController]);
 		},
@@ -77,7 +78,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				}
 			});
 		},
-		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate){
+		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout){
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
 				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
@@ -102,20 +103,20 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
 			);
 			$scope.activities = Activities.query(function(){
-				log('success when calling Activities');
-				log($scope.activities);
-				var i=0, length=$scope.activities.length, dayId, activity;
-				for(;i<length;i++){
-					activity = $scope.activities[i];
-					$scope.dayItemData = {
-						'id': activity._id,
-						'name': activity.category.name,
-						'hours': activity.hours
-					};
-					dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
-					log(dayId);
-					addItem(document.getElementById(dayId));
-				}
+				$timeout(function(){
+					log('success when calling Activities, length: '+$scope.activities.length);
+					var i=0, length=$scope.activities.length, dayId, activity;
+					for(;i<length;i++){
+						activity = $scope.activities[i];
+						$scope.dayItemData = {
+							'id': activity._id,
+							'name': activity.category.name,
+							'hours': activity.hours
+						};
+						dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
+						addItem(document.getElementById(dayId));
+					}
+				}, 1, true);
 			}, function() {
 				log('error when calling Activities');
 			});
