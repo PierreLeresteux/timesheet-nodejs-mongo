@@ -18,10 +18,8 @@ exports.categories = {};
 
 exports.categories.findAll = function(resultCallback) {
     console.log('Retrieving all categories');
-    db.collection('categories', function(err, collection) {
-        collection.find().toArray(function(err, categories) {
-            resultCallback(categories);
-        });
+    mongUtil.findAll(db, 'categories', resultCallback, function(categories) {
+        resultCallback(categories);
     });
 }
 
@@ -113,16 +111,14 @@ exports.projects = {};
 
 exports.projects.findAll = function(resultCallback) {
     console.log('Retrieving all projects');
-    db.collection('categories', function(err, collection) {
-        collection.find().toArray(function(err, categories) {
-            var foundProjects = [];
-            for (var i = categories.length - 1; i >= 0; i--) {
-                if (categories[i].projects && categories[i].projects.length > 0) {
-                    foundProjects = foundProjects.concat(categories[i].projects);
-                }
-            };
-            resultCallback(foundProjects);
-        });
+    mongUtil.findAll(db, 'categories', resultCallback, function(categories) {
+        var foundProjects = [];
+        for (var i = categories.length - 1; i >= 0; i--) {
+            if (categories[i].projects && categories[i].projects.length > 0) {
+                foundProjects = foundProjects.concat(categories[i].projects);
+            }
+        };
+        resultCallback(foundProjects);
     });
 }
 
