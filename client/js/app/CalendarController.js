@@ -89,10 +89,16 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			var days, i, j, className, start=moment().startOf('month');
 			$generateCalendar($scope, start);
-			var Activities = $resource('/activities?user=:user&year=:year&month=:month',
-				{user: 'sjob', year:start.format('YYYY'), month:start.format('M')});
+			
+			var Activities = $resource(
+				'/activities?user=:user&year=:year&month=:month',
+				{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
+			);
 			$scope.activities = Activities.query(function(){
+				log('success when calling Activities');
 				log($scope.activities);
+			}, function() {
+				log('error when calling Activities');
 			});
 
 			var $calendar = $(document.getElementById('calendar'));

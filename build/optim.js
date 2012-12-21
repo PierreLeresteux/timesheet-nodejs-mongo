@@ -6,12 +6,12 @@
 	modules: [
 		{
 			name: 'js/main',
-			exclude: ['angular','zepto','text','underscore','foundation-app','router']
+			exclude: ['angular','jquery','text','underscore','foundation-app','router']
 		}
 	],
 	paths: {
 		'angular': 'empty:',
-		'zepto': 'empty:',
+		'jquery': 'empty:',
 		'foundation': 'empty:',
 		'foundation-app': 'empty:',
 		'foundation-accordion': 'empty:',
