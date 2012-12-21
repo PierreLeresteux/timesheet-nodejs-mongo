@@ -16,80 +16,17 @@ Db.connect(mongoUri, function (err, database) {
 
 exports.categories = {};
 
-exports.categories.findAll = function(req, res) {
+exports.categories.findAll = function(resultCallback) {
     console.log('Retrieving all categories');
     db.collection('categories', function(err, collection) {
-        mongUtil.getAll(collection, res);
-    });
-}
-
-exports.categories.findById = function(req, res) {
-    var categoryId = req.params.id;
-    console.log('Retrieving category id "' + categoryId + '"');
-    db.collection('categories', function(err, collection) {
-        mongUtil.getById(collection, categoryId, res);
-    });
-}
-
-exports.categories.replace = function(req, res) {
-    var categoryId = req.params.id;
-    var category = req.body;
-    console.log('Replacing category id "' + categoryId + '" with category ' + JSON.stringify(category));
-    db.collection('categories', function(err, collection) {
-        mongUtil.updateEntity(collection, categoryId, category, res);
-    });
-    var activitiesQuery = {
-        'category.id': new BSON.ObjectID(categoryId)
-    };
-    var activitiesUpdate = {
-        $set: {
-            'category.name': category.name
-        }
-    };
-    updateActivities(activitiesQuery, activitiesUpdate);
-}
-
-exports.categories.update = function(req, res) {
-    var categoryId = req.params.id;
-    var category = req.body;
-    console.log('Updating category id "' + categoryId + '" with category ' + JSON.stringify(category));
-    var query = {
-        '_id': new BSON.ObjectID(categoryId)
-    };
-    var update = {
-        $set: {
-            name: category.name
-        }
-    };
-    db.collection('categories', function(err, collection) {
-        collection.update(query, update, {safe: true}, function (err, result) {
-            if (err) {
-                console.log('Error updating collection: ' + err);
-                res.send({'error': 'An error has occurred'});
-            } else {
-                console.log('' + result + ' document(s) updated');
-                res.send(category);
-            }
+        collection.find().toArray(function(err, categories) {
+            resultCallback(categories);
         });
     });
-    var activitiesQuery = {
-        'category.id': new BSON.ObjectID(categoryId)
-    };
-    var activitiesUpdate = {
-        $set: {
-            'category.name': category.name
-        }
-    };
-    updateActivities(activitiesQuery, activitiesUpdate);
 }
 
-exports.categories.create = function(req, res) {
-    var category = req.body;
-    createCategory(req.body, function(result) { res.send(result) });
-}
-
-var createCategory = function (category, resultCallback) {
-    console.log('Adding category ' + JSON.stringify(category));
+exports.categories.create = function(category, resultCallback) {
+    console.log('Adding category: ' + JSON.stringify(category));
     if (!category.projects) {
         category.projects = [];
     }
@@ -105,11 +42,76 @@ var createCategory = function (category, resultCallback) {
     });
 }
 
+exports.categories.findById = function(categoryId, resultCallback) {
+    console.log('Retrieving category id "' + categoryId + '"');
+    db.collection('categories', function(err, collection) {
+        collection.findOne({'_id': new BSON.ObjectID(categoryId)}, function (err, category) {
+            resultCallback(category);
+        });
+    });
+}
+
+exports.categories.replace = function(categoryId, category, resultCallback) {
+    console.log('Replacing category id "' + categoryId + '" with category: ' + JSON.stringify(category));
+    db.collection('categories', function(err, collection) {
+        collection.update({'_id': new BSON.ObjectID(categoryId)}, category, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                resultCallback({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                resultCallback(category);
+            }
+        });
+    });
+    var activitiesQuery = {
+        'category.id': new BSON.ObjectID(categoryId)
+    };
+    var activitiesUpdate = {
+        $set: {
+            'category.name': category.name
+        }
+    };
+    updateActivities(activitiesQuery, activitiesUpdate);
+}
+
+exports.categories.update = function(categoryId, category, resultCallback) {
+    console.log('Updating category id "' + categoryId + '" with category: ' + JSON.stringify(category));
+    var query = {
+        '_id': new BSON.ObjectID(categoryId)
+    };
+    var update = {
+        $set: {
+            name: category.name
+        }
+    };
+    db.collection('categories', function(err, collection) {
+        collection.update(query, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                resultCallback({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                resultCallback(category);
+            }
+        });
+    });
+    var activitiesQuery = {
+        'category.id': new BSON.ObjectID(categoryId)
+    };
+    var activitiesUpdate = {
+        $set: {
+            'category.name': category.name
+        }
+    };
+    updateActivities(activitiesQuery, activitiesUpdate);
+}
+
 /*------------- PROJECTS ------------------*/
 
 exports.projects = {};
 
-exports.projects.findAll = function(req, res) {
+exports.projects.findAll = function(resultCallback) {
     console.log('Retrieving all projects');
     db.collection('categories', function(err, collection) {
         collection.find().toArray(function(err, categories) {
@@ -119,122 +121,12 @@ exports.projects.findAll = function(req, res) {
                     foundProjects = foundProjects.concat(categories[i].projects);
                 }
             };
-            res.send(foundProjects);
+            resultCallback(foundProjects);
         });
     });
 }
 
-exports.projects.findById = function(req, res) {
-    var projectId = req.params.id;
-    console.log('Retrieving project id "' + projectId + '"');
-    var query = {
-        'projects.id': new BSON.ObjectID(projectId)
-    };
-    db.collection('categories', function(err, collection) {
-        collection.findOne(query, function (err, category) {
-            if (category && category.projects) {
-                for (var i = 0; i < category.projects.length; i++) {
-                    var project = category.projects[i];
-                    if (project.id == projectId) {
-                        return res.send(project);
-                    }
-                }
-            }
-            var error = {
-                status: 404,
-                message: 'Couldn\'t find project id "' + projectId + '"'
-            };
-            res.send(error, 404);
-        });
-    });
-}
-
-exports.projects.replace = function(req, res) {
-    var projectId = req.params.id;
-    var project = req.body;
-    console.log('Replacing project id "' + projectId + '" with project ' + JSON.stringify(project));
-    project.id = new BSON.ObjectID(projectId);
-    var query = {
-        'projects.id': new BSON.ObjectID(projectId)
-    };
-    var update = {
-        $set: {
-            'projects.$': project
-        }
-    };
-    db.collection('categories', function(err, collection) {
-        collection.update(query, update, {safe: true}, function (err, result) {
-            if (err) {
-                console.log('Error updating collection: ' + err);
-                res.send({'error': 'An error has occurred'});
-            } else {
-                console.log('' + result + ' document(s) updated');
-                res.send(project);
-            }
-        });
-    });
-    var activitiesQuery = {
-        'project.id': new BSON.ObjectID(projectId)
-    };
-    var activitiesUpdate = {
-        $set: {
-            'project.name': project.name
-        }
-    };
-    if (project.accounting && project.accounting.name) {
-        activitiesUpdate.$set['accounting.name'] = project.accounting.name;
-    }
-    updateActivities(activitiesQuery, activitiesUpdate);
-}
-
-exports.projects.update = function(req, res) {
-    var projectId = req.params.id;
-    var project = req.body;
-    console.log('Updating project id "' + projectId + '" with project ' + JSON.stringify(project));
-
-    var query = {
-        'projects.id': new BSON.ObjectID(projectId)
-    };
-    var update = {
-        $set: {
-            'projects.$.name': project.name
-        }
-    };
-    if (project.accounting && project.accounting.name) {
-        update.$set['accounting.name'] = project.accounting.name;
-    }
-    db.collection('categories', function(err, collection) {
-        collection.update(query, update, {safe: true}, function (err, result) {
-            if (err) {
-                console.log('Error updating collection: ' + err);
-                res.send({'error': 'An error has occurred'});
-            } else {
-                console.log('' + result + ' document(s) updated');
-                res.send(project);
-            }
-        });
-    });
-    var activitiesQuery = {
-        'project.id': new BSON.ObjectID(projectId)
-    };
-    var activitiesUpdate = {
-        $set: {
-            'project.name': project.name
-        }
-    };
-    if (project.accounting && project.accounting.name) {
-        activitiesUpdate.$set['accounting.name'] = project.accounting.name;
-    }
-    updateActivities(activitiesQuery, activitiesUpdate);
-}
-
-exports.projects.create = function(req, res) {
-    var categoryId = req.query.category_id;
-    var project = req.body;
-    createProject(project, categoryId, function(result) { res.send(result) });
-}
-
-var createProject = function(project, categoryId, resultCallback) {
+exports.projects.create = function(project, categoryId, resultCallback) {
     project.id = mongo.ObjectID();
     console.log('Adding project ' + JSON.stringify(project) + '" on category id "' + categoryId + '"');
     var query =  {
@@ -256,7 +148,7 @@ var createProject = function(project, categoryId, resultCallback) {
     });
 }
 
-var createProjects = function(projects, categoryId, resultCallback) {
+exports.projects.createMultiple = function(projects, categoryId, resultCallback) {
     for (var i = projects.length - 1; i >= 0; i--) {
         projects[i].id = mongo.ObjectID();
     };
@@ -280,26 +172,109 @@ var createProjects = function(projects, categoryId, resultCallback) {
     });
 }
 
-/*------------- ACTIVITIES ------------------*/
-
-var updateActivities = function(query, update) {
-    db.collection('activities', function(err, collection) {
-        collection.update(query, update, {safe: true}, function (err, result) {
-            if (err) {
-                console.log('Error updating activities collection: ' + err);
-            } else {
-                console.log('Updated ' + result + ' activity document(s)');
+exports.projects.findById = function(projectId, resultCallback) {
+    console.log('Retrieving project id "' + projectId + '"');
+    var query = {
+        'projects.id': new BSON.ObjectID(projectId)
+    };
+    db.collection('categories', function(err, collection) {
+        collection.findOne(query, function (err, category) {
+            if (category && category.projects) {
+                for (var i = 0; i < category.projects.length; i++) {
+                    var project = category.projects[i];
+                    if (project.id == projectId) {
+                        return resultCallback(project);
+                    }
+                }
             }
+            var error = {
+                status: 404,
+                message: 'Couldn\'t find project id "' + projectId + '"'
+            };
+            resultCallback(error, 404);
         });
     });
 }
 
+exports.projects.replace = function(projectId, project, resultCallback) {
+    console.log('Replacing project id "' + projectId + '" with project ' + JSON.stringify(project));
+    project.id = new BSON.ObjectID(projectId);
+    var query = {
+        'projects.id': new BSON.ObjectID(projectId)
+    };
+    var update = {
+        $set: {
+            'projects.$': project
+        }
+    };
+    db.collection('categories', function(err, collection) {
+        collection.update(query, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                resultCallback({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                resultCallback(project);
+            }
+        });
+    });
+    var activitiesQuery = {
+        'project.id': new BSON.ObjectID(projectId)
+    };
+    var activitiesUpdate = {
+        $set: {
+            'project.name': project.name
+        }
+    };
+    if (project.accounting && project.accounting.name) {
+        activitiesUpdate.$set['accounting.name'] = project.accounting.name;
+    }
+    updateActivities(activitiesQuery, activitiesUpdate);
+}
+
+exports.projects.update = function(projectId, project, resultCallback) {
+    console.log('Updating project id "' + projectId + '" with project ' + JSON.stringify(project));
+    var query = {
+        'projects.id': new BSON.ObjectID(projectId)
+    };
+    var update = {
+        $set: {
+            'projects.$.name': project.name
+        }
+    };
+    if (project.accounting && project.accounting.name) {
+        update.$set['accounting.name'] = project.accounting.name;
+    }
+    db.collection('categories', function(err, collection) {
+        collection.update(query, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                resultCallback({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' document(s) updated');
+                resultCallback(project);
+            }
+        });
+    });
+    var activitiesQuery = {
+        'project.id': new BSON.ObjectID(projectId)
+    };
+    var activitiesUpdate = {
+        $set: {
+            'project.name': project.name
+        }
+    };
+    if (project.accounting && project.accounting.name) {
+        activitiesUpdate.$set['accounting.name'] = project.accounting.name;
+    }
+    updateActivities(activitiesQuery, activitiesUpdate);
+}
+
+/*------------- ACTIVITIES ------------------*/
+
 exports.activities = {};
 
-exports.activities.findAll = function(req, res) {
-    var user = req.query.user;
-    var year = req.query.year;
-    var month = req.query.month;
+exports.activities.findAll = function(user, year, month, resultCallback) {
     var query = {};
     if (user) {
         query['user'] = user;
@@ -321,31 +296,30 @@ exports.activities.findAll = function(req, res) {
     console.log('Retrieving all activities with query ' + JSON.stringify(query));
     db.collection('activities', function(err, collection) {
         collection.aggregate(pipeline, function(err, activities) {
-            res.send(activities);
+            resultCallback(activities);
         });
     });
 }
 
-exports.activities.create = function(req, res) {
-    var projectId = req.body.project.id;
+exports.activities.create = function(activity, resultCallback) {
     var query = {
-        'projects.id': new BSON.ObjectID(projectId)
+        'projects.id': new BSON.ObjectID(activity.project.id)
     };
     db.collection('categories', function(err, collection) {
         collection.findOne(query, function (err, category) {
             if (category && category.projects) {
                 for (var i = 0; i < category.projects.length; i++) {
                     var project = category.projects[i];
-                    if (project.id == projectId) {
-                        var activity = {
-                            user: req.body.user,
+                    if (project.id == activity.project.id) {
+                        var activityToAdd = {
+                            user: activity.user,
                             date: {
-                                year: req.body.date.year,
-                                month: req.body.date.month,
-                                day: req.body.date.day
+                                year: activity.date.year,
+                                month: activity.date.month,
+                                day: activity.date.day
                             },
                             project: {
-                                id: projectId,
+                                id: activity.project.id,
                                 name: project.name
                             },
                             category: {
@@ -357,7 +331,14 @@ exports.activities.create = function(req, res) {
                             }
                         };
                         db.collection('activities', function(err, collection) {
-                            mongUtil.insertEntity(collection, activity, res);
+                            collection.insert(activityToAdd, {safe: true}, function (err, result) {
+                                if (err) {
+                                    resultCallback({'error': 'An error has occurred'});
+                                } else {
+                                    console.log('Success: ' + JSON.stringify(result[0]));
+                                    resultCallback(result[0]);
+                                }
+                            });
                         });
                     }
                 }
@@ -366,9 +347,7 @@ exports.activities.create = function(req, res) {
     });
 }
 
-exports.activities.toCsv = function(req, res) {
-    var year = req.params.year;
-    var month = req.params.month;
+exports.activities.exportToCsv = function(year, month, resultCallback) {
     var query = {
         'date.year': ~~year,
         'date.month': ~~month
@@ -390,19 +369,27 @@ exports.activities.toCsv = function(req, res) {
                     '"' + activity.accounting.name + '",' +
                     activity.hours + '\n';
             };
-            res.send(result);
+            resultCallback(result);
+        });
+    });
+}
+
+var updateActivities = function(query, update) {
+    db.collection('activities', function(err, collection) {
+        collection.update(query, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating activities collection: ' + err);
+            } else {
+                console.log('Updated ' + result + ' activity document(s)');
+            }
         });
     });
 }
 
 /*------------- INIT ------------------*/
 
-exports.init = function(req, res){
-    populateDB();
-    res.send();
-};
-var populateDB = function() {
-	console.log('populateDB');
+exports.populateDB = function() {
+	console.log('Populating the database');
 
     var categories = [{
         'name': 'Future Architecture',

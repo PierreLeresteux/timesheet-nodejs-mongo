@@ -24,28 +24,15 @@ __LAUNCH LOCALLY__
 
 __URLs__
 
-* ts => timesheet (document) [CRUD]<br />
-	- ```GET /ts``` => GET ALL<br />
-	- ```GET /ts/:id``` => GET BY OBJECTID<br />
-	- ```POST /ts``` => CREATE NEW timesheet<br />
-	- ```PUT /ts/:id``` => UPDATE timesheet<br />
-	- ```DELETE /ts/:id``` => DELETE timesheet<br />
-* user => utilisateur.login<br />
-    - ```GET /user``` => GET ALL<br />
-    - ```GET /user/:id``` => GET A user<br />
-    - ```DELETE /user/:id``` => DELETE user<br />
-	- ```GET /ts/user/:user?year=[&month=]``` > GET timesheet BY USER (login) <br />
-* project => tasks.project<br />
-    - ```GET /project``` => GET ALL<br />
-    - ```GET /project/:id``` => GET A project<br />
-    - ```DELETE /project/:id``` => DELETE project<br />
-	- ```GET /ts/project/:project?year=[&month=]``` => GET timesheet BY TASKS (project)<br />
 * Categories
     - ```GET /categories``` => Get all categories with all their projects
+    - ```POST /categories``` => Create a new category with no projects
     - ```GET /categories/:id``` => Get a single category with all its projects
     - ```PUT /categories/:id``` => Replace a category with the data passed in the body
     - ```PATCH /categories/:id``` => Update a category with the data passed in the body
+* Projects
     - ```GET /projects``` => Get all projects of a category
+    - ```POST /projects?category_id=``` => Create a new project assigned to a specified category
     - ```GET /projects/:id``` => Get a single project of a category
     - ```PUT /projects/:id``` => Replace a project with the data passed in the body
     - ```PATCH /projects/:id``` => Update a project with the data passed in the body
