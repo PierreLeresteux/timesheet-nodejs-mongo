@@ -1,23 +1,44 @@
-<div ng-controller="ProjectsController">
-    <h2>Categories</h2>
-    <ul id="categories" ng-controller="CategoriesController">
-        <li><div cat-dblclick class="title"><h5><img src="../img/batch/16x16/add.png"/> Add a category</h5></div></li>
-        <li ng-repeat="category in categories" mouse-over-category >
-            <div cat-dblclick class="title" title="Double-click to edit" data-catId="{{category._id}}">
-                <h5 >{{category.name}}</h5>
+<div>
+    <div id="main-template">
+        <div id="categories" ng-controller="ProjectsController">
+            <h2>Categories</h2>
+            <ul ng-controller="CategoriesController">
+                <li>
+                    <div cat-dblclick class="title"><h5><img src="../img/batch/16x16/add.png"/> Add a category</h5>
+                    </div>
+                </li>
+                <li ng-repeat="category in categories" mouse-over-category>
+                    <div cat-dblclick class="title" title="Double-click to edit" data-catId="{{category._id}}">
+                        <h5>{{category.name}}</h5>
+                    </div>
+                    <div class="content" ng-click="noEvent($event)">
+                        <projectlist>
+                        </projectlist>
+                        <div class="project projectadd" title="Double-click to create a project" edit-project
+                             data-projectid="-1">
+                            <div class="name"><img src="../img/batch/16x16/add.png"/> Add a project</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div id="editModal" class="reveal-modal">
+                <h2 ng-bind="title"></h2>
+                <p class="lead">{{description}}</p>
+                <label>Name : </label>
+                <input type="text" ng-model="item.name" />
+                <label ng-hide="hideAccounting">Accounting: </label>
+                <input ng-hide="hideAccounting" type="text" ng-model="item.accounting.name" />
+                <a class="secondary button" href="#" ng-click="cancel($event)">Cancel</a>
+                <a class="button" href="#" ng-click="save($event)">Save</a>
+                <a class="close-reveal-modal">&#215;</a>
             </div>
-            <div class="content" ng-click="noEvent($event)" >
-                <projectlist>
-                </projectlist>
-                <div class="project projectadd" title="Double-click to create a project" edit-project data-projectid="-1">
-                    <div class="name"><img src="../img/batch/16x16/add.png"/> Add a project</div>
-                </div>
-            </div>
-        </li>
-    </ul>
-    <div id="myModal" class="reveal-modal normal">
-        <h2 ng-bind="title"></h2>
-        <p class="lead">{{description}}</p>
-        <a class="close-reveal-modal">&#215;</a>
+        </div>
+    </div>
+    <div id="project-template">
+        <div class="project" title="Double-click to edit" edit-project ng-repeat="project in category.projects"
+             data-projectid="{{project.id}}">
+            <div class="name">Name : {{project.name}}</div>
+            <div class="accounting">Accounting : {{project.accounting.name}}</div>
+        </div>
     </div>
 </div>

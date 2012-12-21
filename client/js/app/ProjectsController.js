@@ -3,69 +3,98 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 		init: function() {
 			log('ProjectsController > init');
 			var that = this;
+			var $template = $(Template);
+			that.mainTemplate = $template.find('#main-template').html();
+			that.projectTemplate = $template.find('#project-template').html();
+
 
 			$module.directive('projectlist', function(){
 				return {
 					restrict: 'E',
 					replace: true,
 					scope: true,
-					template: '<div class="project" title="Double-click to edit" edit-project ng-repeat="project in category.projects" data-projectid="{{project.id}}">'+
-							'<div class="name">Name : {{project.name}}</div>'+
-							'<div class="accounting">Accounting : {{project.accounting.name}}</div>'+
-						'</div>'
+					template: that.projectTemplate
 				};
 			}).directive('editProject', function(){
 				return that.editProject;
 			}).directive('catDblclick', function(){
 				return that.catDblclick;
-			}).factory('$openModalCatProject', function(){
-				return that.openModalCatProject;
 			});
 
-			$module.controller('CategoriesController', ['$scope','$resource','$openModalCatProject',that.categoriesController]);
+			$module.controller('ProjectsController', ['$scope',that.projectsController]);
+			$module.controller('CategoriesController', ['$rootScope','$scope','$resource','$compile','$timeout',that.categoriesController]);
 		},
 		render: function() {
 			log('ProjectsController > render');
-			$container.empty().append(Template);
+			$container.empty().append(this.mainTemplate);
 
 			angular.bootstrap(document.getElementById('categories'), ['timesheet']);
 		},
-		categoriesController: function($scope, $resource,$openModalCatProject){
-			$scope.$openModalCatProject = $openModalCatProject;
+		projectsController: function($scope) {
+
+		},
+		categoriesController: function($rootScope,$scope, $resource,$compile,$timeout){
 			var Categories = $resource('/categories');
 			$scope.categories = Categories.query();
+
+			$scope.openModalCatProject = function($scope, catid, projectid){
+				$rootScope.hideAccounting = true;
+				if (catid && projectid) {
+					log("Edit project "+catid+"-"+projectid);
+					$rootScope.title="Edit a project";
+					$rootScope.description="You can edit this project";
+					$rootScope.hideAccounting = false;
+					var Projects = $resource('/projects/:pid');
+					var project = Projects.get({pid:projectid}, function(){
+						$timeout(function(){
+							$rootScope.item = project;
+							$rootScope.$apply();
+						},1,false);
+					}, function(){
+						log('ERROR');
+					});
+
+
+
+				} else if (catid && projectid == undefined){
+					log("Edit category "+catid);
+					$rootScope.title="Edit a category";
+					$rootScope.description="You can edit this category";
+				} else if (catid == undefined) {
+					log("New category");
+					$rootScope.title="Create a new category";
+					$rootScope.description="";
+				} if (catid && projectid == -1) {
+					log("New project");
+					$rootScope.title="Create a new project";
+					$rootScope.description="";
+					$rootScope.hideAccounting = false;
+				}
+
+				$rootScope.$apply();
+				var $popup = $(document.getElementById('editModal'));
+				$popup.reveal();
+			};
+
+			$scope.save = function($event){
+				log('TOTO');
+			}
 		},
 		editProject: function(scope, element, attrs) {
 			element.ready(function(){
 				element.dblclick(function(){
 					var pid = $(this).attr('data-projectId');
 					var cid = $(this).closest('li').find('.title').attr('data-catid');
-					scope.$openModalCatProject(scope, cid, pid );
+					scope.openModalCatProject(scope, cid, pid );
 				});
 			});
 		},
 		catDblclick: function(scope, element, attrs) {
 			element.ready(function(){
 				element.dblclick(function(){
-					scope.$openModalCatProject(scope, $(this).attr('data-catId'), undefined);
+					scope.openModalCatProject(scope, $(this).attr('data-catId'), undefined);
 				});
 			});
-		},
-		openModalCatProject: function($scope, catid, projectid){
-			if (catid && projectid) {
-				log("Edit project "+catid+"-"+projectid);
-				$scope.title="Edit a project";
-			} else if (catid && projectid == undefined){
-				log("Edit category "+catid);
-				$scope.title="Edit a category";
-			} else if (catid == undefined) {
-				log("New category");
-				$scope.title="Create a new category";
-			} if (catid && projectid == -1) {
-				log("New project");
-				$scope.title="Create a new project";
-			}
-			$("#myModal").reveal();
 		}
 	});
 });
