@@ -87,9 +87,23 @@ exports.categories.update = function(req, res) {
 
 exports.categories.create = function(req, res) {
     var category = req.body;
+    createCategory(req.body, function(result) { res.send(result) });
+}
+
+var createCategory = function (category, resultCallback) {
     console.log('Adding category ' + JSON.stringify(category));
+    if (!category.projects) {
+        category.projects = [];
+    }
     db.collection('categories', function(err, collection) {
-        mongUtil.insertEntity(collection, category, res);
+        collection.insert(category, {safe: true}, function (err, result) {
+            if (err) {
+                resultCallback({'error': 'An error has occurred'});
+            } else {
+                console.log('Success: ' + JSON.stringify(result[0]));
+                resultCallback(result[0]);
+            }
+        });
     });
 }
 
@@ -217,21 +231,52 @@ exports.projects.update = function(req, res) {
 }
 
 exports.projects.create = function(req, res) {
-    var categoryId = req.params.id;
+    var categoryId = req.query.category_id;
     var project = req.body;
+    createProject(project, categoryId, function(result) { res.send(result) });
+}
+
+var createProject = function(project, categoryId, resultCallback) {
     project.id = mongo.ObjectID();
     console.log('Adding project ' + JSON.stringify(project) + '" on category id "' + categoryId + '"');
+    var query =  {
+        '_id': new BSON.ObjectID(categoryId)
+    }
     var update = {
         $push: { projects: project }
     };
     db.collection('categories', function(err, collection) {
-        collection.update({'_id': new BSON.ObjectID(categoryId)}, update, {safe: true}, function (err, result) {
+        collection.update(query, update, {safe: true}, function (err, result) {
             if (err) {
                 console.log('Error updating collection: ' + err);
-                res.send({'error': 'An error has occurred'});
+                resultCallback({'error': 'An error has occurred'});
             } else {
-                console.log('' + result + ' document(s) updated');
-                res.send(project);
+                console.log('' + result + ' category document(s) updated');
+                resultCallback(project);
+            }
+        });
+    });
+}
+
+var createProjects = function(projects, categoryId, resultCallback) {
+    for (var i = projects.length - 1; i >= 0; i--) {
+        projects[i].id = mongo.ObjectID();
+    };
+    console.log('Adding projects ' + JSON.stringify(projects) + '" on category id "' + categoryId + '"');
+    var query =  {
+        '_id': new BSON.ObjectID(categoryId)
+    }
+    var update = {
+        $pushAll: { projects: projects }
+    };
+    db.collection('categories', function(err, collection) {
+        collection.update(query, update, {safe: true}, function (err, result) {
+            if (err) {
+                console.log('Error updating collection: ' + err);
+                resultCallback({'error': 'An error has occurred'});
+            } else {
+                console.log('' + result + ' category document(s) updated');
+                resultCallback(projects);
             }
         });
     });
