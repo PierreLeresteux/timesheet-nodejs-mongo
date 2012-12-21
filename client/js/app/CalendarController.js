@@ -59,6 +59,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$scope.confirm = function(event) {
 				event.preventDefault();
 				$scope.scopeToEdit.hours = $scope.dayItemHours;
+				$scope.scopeToEdit.$apply();
 				$scope.close();
 			};
 
