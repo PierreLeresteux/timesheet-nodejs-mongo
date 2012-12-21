@@ -391,130 +391,81 @@ var updateActivities = function(query, update) {
 exports.populateDB = function() {
 	console.log('Populating the database');
 
-    var categories = [{
-        'name': 'Future Architecture',
-        'projects': [{
-            'id': mongo.ObjectID(),
-            'name': 'DataStore',
-            'accounting': {
-                'name': 'prd'
-            }
-        }]
-    },{
-        'name': 'Holiday/Off',
-        'projects': [{
-            'id': mongo.ObjectID(),
-            'name': 'RTT',
-            'accounting': {
-                'name': 'abs'
-            }
-        },{
-            'id': mongo.ObjectID(),
-            'name': 'Sick',
-            'accounting': {
-                'name': 'abs'
-            }
-        },{
-            'id': mongo.ObjectID(),
-            'name': 'Vacation',
-            'accounting': {
-                'name': 'abs'
-            }
-        }]
-    }];
-    var activities = [{
-        'user': 'sdavid',
-        'date': {
-            'year': 2012,
-            'month': 12,
-            'day': 14
-        },
-        'hours': 8,
-        'project': {
-            'id': categories[1].projects[2].id,
-            'name': 'Vacation'
-        },
-        'category': {
-            'id': categories[1]._id, // null at this time, need first to save categories to DB
-            'name': 'Holiday/Off'
-        },
-        'accounting': {
-            'name': 'abs'
-        }
-    },{
-        'user': 'sdavid',
-        'date': {
-            'year': 2012,
-            'month': 12,
-            'day': 17
-        },
-        'hours': 8,
-        'project': {
-            'id': categories[1].projects[2].id,
-            'name': 'Vacation'
-        },
-        'category': {
-            'id': categories[1]._id, // null at this time, need first to save categories to DB
-            'name': 'Holiday/Off'
-        },
-        'accounting': {
-            'name': 'abs'
-        }
-    },{
-        'user': 'sjob',
-        'date': {
-            'year': 2012,
-            'month': 12,
-            'day': 14
-        },
-        'hours': 4,
-        'project': {
-            'id': categories[1].projects[0].id,
-            'name': 'RTT'
-        },
-        'category': {
-            'id': categories[1]._id, // null at this time, need first to save categories to DB
-            'name': 'Holiday/Off'
-        },
-        'accounting': {
-            'name': 'abs'
-        }
-    },{
-        'user': 'sjob',
-        'date': {
-            'year': 2012,
-            'month': 12,
-            'day': 14
-        },
-        'hours': 4,
-        'project': {
-            'id': categories[0].projects[0].id,
-            'name': 'DataStore'
-        },
-        'category': {
-            'id': categories[0]._id, // null at this time, need first to save categories to DB
-            'name': 'Future Architecture'
-        },
-        'accounting': {
-            'name': 'prd'
-        }
-    }];
-
     db.collection('categories', function(err, collection) {
         collection.drop();
-        collection.insert(categories, {safe:true}, function(err, result) {
-            if (!err) {
-                // Adding activities asynchronously after categories are added since we need their id
-                activities[0].category.id = result[1]._id;
-                activities[1].category.id = result[1]._id;
-                activities[2].category.id = result[1]._id;
-                activities[3].category.id = result[0]._id;
+    });
+    db.collection('activities', function(err, collection) {
+        collection.drop();
+    });
 
-                db.collection('activities', function(err, collection) {
-                    collection.drop();
-                    collection.insert(activities, {safe:true}, function(err, result) {});
-                });
-            }
+    exports.categories.create({name: 'Future Architecture'}, function (category) {
+
+        exports.projects.create({
+                name: 'DataStore',
+                accounting: {name: 'prd'}
+            }, category._id.toString(), function(project) {
+            exports.activities.create({
+                    user: 'sjob',
+                    date: {year: 2012, month: 12, day: 14},
+                    hours: 4,
+                    project: {id: project.id.toString()}
+                }, function(activity) {});
         });
+
+    });
+
+    exports.categories.create({name: 'Foutage de Gueule'}, function (category) {
+
+        exports.projects.create({
+                name: 'Demission',
+                accounting: {name: 'abs'}
+            }, category._id.toString(), function(project) {
+            exports.activities.create({
+                    user: 'pleresteux',
+                    date: {year: 2012, month: 12, day: 21},
+                    hours: 8,
+                    project: {id: project.id.toString()}
+                }, function(activity) {});
+        });
+
+    });
+
+    exports.categories.create({name: 'Holiday/Off'}, function (category) {
+
+        exports.projects.create({
+                name: 'RTT',
+                accounting: {name: 'abs'}
+            }, category._id.toString(), function(project) {
+            exports.activities.create({
+                    user: 'sjob',
+                    date: {year: 2012, month: 12, day: 14},
+                    hours: 4,
+                    project: {id: project.id.toString()}
+                }, function(activity) {});
+        });
+
+        exports.projects.create({
+                name: 'Sick',
+                accounting: {name: 'abs'}
+            }, category._id.toString(), function(project) {});
+
+        exports.projects.create({
+                name: 'Vacation',
+                accounting: {name: 'abs'}
+            }, category._id.toString(), function(project) {
+            exports.activities.create({
+                    user: 'sdavid',
+                    date: {year: 2012, month: 12, day: 14},
+                    hours: 4,
+                    project: {id: project.id.toString()}
+                }, function(activity) {});
+            exports.activities.create({
+                    user: 'sdavid',
+                    date: {year: 2012, month: 12, day: 17},
+                    hours: 4,
+                    project: {id: project.id.toString()}
+                }, function(activity) {});
+        });
+
     });
 };
