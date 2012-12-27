@@ -1,80 +1,89 @@
 #categories {
-	.title {
-		height: 35px;
-		line-height: 35px;
-		padding-left: 40px;
-		border: none;
+  .title {
+    height: 35px;
+    line-height: 35px;
+    padding-left: 40px;
+    border: none;
 
-		h5 {
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			width: auto;
-			overflow: hidden;
-			padding-right: 8px;
-			vertical-align: middle;
-			cursor:pointer;
-			&:hover {
-				color:#2284A1;
-			}
-		}
-		img{
-			cursor:pointer;
-			vertical-align: middle;
-		}
-	}
-	li {
-		line-height: 35px;
-	}
-	.content {
-		padding-top: 0;
+    h5 {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: auto;
+      overflow: hidden;
+      padding-right: 8px;
+      vertical-align: middle;
+      cursor: pointer;
+      &:hover {
+        color: #2284A1;
+      }
+    }
+    img {
+      cursor: pointer;
+      vertical-align: middle;
+    }
+  }
+  .panelScrollable {
+    overflow: auto;
+    height:500px;
+  }
+  .helper {
+    width: 600px;
+    vertical-align: middle;
+    padding-left: 20px;
+  }
+  li {
+    line-height: 35px;
+  }
+  .content {
+    padding-top: 0;
 
-		.project {
-			max-width: 220px;
-			background-color: white;
-			margin-left: 40px;
-			margin-bottom: 20px;
-			border: 2px solid @borderColor;
-			.border-radius(5px);
-			height: 60px;
-			cursor:pointer;
-			div {
-				margin: 0 20px;
-				height: 30px;
-				line-height: 30px;
-			}
+    .project {
+      max-width: 220px;
+      background-color: white;
+      margin-left: 40px;
+      margin-bottom: 20px;
+      border: 2px solid @borderColor;
+      .border-radius(5px);
+      height: 60px;
+      cursor: pointer;
+      div {
+        margin: 0 20px;
+        height: 30px;
+        line-height: 30px;
+      }
 
-			&:hover {
-				border: 2px solid #2284A1;
-				color:#2284A1;
-			}
+      &:hover {
+        border: 2px solid #2284A1;
+        color: #2284A1;
+      }
 
-			.options {
-				text-align: center;
-			}
+      .options {
+        text-align: center;
+      }
 
-		}
+    }
 
-		.projectadd {
-			height:35px;
-		}
-	}
+    .projectadd {
+      height: 35px;
+    }
+  }
 
-	.icon-edit {
-		.icon16("../img/batch/16x16/pencil.png");
-		width: 22px;
-		height: 22px;
-		cursor: pointer;
-	}
+  .icon-edit {
+    .icon16("../img/batch/16x16/pencil.png");
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+  }
 
-	.icon-delete {
-		.icon16("../img/batch/16x16/delete-white.png");
-		width: 22px;
-		height: 22px;
-		cursor: pointer;
-	}
+  .icon-delete {
+    .icon16("../img/batch/16x16/delete-white.png");
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+  }
 
-	.icon-add {
-		.icon16("../img/batch/16x16/add.png");
-	}
+  .icon-add {
+    .icon16("../img/batch/16x16/add.png");
+  }
 
 }

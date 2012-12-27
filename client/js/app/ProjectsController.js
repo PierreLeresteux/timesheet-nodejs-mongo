@@ -45,7 +45,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					$rootScope.description="You can edit this project";
 					$rootScope.hideAccounting = false;
 					var Projects = $resource('/projects/:pid');
-					var project = Projects.get({pid:projectid}, function(){
+					project = Projects.get({pid:projectid}, function(){
 						$timeout(function(){
 							$rootScope.item = project;
 							$rootScope.$apply();
@@ -72,13 +72,25 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 				}
 
 				$rootScope.$apply();
-				var $popup = $(document.getElementById('editModal'));
-				$popup.reveal();
+                $rootScope.$popup = $(document.getElementById('editModal'));
+                $rootScope.$popup.reveal();
 			};
 
-			$scope.save = function($event){
-				log('TOTO');
-			}
+            $rootScope.save = function($event){
+				log('save');
+                $rootScope.$popup.trigger('reveal:close');
+                $rootScope.item.$save;
+                $event.stopPropagation();
+                $event.preventDefault();
+                return false;
+			};
+            $rootScope.cancel = function($event){
+                log('cancel');
+                $rootScope.$popup.trigger('reveal:close');
+                $event.stopPropagation();
+                $event.preventDefault();
+                return false;
+            };
 		},
 		editProject: function(scope, element, attrs) {
 			element.ready(function(){
