@@ -82,11 +82,13 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
 				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
+				$scope.getActivities();
 			};
 
 			$scope.nextMonth = function() {
 				var startDate = $scope.activeDate;
 				$generateCalendar($scope, startDate.add('months', 1).startOf('month'));
+				$scope.getActivities();
 			};
 
 			var days, i, j, className, start=moment().startOf('month');
@@ -98,28 +100,32 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				});
 			};
 
-			var Activities = $resource(
-				'/activities?user=:user&year=:year&month=:month',
-				{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
-			);
-			$scope.activities = Activities.query(function(){
-				$timeout(function(){
-					log('success when calling Activities, length: '+$scope.activities.length);
-					var i=0, length=$scope.activities.length, dayId, activity;
-					for(;i<length;i++){
-						activity = $scope.activities[i];
-						$scope.dayItemData = {
-							'id': activity._id,
-							'name': activity.category.name,
-							'hours': activity.hours
-						};
-						dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
-						addItem(document.getElementById(dayId));
-					}
-				}, 1, true);
-			}, function() {
-				log('error when calling Activities');
-			});
+			$scope.getActivities = function() {
+				var Activities = $resource(
+					'/activities?user=:user&year=:year&month=:month',
+					{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
+				);
+				$scope.activities = Activities.query(function(){
+					$timeout(function(){
+						log('success when calling Activities, length: '+$scope.activities.length);
+						var i=0, length=$scope.activities.length, dayId, activity;
+						for(;i<length;i++){
+							activity = $scope.activities[i];
+							$scope.dayItemData = {
+								'id': activity._id,
+								'name': activity.category.name,
+								'hours': activity.hours
+							};
+							dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
+							addItem(document.getElementById(dayId));
+						}
+					}, 1, true);
+				}, function() {
+					log('error when calling Activities');
+				});
+			};
+			
+			$scope.getActivities();
 
 			var $calendar = $(document.getElementById('calendar'));
 			$scope.$on('addDayItemEvent', function(event, data){
