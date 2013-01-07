@@ -149,6 +149,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
                         }
                     }
                 }
+                categories = categories.sort(function(a,b){return a['name'].localeCompare(b['name']);});
                 $scope.categories = categories;
             };
             $rootScope.cancel = function($event){
