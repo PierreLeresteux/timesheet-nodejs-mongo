@@ -103,7 +103,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$scope.getActivities = function() {
 				var Activities = $resource(
 					'/activities?user=:user&year=:year&month=:month',
-					{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
+					{'user': 'sjob', 'year': $scope.activeDate.format('YYYY'), 'month': $scope.activeDate.format('M')}
 				);
 				$scope.activities = Activities.query(function(){
 					$timeout(function(){
