@@ -49,6 +49,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					$rootScope.description="You can edit this project";
 					$rootScope.hideAccounting = false;
                     $rootScope.create = false;
+                    $rootScope.type = 'P';
 					var Projects = $resource('/projects/:pid',{pid:projectid},{'edit':{method:'PUT'}});
 					var project = Projects.get({pid:projectid}, function(){
 						$timeout(function(){
@@ -65,6 +66,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					$rootScope.title="Edit a category";
 					$rootScope.description="You can edit this category";
                     $rootScope.create = false;
+                    $rootScope.type = 'C';
                     var Categories = $resource('/categories/:cid',{cid:catid},{'edit':{method:'PATCH'}});
                     var category = Categories.get({cid:catid}, function(){
                         $timeout(function(){
@@ -81,6 +83,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					$rootScope.title="Create a new category";
 					$rootScope.description="";
                     $rootScope.create = true;
+                    $rootScope.type = 'C';
                     var Categories = $resource('/categories',{},{'edit':{method:'POST'}});
                     var category = new Categories();
                     $rootScope.item = category;
@@ -94,6 +97,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					$rootScope.description="";
 					$rootScope.hideAccounting = false;
                     $rootScope.create = true;
+                    $rootScope.type = 'P';
                     var Projects = $resource('/projects',{},{'edit':{method:'POST',params:{'category_id':catid}}});
                     var project = new Projects();
                     $rootScope.item = project;
@@ -110,16 +114,16 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
             $rootScope.save = function($event){
                 $rootScope.$popup.trigger('reveal:close');
                 $rootScope.item.$edit(function(data){
-                    $rootScope.updateView(data, $rootScope.pid==undefined,$rootScope.create);
+                    $rootScope.updateView(data, $rootScope.type,$rootScope.create);
                 });
                 $event.stopPropagation();
                 $event.preventDefault();
                 return false;
 			};
-            $rootScope.updateView = function(item, isACategory, creation) {
+            $rootScope.updateView = function(item, type, creation) {
                 var categories = $scope.categories;
                 if (creation) {
-                    if (isACategory) {
+                    if (type == 'C') {
                         categories[categories.length] = item;
                     } else {
                         for(var i= 0, nbCat=categories.length;i<nbCat;i++){
@@ -132,7 +136,7 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
                 } else {
                     for(var i= 0, nbCat=categories.length;i<nbCat;i++){
                         if (categories[i]['_id'] == $rootScope.cid) {
-                            if (isACategory){
+                            if (type == 'C'){
                                 categories[i] = item;
                             } else {
                                 var projects = categories[i]['projects'];

@@ -14,7 +14,6 @@ exports.findAll = function(db, collectionName, resultCallback, successCallback) 
 };
 
 exports.findAll = function(db, collectionName, sortKey, resultCallback, successCallback) {
-    console.log('sort : '+sortKey);
     db.collection(collectionName, function(err, collection) {
         collection.find().toArray(function(err, result) {
             if (err) {
