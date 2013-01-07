@@ -170,7 +170,17 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 		menuController: function ($rootScope, $scope, $resource) {
 			$scope.targetType = 'day';
 			var Categories = $resource('/categories');
-			$scope.categories = Categories.query();
+			$scope.categories = Categories.query(function(){
+                _.each($scope.categories,function(category, i, l){
+                    _.each(category.projects,function(project, index, list){
+                        project.matched = false;
+                        category.projects[index] = project;
+                    });
+                    $scope.categories[i].projects = category.projects;
+                });
+                $scope.allCategories = $scope.categories;
+            });
+
 
 			$scope.changeTargetType = function($event) {
 				var value = $($event.target).attr('data-value');
@@ -180,7 +190,26 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			};
 
 			$scope.searchChange = function() {
-				log('search : '+$scope.search);
+                if ($scope.search && $scope.search.length > 0){
+                    $scope.categories = _.filter($scope.allCategories, function(category){
+                        return _.filter(category.projects, function(project){
+                            var matchProject = project.name.toLocaleLowerCase().indexOf($scope.search.toLocaleLowerCase())==0;
+                            project.matched = matchProject;
+                            return matchProject;
+                        }).length>0;
+                    });
+                }else{
+                    _.each($scope.allCategories,function(category, i, l){
+                        _.each(category.projects,function(project, index, list){
+                            project.matched = false;
+                            category.projects[index] = project;
+                        });
+                        $scope.allCategories[i].projects = category.projects;
+                    });
+                    $scope.categories = $scope.allCategories;
+                }
+                var menuElem = document.getElementById('menu');
+                $(menuElem).foundationAccordion();
 			};
 
 			$scope.noEvent = function($event) {

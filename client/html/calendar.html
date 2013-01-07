@@ -83,7 +83,7 @@
 	</div>
 
 	<div id="project-template">
-		<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}" data-project-name="{{item.name}}">
+		<div project-ready class="project {{item.matched}}" ng-repeat="item in category.projects" data-projectid="{{item.id}}" data-project-name="{{item.name}}">
 			<span class="icon"></span>
 			<span>{{item.name}}</span>
 			<input class="input" type="text" maxlength="1" value="8"/>
