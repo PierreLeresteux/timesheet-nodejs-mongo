@@ -18,7 +18,7 @@ exports.categories = {};
 
 exports.categories.findAll = function(resultCallback) {
     console.log('Retrieving all categories');
-    mongUtil.findAll(db, 'categories', resultCallback, function(categories) {
+    mongUtil.findAll(db, 'categories', 'name', resultCallback, function(categories) {
         resultCallback(categories);
     });
 }

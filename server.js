@@ -118,7 +118,7 @@ app.post('/activities', function(req, res) {
             day: req.body.date.day
         },
         project: {
-            id: req.body.project.id,
+            id: req.body.project.id
         }
     };
     timesheet.activities.create(activity, resultSender(res));

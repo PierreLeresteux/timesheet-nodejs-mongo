@@ -43,11 +43,12 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 
 			$scope.openModalCatProject = function($scope, catid, projectid){
 				$rootScope.hideAccounting = true;
-				if (catid && projectid) {
+				if (catid && projectid && projectid.length>3) {
 					log("Edit project "+catid+"-"+projectid);
 					$rootScope.title="Edit a project";
 					$rootScope.description="You can edit this project";
 					$rootScope.hideAccounting = false;
+                    $rootScope.create = false;
 					var Projects = $resource('/projects/:pid',{pid:projectid},{'edit':{method:'PUT'}});
 					var project = Projects.get({pid:projectid}, function(){
 						$timeout(function(){
@@ -63,7 +64,8 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					log("Edit category "+catid);
 					$rootScope.title="Edit a category";
 					$rootScope.description="You can edit this category";
-                    var Categories = $resource('/categories/:cid',{cid:catid},{'edit':{method:'PATCH',isArray:false,headers:{'Content-Type':'application/json'}}});
+                    $rootScope.create = false;
+                    var Categories = $resource('/categories/:cid',{cid:catid},{'edit':{method:'PATCH'}});
                     var category = Categories.get({cid:catid}, function(){
                         $timeout(function(){
                             $rootScope.item = category;
@@ -78,11 +80,26 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 					log("New category");
 					$rootScope.title="Create a new category";
 					$rootScope.description="";
+                    $rootScope.create = true;
+                    var Categories = $resource('/categories',{},{'edit':{method:'POST'}});
+                    var category = new Categories();
+                    $rootScope.item = category;
+                    $rootScope.pid = undefined;
+                    $rootScope.cid = undefined;
+                    $rootScope.$apply();
+
 				} if (catid && projectid == -1) {
 					log("New project");
 					$rootScope.title="Create a new project";
 					$rootScope.description="";
 					$rootScope.hideAccounting = false;
+                    $rootScope.create = true;
+                    var Projects = $resource('/projects',{},{'edit':{method:'POST',params:{'category_id':catid}}});
+                    var project = new Projects();
+                    $rootScope.item = project;
+                    $rootScope.pid = undefined;
+                    $rootScope.cid = catid;
+                    $rootScope.$apply();
 				}
 
 				$rootScope.$apply();
@@ -91,38 +108,46 @@ define(['controller','text!html/projects.html'], function(Controller,Template){
 			};
 
             $rootScope.save = function($event){
-				log('save');
                 $rootScope.$popup.trigger('reveal:close');
                 $rootScope.item.$edit(function(data){
-                    $rootScope.updateView(data, $rootScope.pid==undefined);
+                    $rootScope.updateView(data, $rootScope.pid==undefined,$rootScope.create);
                 });
                 $event.stopPropagation();
                 $event.preventDefault();
                 return false;
 			};
-            $rootScope.updateView = function(item, isACategory) {
+            $rootScope.updateView = function(item, isACategory, creation) {
                 var categories = $scope.categories;
-                log(categories);
-                log(item);
-                for(var i= 0, nbCat=categories.length;i<nbCat;i++){
-                    if (categories[i]['_id'] == $rootScope.cid) {
-                        if (isACategory){
-                            categories[i] = item;
-                        } else {
-                            var projects = categories[i]['projects'];
-                            for(var j= 0, nbProject=projects.length;j<nbProject;j++){
-                                if (projects[j]['id'] == $rootScope.pid) {
-                                    projects[j] = item;
+                if (creation) {
+                    if (isACategory) {
+                        categories[categories.length] = item;
+                    } else {
+                        for(var i= 0, nbCat=categories.length;i<nbCat;i++){
+                            if (categories[i]['_id'] == $rootScope.cid) {
+                                var projects = categories[i]['projects'];
+                                projects[projects.length] = item;
+                            }
+                        }
+                    }
+                } else {
+                    for(var i= 0, nbCat=categories.length;i<nbCat;i++){
+                        if (categories[i]['_id'] == $rootScope.cid) {
+                            if (isACategory){
+                                categories[i] = item;
+                            } else {
+                                var projects = categories[i]['projects'];
+                                for(var j= 0, nbProject=projects.length;j<nbProject;j++){
+                                    if (projects[j]['id'] == $rootScope.pid) {
+                                        projects[j] = item;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                log(categories);
                 $scope.categories = categories;
             };
             $rootScope.cancel = function($event){
-                log('cancel');
                 $rootScope.$popup.trigger('reveal:close');
                 $event.stopPropagation();
                 $event.preventDefault();
