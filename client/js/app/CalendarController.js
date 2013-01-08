@@ -109,24 +109,30 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				});
 			};
 
+			var nbActivitiesCall = 0, Activities = $resource(
+				'/activities?user=:user&year=:year&month=:month',
+				{'user': 'sjob', 'year': $scope.activeDate.format('YYYY'), 'month': $scope.activeDate.format('M')}
+			);
 			$scope.getActivities = function() {
-				var Activities = $resource(
-					'/activities?user=:user&year=:year&month=:month',
-					{'user': 'sjob', 'year': $scope.activeDate.format('YYYY'), 'month': $scope.activeDate.format('M')}
-				);
+				var callId = ++nbActivitiesCall;
 				$scope.activities = Activities.query(function(){
 					$timeout(function(){
-						log('success when calling Activities, length: '+$scope.activities.length);
-						var i=0, length=$scope.activities.length, dayId, activity;
-						for(;i<length;i++){
-							activity = $scope.activities[i];
-							$scope.dayItemData = {
-								'id': activity._id,
-								'name': activity.category.name,
-								'hours': activity.hours
-							};
-							dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
-							addItem(document.getElementById(dayId));
+						if(callId < nbActivitiesCall) {
+							log('success, but not the last Activities call, do not process success function');
+							return;
+						} else {
+							log('success when calling Activities, length: '+$scope.activities.length);
+							var i=0, length=$scope.activities.length, dayId, activity;
+							for(;i<length;i++){
+								activity = $scope.activities[i];
+								$scope.dayItemData = {
+									'id': activity._id,
+									'name': activity.category.name,
+									'hours': activity.hours
+								};
+								dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
+								addItem(document.getElementById(dayId));
+							}
 						}
 					}, 1, true);
 				}, function() {
