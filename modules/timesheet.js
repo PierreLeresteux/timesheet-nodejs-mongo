@@ -309,6 +309,7 @@ exports.activities.create = function(activity, resultCallback) {
                     if (project.id == activity.project.id) {
                         var activityToAdd = {
                             user: activity.user,
+                            hours: activity.hours,
                             date: {
                                 year: activity.date.year,
                                 month: activity.date.month,
