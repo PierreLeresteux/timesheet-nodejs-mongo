@@ -92,9 +92,8 @@
 
 	<div id="day-item-template">
 		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}" ng-dblclick="edit($event)">
-			<span class="icon" ng-click="removeItem($event)"></span>
+			<span class="icon hours claquos-{{hours}}" ng-click="removeItem($event)"></span>
 			<span class="project-label" ng-bind="label"></span>
-			<span class="hours claquos-{{hours}}"></span>
 		</div>
 	</div>
 </div>
