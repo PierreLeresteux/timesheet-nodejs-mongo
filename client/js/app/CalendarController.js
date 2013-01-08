@@ -35,7 +35,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('MainController', ['$scope',that.mainController]);
 			$module.controller('CalendarController', ['$rootScope','$scope','$resource','$compile','$generateCalendar','$dayItemTemplate','$timeout',
-				'$urlParams', that.calendarController]);
+				'$urlParams', '$location', that.calendarController]);
 			$module.controller('MenuController', ['$rootScope', '$scope','$resource',that.menuController]);
 			$module.controller('DayItemController', ['$scope',that.dayItemController]);
 		},
@@ -80,16 +80,16 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				}
 			});
 		},
-		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout, $urlParams){
+		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout, $urlParams, $location){
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
-				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
+				$generateCalendar($scope, $location, startDate.add('months', -1).startOf('month'));
 				$scope.getActivities();
 			};
 
 			$scope.nextMonth = function() {
 				var startDate = $scope.activeDate;
-				$generateCalendar($scope, startDate.add('months', 1).startOf('month'));
+				$generateCalendar($scope, $location, startDate.add('months', 1).startOf('month'));
 				$scope.getActivities();
 			};
 
@@ -101,7 +101,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				start = moment().startOf('month');
 			}
 
-			$generateCalendar($scope, start);
+			$generateCalendar($scope, $location, start);
 			
 			var addItem = function(dayElem) {
 				$compile($dayItemTemplate)($scope, function(elem, $scope){
@@ -243,7 +243,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				$scope.$emit('editDayItemEvent', {'hours': $scope.hours});
 			};
 		},
-		generateCalendar: function($scope, start){
+		generateCalendar: function($scope, $location, start){
 			$scope.activeDate=moment(start);
 			var activeMonth = moment().format('M');
 			var date=moment(start), now=start.format('dddd');
@@ -287,6 +287,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					bottom: 100-((i*20)+20)
 				});
 			}
+
+			$location.path('/calendar/'+$scope.activeDate.format('YYYY')+'/'+$scope.activeDate.format('MM'));
 		},
 		projectDirective: function($scope, element, attrs) {
 			element.ready(function(){
