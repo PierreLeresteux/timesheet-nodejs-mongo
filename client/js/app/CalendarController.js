@@ -104,7 +104,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			$generateCalendar($scope, $location, start);
 			
 			var addItem = function(dayElem) {
-				$compile($dayItemTemplate)($scope, function(elem, $scope){
+				$compile($dayItemTemplate)($scope, function(elem, $scope) {
 					$(dayElem).append(elem);
 				});
 			};
