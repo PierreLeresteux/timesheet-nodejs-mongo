@@ -14,19 +14,16 @@ define([], function(){
 		},
 		initRoutes: function() {
 			log('Router > init routes');
-			var that = this, calendarController, statsController, projectsController;
-			$module.config(['$routeProvider', function($routeProvider) {
+			var that = this, statsController, projectsController;
+			$module.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 				$routeProvider.when('/calendar', {
 					'redirectTo': function() {
-						that.hide();
-						log('Router > load CalendarController');
-						require(['calendar-controller'], function(CalendarController) {
-							if(!calendarController) {
-								calendarController = new CalendarController();
-							}
-							calendarController.render();
-							that.show();
-						});
+						that.loadCalendar();
+					}
+				});
+				$routeProvider.when('/calendar/:year/:month', {
+					'redirectTo': function(routeParams) {
+						that.loadCalendar(routeParams);
 					}
 				});
 				$routeProvider.when('/stats', {
@@ -66,6 +63,19 @@ define([], function(){
 		hide: function() {
 			$container.removeClass('fade-in');
 			$container.css('opacity', '0');
+		},
+		loadCalendar: function(routeParams) {
+			var that = this;
+			that.hide();
+			log('Router > load CalendarController');
+			require(['calendar-controller'], function(CalendarController) {
+				if(!that.calendarController) {
+					that.calendarController = new CalendarController();
+				}
+				that.calendarController.urlParams = routeParams;
+				that.calendarController.render();
+				that.show();
+			});
 		}
 	}
 

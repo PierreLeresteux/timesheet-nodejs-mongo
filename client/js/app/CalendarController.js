@@ -14,6 +14,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return that.generateCalendar;
 			}).factory('$dayItemTemplate', function(){
 				return that.dayItemTemplate;
+			}).factory('$urlParams', function(){
+				return that.urlParams;
 			});
 
 			$module.directive('project', function(){
@@ -33,7 +35,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('MainController', ['$scope',that.mainController]);
 			$module.controller('CalendarController', ['$rootScope','$scope','$resource','$compile','$generateCalendar','$dayItemTemplate','$timeout',
-				that.calendarController]);
+				'$urlParams', that.calendarController]);
 			$module.controller('MenuController', ['$rootScope', '$scope','$resource',that.menuController]);
 			$module.controller('DayItemController', ['$scope',that.dayItemController]);
 		},
@@ -78,7 +80,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				}
 			});
 		},
-		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout){
+		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout, $urlParams){
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
 				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
@@ -91,7 +93,14 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				$scope.getActivities();
 			};
 
-			var days, i, j, className, start=moment().startOf('month');
+			var days, i, j, className, start;
+
+			if($urlParams && $urlParams.year && $urlParams.month) {
+				start = moment($urlParams.year+$urlParams.month+'01', 'YYYYMMDD');
+			} else {
+				start = moment().startOf('month');
+			}
+
 			$generateCalendar($scope, start);
 			
 			var addItem = function(dayElem) {
