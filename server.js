@@ -126,6 +126,7 @@ app.post('/activities', function(req, res) {
 app.get('/activities-:year-:month.csv', function(req, res) {
     var year = req.params.year;
     var month = req.params.month;
+    res.contentType('csv');
     timesheet.activities.exportToCsv(year, month, resultSender(res));
 });
 
@@ -137,4 +138,4 @@ app.get('/', function(req, res){res.redirect('/index');});
 
 var port = process.env.PORT || 5000;
 app.listen(port);
-console.log('Listening on port '+port);
+console.log('Listening on port ' + port);
