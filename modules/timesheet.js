@@ -23,13 +23,7 @@ exports.categories = {};
 
 exports.categories.findAll = function(resultCallback) {
     console.log('Retrieving all categories');
-<<<<<<< HEAD
     categoriesConnector.find(resultCallback, makeSuccessCallback(resultCallback));
-=======
-    mongUtil.findAll(db, 'categories', 'name', resultCallback, function(categories) {
-        resultCallback(categories);
-    });
->>>>>>> ff695a69b6ee71ee78a4eb73dab8d83535219929
 }
 
 exports.categories.create = function(category, resultCallback) {
@@ -241,7 +235,6 @@ exports.activities.create = function(activity, resultCallback) {
     var query = {
         'projects.id': mongoConnector.objectId(activity.project.id)
     };
-<<<<<<< HEAD
     var successCallback = function(category) {
         if (category && category.projects) {
             for (var i = 0; i < category.projects.length; i++) {
@@ -269,45 +262,6 @@ exports.activities.create = function(activity, resultCallback) {
                     };
 
                     activitiesConnector.insert(resultCallback, makeSuccessCallback(resultCallback), activityToAdd);
-=======
-    db.collection('categories', function(err, collection) {
-        collection.findOne(query, function (err, category) {
-            if (category && category.projects) {
-                for (var i = 0; i < category.projects.length; i++) {
-                    var project = category.projects[i];
-                    if (project.id == activity.project.id) {
-                        var activityToAdd = {
-                            user: activity.user,
-                            hours: activity.hours,
-                            date: {
-                                year: activity.date.year,
-                                month: activity.date.month,
-                                day: activity.date.day
-                            },
-                            project: {
-                                id: activity.project.id,
-                                name: project.name
-                            },
-                            category: {
-                                id: category._id,
-                                name: category.name
-                            },
-                            accounting: {
-                                name: project.accounting.name
-                            }
-                        };
-                        db.collection('activities', function(err, collection) {
-                            collection.insert(activityToAdd, {safe: true}, function (err, result) {
-                                if (err) {
-                                    resultCallback({'error': 'An error has occurred'});
-                                } else {
-                                    console.log('Success: ' + JSON.stringify(result[0]));
-                                    resultCallback(result[0]);
-                                }
-                            });
-                        });
-                    }
->>>>>>> ff695a69b6ee71ee78a4eb73dab8d83535219929
                 }
             }
         }
