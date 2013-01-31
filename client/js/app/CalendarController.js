@@ -14,6 +14,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				return that.generateCalendar;
 			}).factory('$dayItemTemplate', function(){
 				return that.dayItemTemplate;
+			}).factory('$urlParams', function(){
+				return that.urlParams;
 			});
 
 			$module.directive('project', function(){
@@ -33,7 +35,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 
 			$module.controller('MainController', ['$scope',that.mainController]);
 			$module.controller('CalendarController', ['$rootScope','$scope','$resource','$compile','$generateCalendar','$dayItemTemplate','$timeout',
-				that.calendarController]);
+				'$urlParams', '$location', that.calendarController]);
 			$module.controller('MenuController', ['$rootScope', '$scope','$resource',that.menuController]);
 			$module.controller('DayItemController', ['$scope',that.dayItemController]);
 		},
@@ -78,46 +80,59 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				}
 			});
 		},
-		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout){
+		calendarController: function($rootScope, $scope, $resource, $compile, $generateCalendar, $dayItemTemplate, $timeout, $urlParams, $location){
 			$scope.prevMonth = function() {
 				var startDate = $scope.activeDate;
-				$generateCalendar($scope, startDate.add('months', -1).startOf('month'));
+				$generateCalendar($scope, $location, startDate.add('months', -1).startOf('month'));
 				$scope.getActivities();
 			};
 
 			$scope.nextMonth = function() {
 				var startDate = $scope.activeDate;
-				$generateCalendar($scope, startDate.add('months', 1).startOf('month'));
+				$generateCalendar($scope, $location, startDate.add('months', 1).startOf('month'));
 				$scope.getActivities();
 			};
 
-			var days, i, j, className, start=moment().startOf('month');
-			$generateCalendar($scope, start);
+			var days, i, j, className, start;
+
+			if($urlParams && $urlParams.year && $urlParams.month) {
+				start = moment($urlParams.year+$urlParams.month+'01', 'YYYYMMDD');
+			} else {
+				start = moment().startOf('month');
+			}
+
+			$generateCalendar($scope, $location, start);
 			
 			var addItem = function(dayElem) {
-				$compile($dayItemTemplate)($scope, function(elem, $scope){
+				$compile($dayItemTemplate)($scope, function(elem, $scope) {
 					$(dayElem).append(elem);
 				});
 			};
 
+			var nbActivitiesCall = 0, Activities = $resource(
+				'/activities?user=:user&year=:year&month=:month',
+				{'user': 'sjob', 'year': $scope.activeDate.format('YYYY'), 'month': $scope.activeDate.format('M')}
+			);
 			$scope.getActivities = function() {
-				var Activities = $resource(
-					'/activities?user=:user&year=:year&month=:month',
-					{'user': 'sjob', 'year': start.format('YYYY'), 'month': start.format('M')}
-				);
+				var callId = ++nbActivitiesCall;
 				$scope.activities = Activities.query(function(){
 					$timeout(function(){
-						log('success when calling Activities, length: '+$scope.activities.length);
-						var i=0, length=$scope.activities.length, dayId, activity;
-						for(;i<length;i++){
-							activity = $scope.activities[i];
-							$scope.dayItemData = {
-								'id': activity._id,
-								'name': activity.category.name,
-								'hours': activity.hours
-							};
-							dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
-							addItem(document.getElementById(dayId));
+						if(callId < nbActivitiesCall) {
+							log('success, but not the last Activities call, do not process success function');
+							return;
+						} else {
+							log('success when calling Activities, length: '+$scope.activities.length);
+							var i=0, length=$scope.activities.length, dayId, activity;
+							for(;i<length;i++){
+								activity = $scope.activities[i];
+								$scope.dayItemData = {
+									'id': activity._id,
+									'name': activity.category.name,
+									'hours': activity.hours
+								};
+								dayId = activity.date.year+''+activity.date.month+''+activity.date.day;
+								addItem(document.getElementById(dayId));
+							}
 						}
 					}, 1, true);
 				}, function() {
@@ -170,7 +185,17 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 		menuController: function ($rootScope, $scope, $resource) {
 			$scope.targetType = 'day';
 			var Categories = $resource('/categories');
-			$scope.categories = Categories.query();
+			$scope.categories = Categories.query(function(){
+                _.each($scope.categories,function(category, i, l){
+                    _.each(category.projects,function(project, index, list){
+                        project.matched = false;
+                        category.projects[index] = project;
+                    });
+                    $scope.categories[i].projects = category.projects;
+                });
+                $scope.allCategories = $scope.categories;
+            });
+
 
 			$scope.changeTargetType = function($event) {
 				var value = $($event.target).attr('data-value');
@@ -180,7 +205,26 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 			};
 
 			$scope.searchChange = function() {
-				log('search : '+$scope.search);
+                if ($scope.search && $scope.search.length > 0){
+                    $scope.categories = _.filter($scope.allCategories, function(category){
+                        return _.filter(category.projects, function(project){
+                            var matchProject = project.name.toLocaleLowerCase().indexOf($scope.search.toLocaleLowerCase())==0;
+                            project.matched = matchProject;
+                            return matchProject;
+                        }).length>0;
+                    });
+                }else{
+                    _.each($scope.allCategories,function(category, i, l){
+                        _.each(category.projects,function(project, index, list){
+                            project.matched = false;
+                            category.projects[index] = project;
+                        });
+                        $scope.allCategories[i].projects = category.projects;
+                    });
+                    $scope.categories = $scope.allCategories;
+                }
+                var menuElem = document.getElementById('menu');
+                $(menuElem).foundationAccordion();
 			};
 
 			$scope.noEvent = function($event) {
@@ -205,7 +249,7 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 				$scope.$emit('editDayItemEvent', {'hours': $scope.hours});
 			};
 		},
-		generateCalendar: function($scope, start){
+		generateCalendar: function($scope, $location, start){
 			$scope.activeDate=moment(start);
 			var activeMonth = moment().format('M');
 			var date=moment(start), now=start.format('dddd');
@@ -249,6 +293,8 @@ define(['controller', 'text!html/calendar.html', 'moment'], function (Controller
 					bottom: 100-((i*20)+20)
 				});
 			}
+
+			$location.path('/calendar/'+$scope.activeDate.format('YYYY')+'/'+$scope.activeDate.format('MM'));
 		},
 		projectDirective: function($scope, element, attrs) {
 			element.ready(function(){

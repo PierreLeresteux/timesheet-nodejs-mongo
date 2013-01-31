@@ -71,7 +71,7 @@ if(window.debug) {
 require(dependencies, function() {
 	window.log = function(log) {
 		console.log(log);
-	}
+	};
 
 	var init = function() {
 		log('init');
@@ -82,7 +82,7 @@ require(dependencies, function() {
 			window.$container = $(document.getElementById('mainContainer'));
 			new Router();
 		});
-	}
+	};
 
 	$(document).ready(function(){
 		init();

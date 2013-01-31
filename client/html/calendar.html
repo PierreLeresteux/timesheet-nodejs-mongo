@@ -83,7 +83,7 @@
 	</div>
 
 	<div id="project-template">
-		<div project-ready class="project" ng-repeat="item in category.projects" data-projectid="{{item.id}}" data-project-name="{{item.name}}">
+		<div project-ready class="project {{item.matched}}" ng-repeat="item in category.projects" data-projectid="{{item.id}}" data-project-name="{{item.name}}">
 			<span class="icon"></span>
 			<span>{{item.name}}</span>
 			<input class="input" type="text" maxlength="1" value="8"/>
@@ -92,9 +92,8 @@
 
 	<div id="day-item-template">
 		<div class="item" ng-controller="DayItemController" data-project-id="{{id}}" ng-dblclick="edit($event)">
-			<span class="icon" ng-click="removeItem($event)"></span>
+			<span class="icon hours claquos-{{hours}}" ng-click="removeItem($event)"></span>
 			<span class="project-label" ng-bind="label"></span>
-			<span class="hours claquos-{{hours}}"></span>
 		</div>
 	</div>
 </div>

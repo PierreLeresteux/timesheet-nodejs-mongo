@@ -27,7 +27,7 @@ define([], function(){
 		child.__super__ = parent.prototype;
 
 		return child;
-	}
+	};
 
 	Controller.prototype = {
 		init: function(name, template) {
