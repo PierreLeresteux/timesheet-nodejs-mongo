@@ -85,11 +85,10 @@ exports.categories.update = function(categoryId, category, resultCallback) {
 
 exports.categories.delete = function(categoryId, resultCallback) {
     console.log('Deleting category id "' + categoryId + '"');
-    var error = {
-        message: 'Noy yet implemented',
-        status: 405
+    var query = {
+        '_id': mongoConnector.objectId(categoryId)
     };
-    resultCallback(error, 405);
+    categoriesConnector.remove(resultCallback, makeSuccessCallback(resultCallback), query);
 }
 
 /*------------- PROJECTS ------------------*/
@@ -215,11 +214,31 @@ exports.projects.update = function(projectId, project, resultCallback) {
 
 exports.projects.delete = function(projectId, resultCallback) {
     console.log('Deleting project id "' + projectId + '"');
-    var error = {
-        message: 'Noy yet implemented',
-        status: 405
+    var query = {
+        'projects.id': mongoConnector.objectId(projectId)
     };
-    resultCallback(error, 405);
+    var successCallback = function(category) {
+        var keptProjects = [];
+        if (category && category.projects) {
+            for (var i = 0; i < category.projects.length; i++) {
+                var project = category.projects[i];
+                if (project.id != projectId) {
+                    keptProjects.push(project);
+                }
+            }
+        }
+        category.projects = keptProjects;
+        var categoriesQuery = {
+            '_id': category._id
+        };
+        var categoriesUpdate = {
+            $set: {
+                'projects': category.projects
+            }
+        };
+        categoriesConnector.update(resultCallback, makeSuccessCallback(resultCallback), categoriesQuery, categoriesUpdate);
+    }
+    categoriesConnector.findOne(resultCallback, successCallback, query);
 }
 
 /*------------- ACTIVITIES ------------------*/
@@ -289,11 +308,10 @@ exports.activities.create = function(activity, resultCallback) {
 
 exports.activities.delete = function(activityId, resultCallback) {
     console.log('Deleting activity id "' + activityId + '"');
-    var error = {
-        message: 'Noy yet implemented',
-        status: 405
+    var query = {
+        '_id': mongoConnector.objectId(activityId)
     };
-    resultCallback(error, 405);
+    activitiesConnector.remove(resultCallback, makeSuccessCallback(resultCallback), query);
 }
 
 exports.activities.exportToCsv = function(year, month, resultCallback) {

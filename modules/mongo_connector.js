@@ -73,15 +73,19 @@ exports.MongoConnector.prototype.find = function(resultCallback, successCallback
         };
         if (sortKeys) {
             var pipeline = [{ $match: query }, { $sort: sortKeys }, { $limit: 100}];
+            console.log('db.' + collectionName + '.aggregate(' + JSON.stringify(pipeline) + ')');
             collection.aggregate(pipeline, callback);
         } else {
+            console.log('db.' + collectionName + '.find(' + JSON.stringify(query) + ')');
             collection.find(query).toArray(callback);
         }
     }));
 }
 
 exports.MongoConnector.prototype.findOne = function(resultCallback, successCallback, query) {
+    var collectionName = this.collectionName;
     this.db.collection(this.collectionName, makeCollectionAccessErrorHandler(function(collection) {
+        console.log('db.' + collectionName + '.findOne(' + JSON.stringify(query) + ')');
         collection.findOne(query, function(err, result) {
             if (err) {
                 reportError(resultCallback, 'Server error while reading from collection "' + collectionName + '"', err);
@@ -95,6 +99,8 @@ exports.MongoConnector.prototype.findOne = function(resultCallback, successCallb
 exports.MongoConnector.prototype.insert = function(resultCallback, successCallback, document) {
     var collectionName = this.collectionName;
     this.db.collection(this.collectionName, makeCollectionAccessErrorHandler(function(collection) {
+        var options = {safe: true};
+        console.log('db.' + collectionName + '.insert(' + JSON.stringify(document) + ', ' + JSON.stringify(options) + ')');
         collection.insert(document, {safe: true}, function(err, result) {
             if (err) {
                 reportError(resultCallback, 'Server error while inserting into collection "' + collectionName + '"', err);
@@ -111,7 +117,9 @@ exports.MongoConnector.prototype.insert = function(resultCallback, successCallba
 exports.MongoConnector.prototype.update = function(resultCallback, successCallback, query, update) {
     var collectionName = this.collectionName;
     this.db.collection(this.collectionName, makeCollectionAccessErrorHandler(function(collection) {
-        collection.update(query, update, {safe: true, multi: true}, function(err, result) {
+        var options = {safe: true, multi: true};
+        console.log('db.' + collectionName + '.update(' + JSON.stringify(query) + ', ' + JSON.stringify(update) + ', ' + JSON.stringify(options) + ')');
+        collection.update(query, update, options, function(err, result) {
             if (err) {
                 reportError(resultCallback, 'Server error while updating collection "' + collectionName + '"', err);
             } else {
@@ -122,9 +130,27 @@ exports.MongoConnector.prototype.update = function(resultCallback, successCallba
     }));
 }
 
+exports.MongoConnector.prototype.remove = function(resultCallback, successCallback, query) {
+    var collectionName = this.collectionName;
+    this.db.collection(this.collectionName, makeCollectionAccessErrorHandler(function(collection) {
+        var justOne = true;
+        console.log('db.' + collectionName + '.remove(' + JSON.stringify(query) + ', ' + justOne + ')');
+        collection.remove(query, justOne, function(err, result) {
+            if (err) {
+                reportError(resultCallback, 'Server error while removing from collection "' + collectionName + '"', err);
+            } else {
+                console.log('Successfully removed a document from "' + collectionName + '"');
+                reportSuccess(resultCallback, successCallback, 204);
+            }
+        });
+    }));
+}
+
 exports.MongoConnector.prototype.drop = function(resultCallback, successCallback) {
+    var collectionName = this.collectionName;
     this.db.collection(this.collectionName, makeCollectionAccessErrorHandler(function(collection) {
         collection.drop();
+        console.log('Successfully dropped all documents from "' + collectionName + '"');
         reportSuccess(resultCallback, successCallback);        
     }));
 }
