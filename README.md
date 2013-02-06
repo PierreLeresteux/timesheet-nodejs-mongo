@@ -28,17 +28,20 @@ __URLs__
     - ```GET /categories``` => Get all categories with all their projects
     - ```POST /categories``` => Create a new category with no projects
     - ```GET /categories/:id``` => Get a single category with all its projects
+    - ```DELETE /categories/:id``` => Delete a category with all its projects
     - ```PUT /categories/:id``` => Replace a category with the data passed in the body
     - ```PATCH /categories/:id``` => Update a category with the data passed in the body
 * Projects
     - ```GET /projects``` => Get all projects of a category
     - ```POST /projects?category_id=``` => Create a new project assigned to a specified category
     - ```GET /projects/:id``` => Get a single project of a category
+    - ```DELETE /projects/:id``` => Remove a project from a category
     - ```PUT /projects/:id``` => Replace a project with the data passed in the body
     - ```PATCH /projects/:id``` => Update a project with the data passed in the body
 * Activities
     - ```GET /activities?[user=][&year=][&month=]``` => Get all activities by user, year and/or month
     - ```POST /activities``` => Create a new activity with the data passed in the body
+    - ```DELETE /activities/:id``` => Delete an activity
     - ```GET /activities-:year-:month.csv``` => Export all activities of the specified month formatted in CSV
 
 
