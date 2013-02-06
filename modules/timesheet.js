@@ -1,4 +1,3 @@
-var mongo = require('mongodb');
 var mongoConnector = require('./mongo_connector');
 
 var mongoUri = process.env.MONGOLAB_URI ||  'mongodb://localhost:27017/timesheetdb';
@@ -82,6 +81,15 @@ exports.categories.update = function(categoryId, category, resultCallback) {
     }
     console.log('Updating category id "' + categoryId + '" with category: ' + JSON.stringify(category));
     categoriesConnector.update(resultCallback, successCallback, categoriesQuery, categoriesUpdate);
+}
+
+exports.categories.delete = function(categoryId, resultCallback) {
+    console.log('Deleting category id "' + categoryId + '"');
+    var error = {
+        message: 'Noy yet implemented',
+        status: 405
+    };
+    resultCallback(error, 405);
 }
 
 /*------------- PROJECTS ------------------*/
@@ -205,6 +213,15 @@ exports.projects.update = function(projectId, project, resultCallback) {
     activitiesConnector.update(null, null, activitiesQuery, activitiesUpdate);
 }
 
+exports.projects.delete = function(projectId, resultCallback) {
+    console.log('Deleting project id "' + projectId + '"');
+    var error = {
+        message: 'Noy yet implemented',
+        status: 405
+    };
+    resultCallback(error, 405);
+}
+
 /*------------- ACTIVITIES ------------------*/
 
 exports.activities = {};
@@ -268,6 +285,15 @@ exports.activities.create = function(activity, resultCallback) {
     };
     console.log('Adding activity ' + JSON.stringify(activity));
     categoriesConnector.findOne(resultCallback, successCallback, query);
+}
+
+exports.activities.delete = function(activityId, resultCallback) {
+    console.log('Deleting activity id "' + activityId + '"');
+    var error = {
+        message: 'Noy yet implemented',
+        status: 405
+    };
+    resultCallback(error, 405);
 }
 
 exports.activities.exportToCsv = function(year, month, resultCallback) {

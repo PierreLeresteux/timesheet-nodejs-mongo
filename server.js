@@ -77,6 +77,10 @@ app.patch('/categories/:id', function(req, res) {
     var category = req.body;
     timesheet.categories.update(categoryId, category, resultSender(res));
 });
+app.delete('/categories/:id', function(req, res) {
+    var categoryId = req.params.id;
+    timesheet.categories.delete(categoryId, resultSender(res));
+});
 
 // Projects
 app.get('/projects', function(req, res) {
@@ -101,6 +105,10 @@ app.patch('/projects/:id', function(req, res) {
     var project = req.body;
     timesheet.projects.update(projectId, project, resultSender(res));
 });
+app.delete('/projects/:id', function(req, res) {
+    var projectId = req.params.id;
+    timesheet.projects.delete(projectId, resultSender(res));
+});
 
 // Activities
 app.get('/activities', function(req, res) {
@@ -122,6 +130,10 @@ app.post('/activities', function(req, res) {
         }
     };
     timesheet.activities.create(activity, resultSender(res));
+});
+app.delete('/activities/:id', function(req, res) {
+    var activityId = req.params.id;
+    timesheet.activities.delete(activityId, resultSender(res));
 });
 app.get('/activities-:year-:month.csv', function(req, res) {
     var year = req.params.year;
