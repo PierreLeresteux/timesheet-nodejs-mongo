@@ -1,6 +1,5 @@
 var mongo = require('mongodb');
 var BSON = mongo.BSONPure;
-var Db = mongo.Db;
 
 var reportSuccess = function(resultCallback, successCallback, result) {
     if (successCallback) {
@@ -46,7 +45,7 @@ exports.objectId = function(id) {
 
 exports.connect = function(mongoUri, callback) {
     console.log('Connecting to Mongo DB using URI: ' + mongoUri);
-    Db.connect(mongoUri, function(err, db) {
+    mongo.connect(mongoUri, function(err, db) {
         if (err) {
             console.error('Error while connecting to Mongo DB: ' + JSON.stringify(err));
         } else {
@@ -151,6 +150,6 @@ exports.MongoConnector.prototype.drop = function(resultCallback, successCallback
     this.db.collection(this.collectionName, makeCollectionAccessErrorHandler(function(collection) {
         collection.drop();
         console.log('Successfully dropped all documents from "' + collectionName + '"');
-        reportSuccess(resultCallback, successCallback);        
+        reportSuccess(resultCallback, successCallback);
     }));
 }
